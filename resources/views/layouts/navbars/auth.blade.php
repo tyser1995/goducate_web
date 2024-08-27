@@ -76,13 +76,13 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item {{ $elementActive == 'user' ||  $elementActive == 'roles' || $elementActive == 'employees' ? 'active' : '' }}">
+                <li class="nav-item">
                     <a data-toggle="collapse" href="#sitemgmt">
                         <i class="fas fa-cogs"></i>
                         <p>Settings</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ $elementActive == 'user' || $elementActive == 'roles' || $elementActive == 'employees' ? 'show' : '' }}" id="sitemgmt">
+                    <div class="collapse" id="sitemgmt">
                         <ul class="nav nav-collapse">
                             <li class="{{ $elementActive == 'roles' ? 'active' : '' }}">
                                 <a href="{{route('roles')}}">
