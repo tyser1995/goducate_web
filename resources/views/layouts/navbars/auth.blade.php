@@ -76,25 +76,25 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item {{ $elementActive == 'user' ||  $elementActive == 'roles' || $elementActive == 'employees' ? 'active' : '' }}">
+                <li class="nav-item {{ $elementActive == 'aboutus' ||  $elementActive == 'activities' || $elementActive == 'booknow' ? 'active' : '' }}">
                     <a data-toggle="collapse" href="#sitemgmt">
                         <i class="fas fa-cogs"></i>
                         <p>Settings</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ $elementActive == 'user' || $elementActive == 'roles' || $elementActive == 'employees' ? 'show' : '' }}" id="sitemgmt">
+                    <div class="collapse {{ $elementActive == 'aboutus' || $elementActive == 'activities' || $elementActive == 'booknow' ? 'show' : '' }}" id="sitemgmt">
                         <ul class="nav nav-collapse">
-                            <li class="{{ $elementActive == 'roles' ? 'active' : '' }}">
-                                <a href="{{route('roles')}}">
+                            <li class="{{ $elementActive == 'aboutus' ? 'active' : '' }}">
+                                <a href="{{route('aboutus')}}">
                                     <span class="sub-item">About Us</span>
                                 </a>
                             </li>
-                            <li class="{{ $elementActive == 'user' ? 'active' : '' }}">
+                            <li class="{{ $elementActive == 'activities' ? 'active' : '' }}">
                                 <a href="{{route('users')}}">
                                     <span class="sub-item">Activities</span>
                                 </a>
                             </li>
-                            <li class="{{ $elementActive == 'employees' ? 'active' : '' }}">
+                            <li class="{{ $elementActive == 'booknow' ? 'active' : '' }}">
                                 <a href="{{route('employees')}}">
                                     <span class="sub-item">Book Now</span>
                                 </a>

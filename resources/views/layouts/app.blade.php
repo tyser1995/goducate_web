@@ -33,7 +33,8 @@ The above copyright notice and this permission notice shall be included in all c
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <script src="{{asset('atlantis')}}/js/plugin/webfont/webfont.min.js"></script>
-    <script>
+	<link rel="stylesheet" href="{{asset('atlantis')}}/plugins/summernote/summernote-bs4.min.css">
+	<script>
 		WebFont.load({
 			google: {"families":["Lato:300,400,700,900"]},
 			custom: {"families":["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['../atlantis/css/fonts.min.css']},
@@ -124,7 +125,10 @@ The above copyright notice and this permission notice shall be included in all c
 	<!-- Sweet Alert -->
 	<script src="{{ asset('atlantis') }}/js/plugin/sweetalert/sweetalert.min.js"></script>
     
-    <!-- smartwizard -->
+	<!-- Summernote -->
+	<script src="{{ asset('atlantis') }}/plugins/summernote/summernote-bs4.min.js"></script>
+    
+	<!-- smartwizard -->
     <script src="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
 
     <!-- Atlantis JS -->

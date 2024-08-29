@@ -29,7 +29,7 @@
 	<link rel="stylesheet" href="{{asset('atlantis')}}/css/bootstrap.min.css">
 	<link rel="stylesheet" href="{{asset('atlantis')}}/css/atlantis.min.css">
     <link rel="stylesheet" href="{{asset('atlantis')}}/css/global.css">
-
+    <link rel="stylesheet" href="{{asset('atlantis')}}/plugins/summernote/summernote-bs4.min.css">
     <style>
         body {
             background-image: url('images/A14.jpg');
@@ -100,6 +100,9 @@
 
 	<!-- Sweet Alert -->
 	<script src="{{ asset('atlantis') }}/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Summernote -->
+    <script src="{{ asset('atlantis') }}/plugins/summernote/summernote-bs4.min.js"></script>
     
     <!-- Atlantis JS -->
 	<script src="{{ asset('atlantis') }}/js/atlantis.min.js"></script>

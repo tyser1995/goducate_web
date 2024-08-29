@@ -21,6 +21,9 @@ Route::get('/register', [App\Http\Controllers\PageController::class, 'register']
 Route::post('/user/register', ['as' => '/user/register', 'uses' => 'App\Http\Controllers\UserController@register']);
 Route::get('/', [App\Http\Controllers\DashboardController::class, 'index']);//Initial Page
 
+//About Us
+Route::get('_aboutus', ['as' => '_aboutus', 'uses' => 'App\Http\Controllers\AboutUsController@aboutus_page']);
+
 //Google
 Route::get('/google/redirect', ['as' => 'google.redirect', 'uses' => 'App\Http\Controllers\Auth\LoginController@redirectToGoogle']);
 Route::get('/google/callback', ['as' => 'google.callback', 'uses' => 'App\Http\Controllers\Auth\LoginController@handleGoogleCallback']);
@@ -58,6 +61,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('roles', ['as' => 'roles', 'uses' => 'App\Http\Controllers\RoleController@index']);
     Route::resource('role', 'App\Http\Controllers\RoleController');
 
+    //About Us
+  
+    Route::get('aboutus', ['as' => 'aboutus', 'uses' => 'App\Http\Controllers\AboutUsController@index']);
+    Route::resource('about', 'App\Http\Controllers\AboutUsController');
+    
     //Announcement
     Route::get('announcements', ['as' => 'announcements', 'uses' => 'App\Http\Controllers\AnnouncementController@index']);
     Route::resource('announcement', 'App\Http\Controllers\AnnouncementController');
