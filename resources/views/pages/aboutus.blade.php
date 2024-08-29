@@ -70,123 +70,20 @@
     .hambuger {
       display: none;
     }
-
-    .home {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 50px 0;
-      min-height: 80vh;
-    }
-
-    .home .content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-
-    .home .content .text {
-      flex: 1;
-      text-align: left;
-    }
-
-    .home .content .text h1 {
-      margin: 0;
-      font-size: 2.5em;
-    }
-
-    .home .content .text p {
-      margin: 10px 0;
-    }
-
-    .home .content .text button {
-      padding: 10px 20px;
-      background-color: #ff9900;
+    .about {
+      background-color: #444;
       color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .home .image {
-      display: none;
-    }
-
-    .image_item {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
-      padding: 10px;
+      padding: 50px 20px;
       border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
-
-    .image_item img {
-      width: 100px;
-      cursor: pointer;
-      opacity: 0.6;
-      transition: opacity 0.3s;
-      border-radius: 5px;
+    .about h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
     }
-
-    .image_item img.active {
-      opacity: 1;
-      border: 2px solid #ff9900;
-    }
-
-    .Promo-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px;
-      margin: 20px 0;
-      background-color: rgba(248, 249, 250, 0.9);
-      color: #333;
-    }
-
-    .Promo-section .left,
-    .Promo-section .center,
-    .Promo-section .right {
-      flex: 1;
-      padding: 20px;
-    }
-
-    .Promo-section .left img,
-    .Promo-section .right img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 10px;
-    }
-
-    .Promo-section .center {
-      text-align: center;
-    }
-
-    .Promo-section .right .activities {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .Promo-section .right .activities div {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .Promo-section .right .activities div img {
-      width: 100px;
-      height: auto;
-      border-radius: 5px;
-      transition: transform 0.3s ease-in-out;
-    }
-
-    .Promo-section .right .activities div img:hover {
-      transform: scale(1.5);
+    .about p {
+      font-size: 1.2em;
+      line-height: 1.6;
     }
 </style>
 
@@ -194,70 +91,14 @@
   <div class="overlay"></div>
   <!-- Header -->
   @include('pages.header')
-  <!-- Home -->
-  <section class="home" id="home">
-    <div class="container content">
-      <div class="text">
-        <h1>Welcome to Camp Goducate Iloilo</h1>
-        <p>Relax and enjoy your stay at Camp Goducate.</p>
-        <a href="booking.php"><button>Book Now</button></a>
-      </div>
-      <div class="image_item">
-        <img src="{{asset('images')}}/bckgrnd.png" alt="Image 1" class="slide active" onclick="setBackground('{{asset('images')}}/bckgrnd.png')">
-        <img src="{{asset('images')}}/A11.jpg" alt="Image 2" class="slide" onclick="setBackground('{{asset('images')}}/A11.jpg')">
-        <img src="{{asset('images')}}/A12.jpg" alt="Image 3" class="slide" onclick="setBackground('{{asset('images')}}/A12.jpg')">
-        <img src="{{asset('images')}}/A13.jpg" alt="Image 4" class="slide" onclick="setBackground('{{asset('images')}}/A13.jpg')">
-        <img src="{{asset('images')}}/A14.jpg" alt="Image 5" class="slide" onclick="setBackground('{{asset('images')}}/A14.jpg')">
-      </div>
+  <section class="about" id="about">
+    <div class="container">
+      @foreach ($aboutus as $about)
+        <?php
+            echo html_entity_decode($about['description']);
+        ?>
+      @endforeach
     </div>
   </section>
-
-  <!-- Promo and announcement  -->
-  <section class="Promo-section">
-    <div class="left">
-      <img src="{{asset('images')}}/about.jpg" alt="Left Image">
-    </div>
-    <div class="center">
-      <p>Description of the Promo.</p>
-    </div>
-    <div class="right">
-      <h2>Activities</h2>
-      <div class="activities">
-        <div>
-          <img src="{{asset('images')}}/A2.jpg" alt="Activity Image 1">
-          <p>Archery</p>
-        </div>
-        <div>
-          <img src="{{asset('images')}}/A3.jpg" alt="Activity Image 2">
-          <p>Big Volleyball</p>
-        </div>
-        <div>
-          <img src="{{asset('images')}}/A4.jpg" alt="Activity Image 3">
-          <p>Swimming</p>
-        </div>
-        <div>
-          <img src="{{asset('images')}}/A5.jpg" alt="Activity Image 4">
-          <p>Camping</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <script>
-    function setBackground(imageUrl) {
-        var backgroundOverlay = document.getElementById('background-overlay');
-        backgroundOverlay.style.backgroundImage = 'url(' + imageUrl + ')';
-    
-        var slides = document.querySelectorAll('.slide');
-        slides.forEach(function(slide) {
-            slide.classList.remove('active');
-        });
-    
-        var activeSlide = document.querySelector('img[src="' + imageUrl + '"]');
-        if (activeSlide) {
-            activeSlide.classList.add('active');
-        }
-    }
-    </script>
 @endsection
 

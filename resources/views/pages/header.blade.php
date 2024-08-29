@@ -3,7 +3,7 @@
       <div class="logo"><img src="{{asset('images')}}/logo.webp" alt="Logo"></div>
       <div class="nav">
         <a href="{{url('/home')}}">Home</a>
-        <a href="{{url('/home')}}">About Us</a>
+        <a href="{{url('/_aboutus')}}">About Us</a>
         <a href="{{url('/home')}}">Activities</a>
         <a href="{{url('/home')}}">Book Now</a>
         <a href="{{url('/home')}}">Volunteer</a>
