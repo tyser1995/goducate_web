@@ -23,6 +23,9 @@ Route::get('/', [App\Http\Controllers\DashboardController::class, 'index']);//In
 
 //About Us
 Route::get('_aboutus', ['as' => '_aboutus', 'uses' => 'App\Http\Controllers\AboutUsController@aboutus_page']);
+//Activity
+Route::get('_activities', ['as' => '_activities', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page']);
+Route::get('_activities_page/{id}', ['as' => '_activities_page', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page_id']);
 
 //Google
 Route::get('/google/redirect', ['as' => 'google.redirect', 'uses' => 'App\Http\Controllers\Auth\LoginController@redirectToGoogle']);
@@ -65,6 +68,18 @@ Route::group(['middleware' => 'auth'], function () {
   
     Route::get('aboutus', ['as' => 'aboutus', 'uses' => 'App\Http\Controllers\AboutUsController@index']);
     Route::resource('about', 'App\Http\Controllers\AboutUsController');
+
+    //Activities
+    Route::get('activities', ['as' => 'activities', 'uses' => 'App\Http\Controllers\ActivityPageController@index']);
+    //List
+    Route::get('activities/create/list', ['as' => 'activities/create/list', 'uses' => 'App\Http\Controllers\ActivityPageController@create_list']);
+    Route::post('activities/store/list', ['as' => 'activities/store/list', 'uses' => 'App\Http\Controllers\ActivityPageController@store_list']);
+    Route::get('activities/edit/list/{id}', ['as' => 'activities.edit.list', 'uses' => 'App\Http\Controllers\ActivityPageController@edit_list']);
+    Route::put('activities/update/list/{id}', ['as' => 'activities.update.list', 'uses' => 'App\Http\Controllers\ActivityPageController@update_list']);
+    Route::delete('activities/delete/list/{id}', ['as' => 'activities.delete.list', 'uses' => 'App\Http\Controllers\ActivityPageController@destroy_list']);
+
+    Route::resource('activity', 'App\Http\Controllers\ActivityPageController');
+
     
     //Announcement
     Route::get('announcements', ['as' => 'announcements', 'uses' => 'App\Http\Controllers\AnnouncementController@index']);
