@@ -4,7 +4,7 @@
       <div class="nav">
         <a href="{{url('/home')}}">Home</a>
         <a href="{{url('/_aboutus')}}">About Us</a>
-        <a href="{{url('/home')}}">Activities</a>
+        <a href="{{url('/_activities')}}">Activities</a>
         <a href="{{url('/home')}}">Book Now</a>
         <a href="{{url('/home')}}">Volunteer</a>
         <a href="{{url('/login')}}">Login</a>

@@ -52,7 +52,7 @@ The above copyright notice and this permission notice shall be included in all c
 	<link rel="stylesheet" href="{{asset('atlantis')}}/css/atlantis.min.css">
 	<link rel="stylesheet" href="{{asset('atlantis')}}/css/global.css">
 
-    <link rel="stylesheet" href="{{asset('atlantis')}}/css/demo.css">
+    {{-- <link rel="stylesheet" href="{{asset('atlantis')}}/css/demo.css"> --}}
 
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/css/smart_wizard_all.min.css" rel="stylesheet" type="text/css" />

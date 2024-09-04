@@ -90,7 +90,7 @@
                                 </a>
                             </li>
                             <li class="{{ $elementActive == 'activities' ? 'active' : '' }}">
-                                <a href="{{route('users')}}">
+                                <a href="{{route('activities')}}">
                                     <span class="sub-item">Activities</span>
                                 </a>
                             </li>
