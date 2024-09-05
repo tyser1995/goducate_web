@@ -30,11 +30,26 @@ class PermissionTableSeeder extends Seeder
             'role-list',
             'role-create',
             'role-edit',
-            'role-delete'
+            'role-delete',
+            'employee-list',
+            'employee-create',
+            'employee-edit',
+            'employee-delete',
+            'aboutus-list',
+            'aboutus-create',
+            'aboutus-edit',
+            'aboutus-delete',
+            'activity-list',
+            'activity-create',
+            'activity-edit',
+            'activity-delete'
         ];
 
+        // foreach ($permissions as $permission) {
+        //      Permission::create(['name' => $permission]);
+        // }
         foreach ($permissions as $permission) {
-             Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
     }
 }

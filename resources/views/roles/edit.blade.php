@@ -13,11 +13,10 @@
     margin: 10px;
     display: inline-block;
     font-size: 19px;
-    background-color: #645F59;
     padding: 10px;
 }
 .permission-list li label, .permission-list li p{
-    color:  #ffffff;
+    color:  #645F59;
 }
 .chk-permission{
     margin-right: 5px;
@@ -44,11 +43,6 @@
                         </div>
                         <div class="col-4 text-right edit-role-btn">
                             <a href="{{ route('roles') }}" class="btn btn-sm btn-primary" id="edit-role-btn">{{ __('Back to list') }}</a>
-                            <div class="icon">
-                                <a href="{{ route('roles') }}" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-chevron-left"></i>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
