@@ -42,7 +42,11 @@ class PermissionTableSeeder extends Seeder
             'activity-list',
             'activity-create',
             'activity-edit',
-            'activity-delete'
+            'activity-delete',
+            'booknow-list',
+            'booknow-create',
+            'booknow-edit',
+            'booknow-delete'
         ];
 
         // foreach ($permissions as $permission) {
