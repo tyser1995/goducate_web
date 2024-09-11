@@ -26,6 +26,15 @@ Route::get('_aboutus', ['as' => '_aboutus', 'uses' => 'App\Http\Controllers\Abou
 //Activity
 Route::get('_activities', ['as' => '_activities', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page']);
 Route::get('_activities_page/{id}', ['as' => '_activities_page', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page_id']);
+//
+Route::get('/booking', [App\Http\Controllers\HomeController::class, 'booking']);
+
+//Booking public
+Route::post('bookings.store', ['as' => 'bookings.store', 'uses' => 'App\Http\Controllers\BookingController@booking_store']);
+Route::get('bookings.list', ['as' => 'bookings.list', 'uses' => 'App\Http\Controllers\BookingController@booking_list']);
+Route::post('bookings.overnight_stay', ['as' => 'bookings.overnight_stay', 'uses' => 'App\Http\Controllers\BookingController@os_store']);
+Route::post('bookings.day_tour', ['as' => 'bookings.day_tour', 'uses' => 'App\Http\Controllers\BookingController@dt_store']);
+// Route::resource('booking', 'App\Http\Controllers\BookingController');
 
 //Google
 Route::get('/google/redirect', ['as' => 'google.redirect', 'uses' => 'App\Http\Controllers\Auth\LoginController@redirectToGoogle']);
@@ -80,7 +89,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('activity', 'App\Http\Controllers\ActivityPageController');
 
-    
+    //Booking
+
     //Announcement
     Route::get('announcements', ['as' => 'announcements', 'uses' => 'App\Http\Controllers\AnnouncementController@index']);
     Route::resource('announcement', 'App\Http\Controllers\AnnouncementController');

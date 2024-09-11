@@ -26,6 +26,7 @@ The above copyright notice and this permission notice shall be included in all c
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
         name='viewport' />
+	<meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Extra details for Live View on GitHub Pages -->
 
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -59,6 +60,18 @@ The above copyright notice and this permission notice shall be included in all c
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.min.css">
 	
     <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+
+	<!-- FullCalendar -->
+	<link href='https://cdn.jsdelivr.net/npm/fullcalendar/core/main.min.css' rel='stylesheet' />
+	<link href='https://cdn.jsdelivr.net/npm/fullcalendar/daygrid/main.min.css' rel='stylesheet' />
+
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar/core@6.1.15/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar/daygrid@6.1.15/index.global.min.js'></script>
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar/interaction/main.min.js'></script>
+	
+     <!-- daterange picker -->
+  	<link rel="stylesheet" href="{{asset('atlantis')}}/plugins/daterangepicker/daterangepicker.css">
 </head>
 
 <x-head.tinymce-config />
@@ -130,6 +143,12 @@ The above copyright notice and this permission notice shall be included in all c
     
 	<!-- smartwizard -->
     <script src="https://cdn.jsdelivr.net/npm/smartwizard@6/dist/js/jquery.smartWizard.min.js" type="text/javascript"></script>
+
+	<!-- InputMask -->
+	<script src="{{ asset('atlantis') }}/plugins/moment/moment.min.js"></script>
+
+	<!-- date-range-picker -->
+	<script src="{{ asset('atlantis') }}/plugins/daterangepicker/daterangepicker.js"></script>
 
     <!-- Atlantis JS -->
 	<script src="{{ asset('atlantis') }}/js/atlantis.min.js"></script>

@@ -1,0 +1,119 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+use DB;
+
+class BookingModel extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $table = 'bookings';
+
+    protected $fillable =[
+        'created_by_user_id',
+        'customer_id',
+        'name',
+        'email',
+        'address',
+        'contact_no',
+        'no_of_adults',
+        'no_of_children',
+        'boooking_status'
+    ];
+
+    // protected $attributes = [
+    //     'created_by_user_id' => 0, 
+    //     'customer_id' => 0,
+    //     'name' => 'Guest',
+    //     'email' => 'no-reply@example.com',
+    //     'address' => '',
+    //     'contact_no' => '',
+    //     'no_of_adults' => 1,
+    //     'no_of_children' => 0,
+    //     'booking_status' => '',
+    // ];
+
+    public static function createBooking($data)
+    {
+        $payload = self::create([
+            'created_by_user_id' => $data['created_by_users_id'] ?? 0,
+            'customer_id' => $data['customer_id'] ?? 0,
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'address' => $data['address'],
+            'contact_no' => $data['contact_no'],
+            'no_of_adults' => $data['no_of_adults'],
+            'no_of_children' => $data['no_of_children'],
+            'boooking_status' => $data['boooking_status']
+        ]);
+
+        return $payload;
+    }
+
+    public static function getBooking()
+    {
+        return self::selectRaw("
+                CASE 
+                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkin_date 
+                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkin_date 
+                    ELSE booking_place_reservations.checkin_date 
+                END as checkin_date,
+                CASE 
+                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkout_date 
+                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkout_date 
+                    ELSE booking_place_reservations.checkout_date 
+                END as checkout_date
+            ")
+            ->leftJoin('booking_overnight_stays', function($join) {
+                $join->on('booking_overnight_stays.customer_id', '=', 'bookings.customer_id')
+                    ->where('bookings.boooking_status', '=', 0);
+            })
+            ->leftJoin('booking_day_tours', function($join) {
+                $join->on('booking_day_tours.customer_id', '=', 'bookings.customer_id')
+                    ->where('bookings.boooking_status', '=', 1); 
+            })
+            ->leftJoin('booking_place_reservations', function($join) {
+                $join->on('booking_place_reservations.customer_id', '=', 'bookings.customer_id')
+                    ->where('bookings.boooking_status', '!=', 0)
+                    ->where('bookings.boooking_status', '!=', 1); 
+            })
+            ->distinct()
+            ->get();
+    }
+
+
+
+    public static function getBookingById($id)
+    {
+        return self::findOrFail($id);
+    }
+
+    public static function updateBooking($id, $data)
+    {
+        $payload = self::findOrFail($id);
+        
+        $payload->update([
+            'created_by_user_id' => $data['created_by_users_id'] ?? 0,
+            'customer_id' => $data['customer_id'] ?? 0,
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'address' => $data['address'],
+            'contact_no' => $data['contact_no'],
+            'no_of_adults' => $data['no_of_adults'],
+            'no_of_children' => $data['no_of_children'],
+            'boooking_status' => $data['boooking_status']
+        ]);
+
+        return $payload;
+    }
+
+    public static function deleteBooking($id)
+    {
+        return self::findOrFail($id)->delete();
+    }
+}
