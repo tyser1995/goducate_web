@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\ActivityHeader;
+use App\Models\ActivityList;
+use Vinkla\Hashids\Facades\Hashids;
 
 class HomeController extends Controller
 {
@@ -21,6 +24,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('pages.home');
+
+        return view('pages.home',[
+            'headers' => ActivityHeader::getActivityHeader(),
+            'lists' => ActivityList::getActivityList()
+        ]);
+    }
+
+    public function booking()
+    {
+
+        return view('pages.booking');
     }
 }
