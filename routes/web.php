@@ -21,6 +21,21 @@ Route::get('/register', [App\Http\Controllers\PageController::class, 'register']
 Route::post('/user/register', ['as' => '/user/register', 'uses' => 'App\Http\Controllers\UserController@register']);
 Route::get('/', [App\Http\Controllers\DashboardController::class, 'index']);//Initial Page
 
+//About Us
+Route::get('_aboutus', ['as' => '_aboutus', 'uses' => 'App\Http\Controllers\AboutUsController@aboutus_page']);
+//Activity
+Route::get('_activities', ['as' => '_activities', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page']);
+Route::get('_activities_page/{id}', ['as' => '_activities_page', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page_id']);
+//
+Route::get('/booking', [App\Http\Controllers\HomeController::class, 'booking']);
+
+//Booking public
+Route::post('bookings.store', ['as' => 'bookings.store', 'uses' => 'App\Http\Controllers\BookingController@booking_store']);
+Route::get('bookings.list', ['as' => 'bookings.list', 'uses' => 'App\Http\Controllers\BookingController@booking_list']);
+Route::post('bookings.overnight_stay', ['as' => 'bookings.overnight_stay', 'uses' => 'App\Http\Controllers\BookingController@os_store']);
+Route::post('bookings.day_tour', ['as' => 'bookings.day_tour', 'uses' => 'App\Http\Controllers\BookingController@dt_store']);
+// Route::resource('booking', 'App\Http\Controllers\BookingController');
+
 //Google
 Route::get('/google/redirect', ['as' => 'google.redirect', 'uses' => 'App\Http\Controllers\Auth\LoginController@redirectToGoogle']);
 Route::get('/google/callback', ['as' => 'google.callback', 'uses' => 'App\Http\Controllers\Auth\LoginController@handleGoogleCallback']);
@@ -57,6 +72,24 @@ Route::group(['middleware' => 'auth'], function () {
     //Roles
     Route::get('roles', ['as' => 'roles', 'uses' => 'App\Http\Controllers\RoleController@index']);
     Route::resource('role', 'App\Http\Controllers\RoleController');
+
+    //About Us
+  
+    Route::get('aboutus', ['as' => 'aboutus', 'uses' => 'App\Http\Controllers\AboutUsController@index']);
+    Route::resource('about', 'App\Http\Controllers\AboutUsController');
+
+    //Activities
+    Route::get('activities', ['as' => 'activities', 'uses' => 'App\Http\Controllers\ActivityPageController@index']);
+    //List
+    Route::get('activities/create/list', ['as' => 'activities/create/list', 'uses' => 'App\Http\Controllers\ActivityPageController@create_list']);
+    Route::post('activities/store/list', ['as' => 'activities/store/list', 'uses' => 'App\Http\Controllers\ActivityPageController@store_list']);
+    Route::get('activities/edit/list/{id}', ['as' => 'activities.edit.list', 'uses' => 'App\Http\Controllers\ActivityPageController@edit_list']);
+    Route::put('activities/update/list/{id}', ['as' => 'activities.update.list', 'uses' => 'App\Http\Controllers\ActivityPageController@update_list']);
+    Route::delete('activities/delete/list/{id}', ['as' => 'activities.delete.list', 'uses' => 'App\Http\Controllers\ActivityPageController@destroy_list']);
+
+    Route::resource('activity', 'App\Http\Controllers\ActivityPageController');
+
+    //Booking
 
     //Announcement
     Route::get('announcements', ['as' => 'announcements', 'uses' => 'App\Http\Controllers\AnnouncementController@index']);

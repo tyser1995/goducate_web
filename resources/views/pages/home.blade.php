@@ -221,29 +221,67 @@
       <p>Description of the Promo.</p>
     </div>
     <div class="right">
-      <h2>Activities</h2>
-      <div class="activities">
-        <div>
-          <img src="{{asset('images')}}/A2.jpg" alt="Activity Image 1">
-          <p>Archery</p>
+      @if (count($lists) > 0)
+        <h2>Activities</h2>
+        <div class="activities" id="activities-container">
+          @foreach ($lists as $list)
+            <div class="activity-item">
+              <img src="{{ asset('images/header_list/' . $list->image) }}" class="mb-2" style="width: 100px; height:100px" alt="{{ $list->title }}" />
+              <p>{{$list->title}}</p>
+            </div>
+          @endforeach
         </div>
-        <div>
-          <img src="{{asset('images')}}/A3.jpg" alt="Activity Image 2">
-          <p>Big Volleyball</p>
+      
+        <!-- Pagination controls -->
+        <div id="pagination-controls">
+          <button id="prevPage" class="btn btn-sm btn-info">
+            <i class="fa fa-angle-left"></i>
+          </button>
+          <button id="nextPage" class="btn btn-sm btn-info">
+            <i class="fa fa-angle-right"></i>
+          </button>
         </div>
-        <div>
-          <img src="{{asset('images')}}/A4.jpg" alt="Activity Image 3">
-          <p>Swimming</p>
-        </div>
-        <div>
-          <img src="{{asset('images')}}/A5.jpg" alt="Activity Image 4">
-          <p>Camping</p>
-        </div>
-      </div>
+      @else
+        <p>No Activites.</p>
+      @endif
+
+      
     </div>
   </section>
 
   <script>
+     const itemsPerPage = 3;
+      let currentPage = 1;
+
+      const items = document.querySelectorAll('.activity-item');
+      const totalPages = Math.ceil(items.length / itemsPerPage);
+
+      function showPage(page) {
+          const start = (page - 1) * itemsPerPage;
+          const end = start + itemsPerPage;
+
+          items.forEach((item, index) => {
+              item.style.display = (index >= start && index < end) ? 'flex' : 'none';
+          });
+      }
+
+      document.getElementById('nextPage').addEventListener('click', () => {
+          if (currentPage < totalPages) {
+              currentPage++;
+              showPage(currentPage);
+          }
+      });
+
+      document.getElementById('prevPage').addEventListener('click', () => {
+          if (currentPage > 1) {
+              currentPage--;
+              showPage(currentPage);
+          }
+      });
+
+      // Show the first page initially
+      showPage(currentPage);
+
     function setBackground(imageUrl) {
         var backgroundOverlay = document.getElementById('background-overlay');
         backgroundOverlay.style.backgroundImage = 'url(' + imageUrl + ')';

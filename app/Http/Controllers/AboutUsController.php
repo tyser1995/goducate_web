@@ -15,7 +15,17 @@ class AboutUsController extends Controller
     public function index()
     {
         //
-        return view('pages.aboutus');
+        return view('pages.aboutus.index',[
+            'aboutus' => AboutUs::getAboutUsPage()
+        ]);
+    }
+
+    public function aboutus_page()
+    {
+        //
+        return view('pages.aboutus',[
+            'aboutus' => AboutUs::getAboutUsPage()
+        ]);
     }
 
     /**
@@ -26,6 +36,7 @@ class AboutUsController extends Controller
     public function create()
     {
         //
+        return view('pages.aboutus.create');
     }
 
     /**
@@ -37,6 +48,8 @@ class AboutUsController extends Controller
     public function store(Request $request)
     {
         //
+        AboutUs::createAboutUsPage($request->all());
+        return redirect()->route('about.index')->withStatus(__('Successfully created.'));
     }
 
     /**
@@ -56,9 +69,13 @@ class AboutUsController extends Controller
      * @param  \App\Models\AboutUs  $aboutUs
      * @return \Illuminate\Http\Response
      */
-    public function edit(AboutUs $aboutUs)
+    public function edit($id)
     {
         //
+        $about_us = AboutUs::getAboutUsPageById($id);
+        return view('pages.aboutus.edit',[
+            'about' => $about_us
+        ]);
     }
 
     /**
@@ -68,9 +85,10 @@ class AboutUsController extends Controller
      * @param  \App\Models\AboutUs  $aboutUs
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, AboutUs $aboutUs)
+    public function update(Request $request, $id)
     {
-        //
+        AboutUs::updateAboutUsPage($id, $request->all());
+        return redirect()->route('about.index')->withStatus(__('Successfully Updated.'));
     }
 
     /**
@@ -79,8 +97,10 @@ class AboutUsController extends Controller
      * @param  \App\Models\AboutUs  $aboutUs
      * @return \Illuminate\Http\Response
      */
-    public function destroy(AboutUs $aboutUs)
+    public function destroy($id)
     {
         //
+        AboutUs::deleteAboutUsPage($id);
+        return redirect()->route('about.index')->withStatus(__('Deleted successfully'));
     }
 }
