@@ -26,6 +26,10 @@ Route::get('_aboutus', ['as' => '_aboutus', 'uses' => 'App\Http\Controllers\Abou
 //Activity
 Route::get('_activities', ['as' => '_activities', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page']);
 Route::get('_activities_page/{id}', ['as' => '_activities_page', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page_id']);
+//Volunteer
+Route::get('_volunteer', ['as' => '_volunteer', 'uses' => 'App\Http\Controllers\VolunteerController@volunteer_page']);
+Route::post('volunteer.register', ['as' => 'volunteer.register', 'uses' => 'App\Http\Controllers\VolunteerController@register']);
+
 //
 Route::get('/booking', [App\Http\Controllers\HomeController::class, 'booking']);
 
