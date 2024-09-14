@@ -96,6 +96,11 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Booking
 
+    //Volunteer
+    //Activities
+    Route::get('volunteers', ['as' => 'volunteers', 'uses' => 'App\Http\Controllers\VolunteerController@index']);
+    Route::resource('volunteer', 'App\Http\Controllers\VolunteerController');
+
     //Announcement
     Route::get('announcements', ['as' => 'announcements', 'uses' => 'App\Http\Controllers\AnnouncementController@index']);
     Route::resource('announcement', 'App\Http\Controllers\AnnouncementController');

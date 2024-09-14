@@ -15,6 +15,9 @@ class VolunteerController extends Controller
     public function index()
     {
         //
+        return view('pages.volunteer.index',[
+            'volunteers' => VolunteerModel::getVolunteer()
+        ]);
     }
 
     /**
@@ -25,6 +28,7 @@ class VolunteerController extends Controller
     public function create()
     {
         //
+        return view('pages.volunteer.create');
     }
 
     /**
@@ -36,6 +40,8 @@ class VolunteerController extends Controller
     public function store(Request $request)
     {
         //
+        VolunteerModel::createVolunteer($request->all());
+        return redirect()->route('volunteer.index')->withStatus(__('Successfully created.'));
     }
 
     /**
@@ -55,9 +61,12 @@ class VolunteerController extends Controller
      * @param  \App\Models\VolunteerModel  $volunteerModel
      * @return \Illuminate\Http\Response
      */
-    public function edit(VolunteerModel $volunteerModel)
+    public function edit($id)
     {
         //
+        return view('pages.volunteer.edit',[
+            'volunteer' => VolunteerModel::getVolunteerById($id)
+        ]);
     }
 
     /**
@@ -67,9 +76,11 @@ class VolunteerController extends Controller
      * @param  \App\Models\VolunteerModel  $volunteerModel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, VolunteerModel $volunteerModel)
+    public function update(Request $request, $id)
     {
         //
+        VolunteerModel::updateVolunteer($id, $request->all());
+        return redirect()->route('volunteer.index')->withStatus(__('Successfully Updated.'));
     }
 
     /**
@@ -78,9 +89,11 @@ class VolunteerController extends Controller
      * @param  \App\Models\VolunteerModel  $volunteerModel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(VolunteerModel $volunteerModel)
+    public function destroy($id)
     {
         //
+        VolunteerModel::deleteVolunteer($id);
+        return redirect()->route('volunteer.index')->withError(__('Deleted successfully'));
     }
 
     public function volunteer_page(Request $request){

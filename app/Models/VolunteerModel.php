@@ -17,6 +17,7 @@ class VolunteerModel extends Model
         'created_by_user_id',
         'name',
         'age',
+        'email',
         'address',
         'birthday',
         'church_name',
@@ -43,7 +44,8 @@ class VolunteerModel extends Model
 
     public static function getVolunteer()
     {
-        return self::get();
+        return self::orderBy('created_at','DESC')
+            ->get();
     }
 
     public static function getVolunteerById($id)

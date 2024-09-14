@@ -17,6 +17,7 @@ class CreateVolunteerPageTable extends Migration
             $table->id();
             $table->integer('created_by_user_id')->default(0)->nullable();
             $table->string('name')->nullable();
+            $table->string('email')->nullable();
             $table->integer('age')->default(0)->nullable();
             $table->longText('address')->nullable();
             $table->date('birthday')->nullable();

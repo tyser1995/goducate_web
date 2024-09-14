@@ -46,7 +46,11 @@ class PermissionTableSeeder extends Seeder
             'booknow-list',
             'booknow-create',
             'booknow-edit',
-            'booknow-delete'
+            'booknow-delete',
+            'volunteer-list',
+            'volunteer-create',
+            'volunteer-edit',
+            'volunteer-delete'
         ];
 
         // foreach ($permissions as $permission) {
