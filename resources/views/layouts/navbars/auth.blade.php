@@ -50,14 +50,14 @@
                     </span>
                     <h4 class="text-section">Management</h4>
                 </li>
-                @if(Auth::user()->can('role-list') || Auth::user()->can('user-list') || Auth::user()->can('employee-list') || Auth::user()->role == 1)
+                @if(Auth::user()->can('role-list') || Auth::user()->can('user-list') || Auth::user()->can('employee-list') || Auth::user()->can('volunteer-list') ||Auth::user()->role == 1)
                     <li class="nav-item {{ $elementActive == 'user' ||  $elementActive == 'roles' || $elementActive == 'employees' ? 'active' : '' }}">
                         <a data-toggle="collapse" href="#usermgmt">
                             <i class="fas fa-users"></i>
                             <p>User</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ $elementActive == 'user' || $elementActive == 'roles' || $elementActive == 'employees' ? 'show' : '' }}" id="usermgmt">
+                        <div class="collapse {{ $elementActive == 'user' || $elementActive == 'roles' || $elementActive == 'employees' || $elementActive == 'volunteer' ? 'show' : '' }}" id="usermgmt">
                             <ul class="nav nav-collapse">
                                 @if(Auth::user()->can('role-list') || Auth::user()->role == 1)
                                     <li class="{{ $elementActive == 'roles' ? 'active' : '' }}">
@@ -80,6 +80,13 @@
                                         </a>
                                     </li>
                                 @endif
+                                @if(Auth::user()->can('volunteer-list') || Auth::user()->role == 1)
+                                <li class="{{ $elementActive == 'volunteer' ? 'active' : '' }}">
+                                    <a href="{{route('volunteers')}}">
+                                        <span class="sub-item">Volunteer</span>
+                                    </a>
+                                </li>
+                            @endif
                             </ul>
                         </div>
                     </li>
