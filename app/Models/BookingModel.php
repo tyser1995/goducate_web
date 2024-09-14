@@ -55,6 +55,43 @@ class BookingModel extends Model
         return $payload;
     }
 
+    public static function getBookingList()
+    {
+        return self::selectRaw("
+                bookings.id,
+                bookings.name,
+                bookings.email,
+                bookings.address,
+                bookings.contact_no,
+                CASE 
+                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkin_date 
+                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkin_date 
+                    ELSE booking_place_reservations.checkin_date 
+                END as checkin_date,
+                CASE 
+                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkout_date 
+                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkout_date 
+                    ELSE booking_place_reservations.checkout_date 
+                END as checkout_date,
+                bookings.created_at
+            ")
+            ->leftJoin('booking_overnight_stays', function($join) {
+                $join->on('booking_overnight_stays.customer_id', '=', 'bookings.customer_id')
+                    ->where('bookings.boooking_status', '=', 0);
+            })
+            ->leftJoin('booking_day_tours', function($join) {
+                $join->on('booking_day_tours.customer_id', '=', 'bookings.customer_id')
+                    ->where('bookings.boooking_status', '=', 1); 
+            })
+            ->leftJoin('booking_place_reservations', function($join) {
+                $join->on('booking_place_reservations.customer_id', '=', 'bookings.customer_id')
+                    ->where('bookings.boooking_status', '!=', 0)
+                    ->where('bookings.boooking_status', '!=', 1); 
+            })
+            ->distinct()
+            ->get();
+    }
+
     public static function getBooking()
     {
         return self::selectRaw("

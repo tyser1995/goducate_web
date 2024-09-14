@@ -95,6 +95,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('activity', 'App\Http\Controllers\ActivityPageController');
 
     //Booking
+    Route::get('bookings', ['as' => 'bookings', 'uses' => 'App\Http\Controllers\BookingController@index']);
+    Route::resource('booking', 'App\Http\Controllers\BookingController');
 
     //Volunteer
     //Activities

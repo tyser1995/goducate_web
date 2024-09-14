@@ -18,6 +18,9 @@ class BookingController extends Controller
     public function index()
     {
         //
+        return view('pages.booking.index',[
+            'bookings' => BookingModel::getBookingList()
+        ]);
     }
 
     /**
@@ -28,6 +31,7 @@ class BookingController extends Controller
     public function create()
     {
         //
+        return view('pages.booking.create');
     }
 
     /**
@@ -58,9 +62,10 @@ class BookingController extends Controller
      * @param  \App\Models\BookingModel  $bookingModel
      * @return \Illuminate\Http\Response
      */
-    public function edit(BookingModel $bookingModel)
+    public function edit($id)
     {
         //
+       
     }
 
     /**
@@ -70,7 +75,7 @@ class BookingController extends Controller
      * @param  \App\Models\BookingModel  $bookingModel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, BookingModel $bookingModel)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -81,9 +86,11 @@ class BookingController extends Controller
      * @param  \App\Models\BookingModel  $bookingModel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BookingModel $bookingModel)
+    public function destroy($id)
     {
         //
+        BookingModel::deleteBooking($id);
+        return redirect()->route('booking.index')->withError(__('Deleted successfully'));
     }
 
     public function booking_list(){
