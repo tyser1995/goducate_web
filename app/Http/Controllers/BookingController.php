@@ -110,4 +110,8 @@ class BookingController extends Controller
     }
 
     //Place Reservation
+    //Day Tour
+    public function pr_store(Request $request){
+        BookingPlaceReservationModel::createPlaceReservation($request->all());
+    }
 }

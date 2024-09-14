@@ -104,6 +104,10 @@
     <!-- Summernote -->
     <script src="{{ asset('atlantis') }}/plugins/summernote/summernote-bs4.min.js"></script>
     
+    <!-- InputMask -->
+    <script src="{{ asset('atlantis') }}/plugins/moment/moment.min.js"></script>
+    <script src="{{ asset('atlantis') }}/plugins/inputmask/jquery.inputmask.min.js"></script>
+
     <!-- Atlantis JS -->
 	<script src="{{ asset('atlantis') }}/js/atlantis.min.js"></script>
 

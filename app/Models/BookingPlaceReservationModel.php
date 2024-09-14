@@ -22,14 +22,22 @@ class BookingPlaceReservationModel extends Model
         'checkout_date'
     ];
 
+    public const ROOM_TYPE = [
+        'board_room'        => 'Board Room',
+        'function_hall'     => 'Function Hall',
+        'basketball_gym'    => 'Basketball Gym',
+        'cottages'          => 'Cottages',
+        'small_huts'        => 'Small Huts'
+    ];
+
     public static function createPlaceReservation($data)
     {
         $payload = self::create([
             'created_by_user_id' => $data['created_by_users_id'] ?? 0,
             'customer_id' => $data['customer_id'] ?? 0,
             'room_type' => $data['room_type'],
-            'no_of_cottages' => $data['no_of_cottages'],
-            'no_of_persons' => $data['no_of_persons'],
+            'no_of_cottages' => $data['no_of_cottages'] ?? 0,
+            'no_of_persons' => $data['no_of_persons'] ?? 0,
             'checkin_date' => $data['checkin_date'],
             'checkout_date' => $data['checkout_date']
         ]);
@@ -55,8 +63,8 @@ class BookingPlaceReservationModel extends Model
             'created_by_user_id' => $data['created_by_users_id'] ?? 0,
             'customer_id' => $data['customer_id'] ?? 0,
             'room_type' => $data['room_type'],
-            'no_of_cottages' => $data['no_of_cottages'],
-            'no_of_persons' => $data['no_of_persons'],
+            'no_of_cottages' => $data['no_of_cottages'] ?? 0,
+            'no_of_persons' => $data['no_of_persons'] ?? 0,
             'checkin_date' => $data['checkin_date'],
             'checkout_date' => $data['checkout_date']
         ]);

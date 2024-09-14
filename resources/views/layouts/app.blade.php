@@ -146,6 +146,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 	<!-- InputMask -->
 	<script src="{{ asset('atlantis') }}/plugins/moment/moment.min.js"></script>
+	<script src="{{ asset('atlantis') }}/plugins/inputmask/jquery.inputmask.min.js"></script>
 
 	<!-- date-range-picker -->
 	<script src="{{ asset('atlantis') }}/plugins/daterangepicker/daterangepicker.js"></script>
