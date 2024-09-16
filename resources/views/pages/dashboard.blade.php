@@ -31,7 +31,29 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        {{-- <div class="col-md-6">
+            <div class="card full-height">
+                <div class="card-body">
+                    <div class="card-title">Group statistics</div>
+                    <div class="card-category">Group information (Family, Organization, Compnay, Church, Others) about statistics in system</div>
+                    <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-1"></div>
+                            <h6 class="fw-bold mt-3 mb-0">New Users</h6>
+                        </div>
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-2"></div>
+                            <h6 class="fw-bold mt-3 mb-0">Sales</h6>
+                        </div>
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-3"></div>
+                            <h6 class="fw-bold mt-3 mb-0">Subscribers</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+        <div class="col-md-6 d-none">
             <div class="card full-height">
                 <div class="card-body">
                     <div class="card-title">Total income & spend statistics</div>
@@ -56,7 +78,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row  d-none">
         <div class="col-md-4">
             <div class="card card-primary bg-primary-gradient">
                 <div class="card-body">
@@ -145,92 +167,113 @@
                         <div class="card-tools">
                             <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">Today</a>
+                                    <a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab">Today</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="pills-week" data-toggle="pill" href="#pills-week" role="tab" aria-selected="false">Week</a>
+                                    <a class="nav-link" id="pills-week" data-toggle="pill" href="#pills-week" role="tab">Week</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-month" data-toggle="pill" href="#pills-month" role="tab" aria-selected="false">Month</a>
+                                    <a class="nav-link" id="pills-month" data-toggle="pill" href="#pills-month" role="tab">Month</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="avatar avatar-online">
-                            <span class="avatar-title rounded-circle border border-white bg-info">J</span>
-                        </div>
-                        <div class="flex-1 ml-3 pt-1">
-                            <h6 class="text-uppercase fw-bold mb-1">Joko Subianto <span class="text-warning pl-3">pending</span></h6>
-                            <span class="text-muted">I am facing some trouble with my viewport. When i start my</span>
-                        </div>
-                        <div class="float-right pt-1">
-                            <small class="text-muted">8:40 PM</small>
-                        </div>
-                    </div>
-                    <div class="separator-dashed"></div>
-                    <div class="d-flex">
-                        <div class="avatar avatar-offline">
-                            <span class="avatar-title rounded-circle border border-white bg-secondary">P</span>
-                        </div>
-                        <div class="flex-1 ml-3 pt-1">
-                            <h6 class="text-uppercase fw-bold mb-1">Prabowo Widodo <span class="text-success pl-3">open</span></h6>
-                            <span class="text-muted">I have some query regarding the license issue.</span>
-                        </div>
-                        <div class="float-right pt-1">
-                            <small class="text-muted">1 Day Ago</small>
-                        </div>
-                    </div>
-                    <div class="separator-dashed"></div>
-                    <div class="d-flex">
-                        <div class="avatar avatar-away">
-                            <span class="avatar-title rounded-circle border border-white bg-danger">L</span>
-                        </div>
-                        <div class="flex-1 ml-3 pt-1">
-                            <h6 class="text-uppercase fw-bold mb-1">Lee Chong Wei <span class="text-muted pl-3">closed</span></h6>
-                            <span class="text-muted">Is there any update plan for RTL version near future?</span>
-                        </div>
-                        <div class="float-right pt-1">
-                            <small class="text-muted">2 Days Ago</small>
-                        </div>
-                    </div>
-                    <div class="separator-dashed"></div>
-                    <div class="d-flex">
-                        <div class="avatar avatar-offline">
-                            <span class="avatar-title rounded-circle border border-white bg-secondary">P</span>
-                        </div>
-                        <div class="flex-1 ml-3 pt-1">
-                            <h6 class="text-uppercase fw-bold mb-1">Peter Parker <span class="text-success pl-3">open</span></h6>
-                            <span class="text-muted">I have some query regarding the license issue.</span>
-                        </div>
-                        <div class="float-right pt-1">
-                            <small class="text-muted">2 Day Ago</small>
-                        </div>
-                    </div>
-                    <div class="separator-dashed"></div>
-                    <div class="d-flex">
-                        <div class="avatar avatar-away">
-                            <span class="avatar-title rounded-circle border border-white bg-danger">L</span>
-                        </div>
-                        <div class="flex-1 ml-3 pt-1">
-                            <h6 class="text-uppercase fw-bold mb-1">Logan Paul <span class="text-muted pl-3">closed</span></h6>
-                            <span class="text-muted">Is there any update plan for RTL version near future?</span>
-                        </div>
-                        <div class="float-right pt-1">
-                            <small class="text-muted">2 Days Ago</small>
-                        </div>
-                    </div>
+                <div class="card-body" id="booking-list">
+                    <!-- Booking tickets will be injected here dynamically -->
                 </div>
             </div>
-        </div>
+        </div>        
     </div>
 </div>
 @endsection
 
 @push('scripts')
 <script>
+    function loadBookings(timeframe) {
+        $.ajax({
+            url: "{{ route('bookings.list.table') }}",  // Adjust your route
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                var bookingList = '';
 
+                data.data.forEach(function (booking) {
+
+                    var bookingDate = moment(booking.created_at).format('MMMM Do YYYY, h:mm A');
+                    var timeAgo = moment(booking.created_at).fromNow(); 
+
+                    var now = moment();
+                    if (timeframe === 'today' && !moment(booking.created_at).isSame(now, 'day')) {
+                        return;
+                    }
+                    if (timeframe === 'week' && !moment(booking.created_at).isSame(now, 'week')) {
+                        return;
+                    }
+                    if (timeframe === 'month' && !moment(booking.created_at).isSame(now, 'month')) {
+                        return;
+                    }
+
+                    bookingList += `
+                    <div class="d-flex">
+                        <div class="avatar avatar-${booking.status === 'open' ? 'online' : 'offline'}">
+                            <span class="avatar-title rounded-circle border border-white bg-${getColorForStatus(booking.status)}">${booking.name.charAt(0).toUpperCase()}</span>
+                        </div>
+                        <div class="flex-1 ml-3 pt-1">
+                            <h6 class="text-uppercase fw-bold mb-1">${booking.name} 
+                                <span class="text-${getStatusColor(booking.status)} pl-3">${booking.status}</span>
+                            </h6>
+                            <span class="text-muted">${booking.address || 'No additional notes'}</span><br/>
+                            <span class="text-muted">Booked Date: ${moment(booking.checkin_date).format('MMM D')+'-'+moment(booking.checkout_date).format('D, YYYY') + '; '+ moment(booking.checkin_date).format('h:mm A')+'-'+moment(booking.checkout_date).format('h:mm A')|| 'No Data'}</span>
+                        </div>
+                        <div class="float-right pt-1">
+                            <small class="text-muted">${timeAgo}</small>
+                        </div>
+                    </div>
+                    <div class="separator-dashed"></div>
+                    `;
+                });
+                $('#booking-list').html(bookingList);
+            },
+            error: function (error) {
+                console.error('Error fetching bookings:', error);
+            }
+        });
+    }
+
+    // Helper function to get the color based on booking status
+    function getColorForStatus(status) {
+        switch (status) {
+            case 'pending':
+                return 'warning';
+            case 'open':
+                return 'success';
+            case 'closed':
+                return 'danger';
+            default:
+                return 'secondary';
+        }
+    }
+
+    // Helper function to get the text color based on status
+    function getStatusColor(status) {
+        return status === 'pending' ? 'warning' : status === 'open' ? 'success' : 'muted';
+    }
+
+    // Handle tab clicks to load corresponding timeframe
+    $('#pills-today').on('click', function () {
+        loadBookings('today');
+    });
+
+    $('#pills-week').on('click', function () {
+        loadBookings('week');
+    });
+
+    $('#pills-month').on('click', function () {
+        loadBookings('month');
+    });
+
+    // Initially load the "Week" bookings
+    loadBookings('today');
 </script>
 @endpush

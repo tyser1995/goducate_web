@@ -15,6 +15,7 @@ class BookingOvernightStayModel extends Model
     protected $fillable =[
         'created_by_user_id',
         'customer_id',
+        'email',
         'room_type',
         'checkin_date',
         'checkout_date'
@@ -33,6 +34,7 @@ class BookingOvernightStayModel extends Model
         $payload = self::create([
             'created_by_user_id' => $data['created_by_users_id'] ?? 0,
             'customer_id' => $data['customer_id'] ?? 0,
+            'email' => $data['email'],
             'room_type' => $data['room_type'],
             'checkin_date' => $data['checkin_date'],
             'checkout_date' => $data['checkout_date']
@@ -58,6 +60,7 @@ class BookingOvernightStayModel extends Model
         $payload->update([
             'created_by_user_id' => $data['created_by_users_id'] ?? 0,
             'customer_id' => $data['customer_id'] ?? 0,
+            'email' => $data['email'],
             'room_type' => $data['room_type'],
             'checkin_date' => $data['checkin_date'],
             'checkout_date' => $data['checkout_date']

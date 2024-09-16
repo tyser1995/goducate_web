@@ -26,9 +26,9 @@ class CustomerModel extends Model
     {
         $payload = self::create([
             'created_by_user_id' => $data['created_by_users_id'],
-            'first_name' => $data['first_name'],
-            'middle_name' => $data['middle_name'],
-            'last_name' => $data['last_name'],
+            'first_name' => $data['first_name'] ?? 'fn',
+            'middle_name' => $data['middle_name'] ?? 'mn',
+            'last_name' => $data['last_name'] ?? 'ln',
             'email' => $data['email'],
             'address' => $data['address'],
             'contact_no' => $data['contact_no']

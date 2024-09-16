@@ -31,11 +31,12 @@ Route::get('_volunteer', ['as' => '_volunteer', 'uses' => 'App\Http\Controllers\
 Route::post('volunteer.register', ['as' => 'volunteer.register', 'uses' => 'App\Http\Controllers\VolunteerController@register']);
 
 //
-Route::get('/booking', [App\Http\Controllers\HomeController::class, 'booking']);
+Route::get('_booking', [App\Http\Controllers\HomeController::class, 'booking']);
 
 //Booking public
 Route::post('bookings.store', ['as' => 'bookings.store', 'uses' => 'App\Http\Controllers\BookingController@booking_store']);
 Route::get('bookings.list', ['as' => 'bookings.list', 'uses' => 'App\Http\Controllers\BookingController@booking_list']);
+Route::get('bookings.list.table', ['as' => 'bookings.list.table', 'uses' => 'App\Http\Controllers\BookingController@booking_list_dashboard']);
 Route::post('bookings.overnight_stay', ['as' => 'bookings.overnight_stay', 'uses' => 'App\Http\Controllers\BookingController@os_store']);
 Route::post('bookings.day_tour', ['as' => 'bookings.day_tour', 'uses' => 'App\Http\Controllers\BookingController@dt_store']);
 Route::post('bookings.place_reservation', ['as' => 'bookings.place_reservation', 'uses' => 'App\Http\Controllers\BookingController@pr_store']);

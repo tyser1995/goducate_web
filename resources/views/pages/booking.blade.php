@@ -422,7 +422,7 @@
               url: "{{ route('bookings.store') }}",
               type: "POST",
               data: {
-                'name'            :$('#dt_name').val(),
+                'name'            :$('#name').val(),
                 'email'           :$('#email').val(),
                 'address'         :$('#address').val(),
                 'contact_no'      :$('#contact_no').val(),
@@ -442,6 +442,7 @@
               url: "{{ route('bookings.overnight_stay') }}",
               type: "POST",
               data: {
+                'email'           :$('#email').val(),
                 'room_type'       :$('#room_type').val(),
                 'checkin_date'    :$('#checkin_date').val(),
                 'checkout_date'    :$('#checkout_date').val()
@@ -460,7 +461,7 @@
               url: "{{ route('bookings.store') }}",
               type: "POST",
               data: {
-                'name'            :$('#dt_name').val(),
+                'name'            :$('#name').val(),
                 'email'           :$('#email').val(),
                 'address'         :$('#address').val(),
                 'contact_no'      :$('#contact_no').val(),
@@ -479,6 +480,7 @@
               url: "{{ route('bookings.day_tour') }}",
               type: "POST",
               data: {
+                'email'           :$('#email').val(),
                 'name'            :$('#dt_name').val(),
                 'tour_type'       :$('#tour_type').val(),
                 'group_type'      :$('#group_type').val(),
@@ -501,7 +503,7 @@
               url: "{{ route('bookings.store') }}",
               type: "POST",
               data: {
-                'name'            :$('#dt_name').val(),
+                'name'            :$('#name').val(),
                 'email'           :$('#email').val(),
                 'address'         :$('#address').val(),
                 'contact_no'      :$('#contact_no').val(),
@@ -521,6 +523,7 @@
               url: "{{ route('bookings.place_reservation') }}",
               type: "POST",
               data: {
+                'email'           :$('#email').val(),
                 'room_type'       :$('#room_type_pr').val(),
                 'no_of_cottages'  :$('#no_of_cottages').val(),
                 'checkin_date'    :$('#checkin_date_pr').val(),

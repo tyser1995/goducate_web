@@ -15,6 +15,7 @@ class VerifyCsrfToken extends Middleware
         'bookings.customer',
         'bookings.store',
         'bookings.list',
+        'bookings.list.table',
         'bookings.overnight_stay',
         'bookings.day_tour',
         'bookings.place_reservation',

@@ -15,6 +15,7 @@ class BookingPlaceReservationModel extends Model
     protected $fillable =[
         'created_by_user_id',
         'customer_id',
+        'email',
         'room_type',
         'no_of_cottages',
         'no_of_persons',
@@ -35,6 +36,7 @@ class BookingPlaceReservationModel extends Model
         $payload = self::create([
             'created_by_user_id' => $data['created_by_users_id'] ?? 0,
             'customer_id' => $data['customer_id'] ?? 0,
+            'email' => $data['email'],
             'room_type' => $data['room_type'],
             'no_of_cottages' => $data['no_of_cottages'] ?? 0,
             'no_of_persons' => $data['no_of_persons'] ?? 0,
@@ -62,6 +64,7 @@ class BookingPlaceReservationModel extends Model
         $payload->update([
             'created_by_user_id' => $data['created_by_users_id'] ?? 0,
             'customer_id' => $data['customer_id'] ?? 0,
+            'email' => $data['email'],
             'room_type' => $data['room_type'],
             'no_of_cottages' => $data['no_of_cottages'] ?? 0,
             'no_of_persons' => $data['no_of_persons'] ?? 0,

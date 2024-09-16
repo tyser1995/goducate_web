@@ -6,6 +6,7 @@ use App\Models\BookingModel;
 use App\Models\BookingOvernightStayModel;
 use App\Models\BookingDayTourModel;
 use App\Models\BookingPlaceReservationModel;
+use App\Models\CustomerModel;
 use Illuminate\Http\Request;
 
 class BookingController extends Controller
@@ -95,6 +96,15 @@ class BookingController extends Controller
 
     public function booking_list(){
         $bookings = BookingModel::getBooking();
+
+        return response()->json([
+            'success' => true,
+            'data' => $bookings
+        ], 200);
+    }
+
+    public function booking_list_dashboard(){
+        $bookings = BookingModel::getBookingListTable();
 
         return response()->json([
             'success' => true,

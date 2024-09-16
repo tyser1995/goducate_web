@@ -16,6 +16,7 @@ class BookingDayTourModel extends Model
         'created_by_user_id',
         'customer_id',
         'name',
+        'email',
         'tour_type',
         'group_type',
         'no_of_persons',
@@ -40,7 +41,8 @@ class BookingDayTourModel extends Model
         $payload = self::create([
             'created_by_user_id' => $data['created_by_users_id'] ?? 0,
             'customer_id' => $data['customer_id'] ?? 0,
-            'name' => $data['name'],
+            'name' => $data['name'] ?? '',
+            'email' => $data['email'],
             'tour_type' => $data['tour_type'],
             'group_type' => $data['group_type'] ?? 0,
             'no_of_persons' => $data['no_of_persons'] ?? 0,
@@ -68,7 +70,8 @@ class BookingDayTourModel extends Model
         $payload->update([
             'created_by_user_id' => $data['created_by_users_id'] ?? 0,
             'customer_id' => $data['customer_id'] ?? 0,
-            'name' => $data['name'],
+            'name' => $data['name'] ?? '',
+            'email' => $data['email'],
             'tour_type' => $data['tour_type'],
             'group_type' => $data['group_type'] ?? 0,
             'no_of_persons' => $data['no_of_persons'] ?? 0,
