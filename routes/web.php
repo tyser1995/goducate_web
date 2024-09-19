@@ -30,6 +30,14 @@ Route::get('_activities_page/{id}', ['as' => '_activities_page', 'uses' => 'App\
 Route::get('_volunteer', ['as' => '_volunteer', 'uses' => 'App\Http\Controllers\VolunteerController@volunteer_page']);
 Route::post('volunteer.register', ['as' => 'volunteer.register', 'uses' => 'App\Http\Controllers\VolunteerController@register']);
 
+//Survey and Feedback
+Route::get('_survey', ['as' => '_survey', 'uses' => 'App\Http\Controllers\SurveyController@survey_page']);
+Route::post('survey.register', ['as' => 'survey.register', 'uses' => 'App\Http\Controllers\SurveyController@register']);
+
+Route::get('_feedback', ['as' => '_feedback', 'uses' => 'App\Http\Controllers\SurveyController@feedback_page']);
+Route::post('survey.feedback', ['as' => 'survey.feedback', 'uses' => 'App\Http\Controllers\SurveyController@feedback']);
+
+
 //
 Route::get('_booking', [App\Http\Controllers\HomeController::class, 'booking']);
 
@@ -103,6 +111,13 @@ Route::group(['middleware' => 'auth'], function () {
     //Activities
     Route::get('volunteers', ['as' => 'volunteers', 'uses' => 'App\Http\Controllers\VolunteerController@index']);
     Route::resource('volunteer', 'App\Http\Controllers\VolunteerController');
+
+
+    //Survey
+    Route::get('surveys', ['as' => 'surveys', 'uses' => 'App\Http\Controllers\SurveyController@index']);
+    Route::get('surveys.list', ['as' => 'surveys.list', 'uses' => 'App\Http\Controllers\SurveyController@survey_data']);
+    Route::get('feedback.list', ['as' => 'feedback.list', 'uses' => 'App\Http\Controllers\SurveyController@feedback_data']);
+    Route::resource('survey', 'App\Http\Controllers\SurveyController');
 
     //Announcement
     Route::get('announcements', ['as' => 'announcements', 'uses' => 'App\Http\Controllers\AnnouncementController@index']);

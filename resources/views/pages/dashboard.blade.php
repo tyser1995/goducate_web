@@ -9,7 +9,7 @@
 
 <div class="page-inner mt--5">
     <div class="row mt--2">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="card full-height">
                 <div class="card-body">
                     <div class="card-title">Overall statistics</div>
@@ -17,20 +17,32 @@
                     <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
                         <div class="px-2 pb-2 pb-md-0 text-center">
                             <div id="circles-1"></div>
-                            <h6 class="fw-bold mt-3 mb-0">New Users</h6>
+                            <h6 class="fw-bold mt-3 mb-0">
+                                <i class="fas fa-angry mr-2" style="color: red;"></i>Angry
+                            </h6>
                         </div>
                         <div class="px-2 pb-2 pb-md-0 text-center">
                             <div id="circles-2"></div>
-                            <h6 class="fw-bold mt-3 mb-0">Sales</h6>
+                            <h6 class="fw-bold mt-3 mb-0"> <i class="fas fa-sad-tear mr-2" style="color: orange;"></i>
+                                Sad</h6>
                         </div>
                         <div class="px-2 pb-2 pb-md-0 text-center">
                             <div id="circles-3"></div>
-                            <h6 class="fw-bold mt-3 mb-0">Subscribers</h6>
+                            <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-meh mr-2" style="color: gray;"></i>Neutral</h6>
+                        </div>
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-4"></div>
+                            <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-smile mr-2" style="color: green;"></i>Smile</h6>
+                        </div>
+                        <div class="px-2 pb-2 pb-md-0 text-center">
+                            <div id="circles-5"></div>
+                            <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-grin-stars mr-2" style="color: gold;"></i>Happy</h6>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
         {{-- <div class="col-md-6">
             <div class="card full-height">
                 <div class="card-body">
@@ -130,31 +142,8 @@
                     <div class="card-title">User Feedback Activity</div>
                 </div>
                 <div class="card-body">
-                    <ol class="activity-feed">
-                        <li class="feed-item feed-item-secondary">
-                            <time class="date" datetime="9-25">Sep 25</time>
-                            <span class="text">Responded to need <a href="#">"Volunteer opportunity"</a></span>
-                        </li>
-                        <li class="feed-item feed-item-success">
-                            <time class="date" datetime="9-24">Sep 24</time>
-                            <span class="text">Added an interest <a href="#">"Volunteer Activities"</a></span>
-                        </li>
-                        <li class="feed-item feed-item-info">
-                            <time class="date" datetime="9-23">Sep 23</time>
-                            <span class="text">Joined the group <a href="single-group.php">"Boardsmanship Forum"</a></span>
-                        </li>
-                        <li class="feed-item feed-item-warning">
-                            <time class="date" datetime="9-21">Sep 21</time>
-                            <span class="text">Responded to need <a href="#">"In-Kind Opportunity"</a></span>
-                        </li>
-                        <li class="feed-item feed-item-danger">
-                            <time class="date" datetime="9-18">Sep 18</time>
-                            <span class="text">Created need <a href="#">"Volunteer Opportunity"</a></span>
-                        </li>
-                        <li class="feed-item">
-                            <time class="date" datetime="9-17">Sep 17</time>
-                            <span class="text">Attending the event <a href="single-event.php">"Some New Event"</a></span>
-                        </li>
+                    <ol class="activity-feed" id="feedback-activity-feed">
+                        
                     </ol>
                 </div>
             </div>
@@ -190,6 +179,107 @@
 
 @push('scripts')
 <script>
+    loadSurveys();
+    function loadSurveys() {
+        $.ajax({
+            url: "{{ route('surveys.list') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#feedback-activity-feed').empty();
+
+                function formatDate(datetime) {
+                    const date = new Date(datetime);
+                    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                    return date.toLocaleDateString('en-US', options);
+                }
+
+                const groupedData = data.data.reduce((acc, item) => {
+                    const date = formatDate(item.created_at);
+                    if (!acc[date]) {
+                        acc[date] = [];
+                    }
+                    acc[date].push(item);
+                    return acc;
+                }, {});
+
+                function createDateGroup(date, items) {
+                    const groupTitle = $('<h4></h4>').text(date).addClass('date-group-title');
+                    $('#feedback-activity-feed').append(groupTitle);
+                    
+                    items.forEach(item => {
+                        const listItem = $('<li></li>').addClass('feed-item');
+
+                        const time = $('<time></time>').addClass('date').attr('datetime', item.created_at).text(date);
+
+                        const text = $('<p></p>').addClass('text').html(
+                            `Survey taken by a ${item.person_type} from the ${item.group_type} group in ${item.address}`
+                        );
+
+                        listItem.append(text);
+                        $('#feedback-activity-feed').append(listItem);
+                    });
+                }
+
+                Object.keys(groupedData).forEach(date => {
+                    createDateGroup(date, groupedData[date]);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching survey:', error);
+            }
+        });
+    }
+
+    loadFeedbacks();
+    function loadFeedbacks() {
+        $.ajax({
+        url: "{{ route('feedback.list') }}",
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const counts = {
+                angry: 0,
+                sad: 0,
+                neutral: 0,
+                smile: 0,
+                happy: 0
+            };
+
+            data.data.forEach(item => {
+                if (item.ratings in counts) {
+                    counts[item.ratings]++;
+                }
+            });
+            function createCircle(id, value, color) {
+                Circles.create({
+                    id: id,
+                    radius: 45,
+                    value: value,
+                    maxValue: data.data.length,
+                    width: 7,
+                    text: value,
+                    colors: ['#f1f1f1', color],
+                    duration: 400,
+                    wrpClass: 'circles-wrp',
+                    textClass: 'circles-text',
+                    styleWrapper: true,
+                    styleText: true
+                });
+            }
+
+            createCircle('circles-1', counts.angry, '#F25961'); // Angry
+            createCircle('circles-2', counts.sad, '#F1C40F');   // Sad
+            createCircle('circles-3', counts.neutral, '#BDC3C7'); // Neutral
+            createCircle('circles-4', counts.smile, '#2ECC71');  // Smile
+            createCircle('circles-5', counts.happy, '#3498DB');  // Happy
+        },
+        error: function(error) {
+            console.error('Error fetching feedback:', error);
+        }
+    });
+    }
+
     function loadBookings(timeframe) {
         $.ajax({
             url: "{{ route('bookings.list.table') }}",  // Adjust your route
@@ -241,7 +331,6 @@
         });
     }
 
-    // Helper function to get the color based on booking status
     function getColorForStatus(status) {
         switch (status) {
             case 'pending':
