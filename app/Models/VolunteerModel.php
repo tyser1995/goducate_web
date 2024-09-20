@@ -22,7 +22,8 @@ class VolunteerModel extends Model
         'birthday',
         'church_name',
         'pastor_name',
-        'pastor_recommendation'
+        'pastor_recommendation',
+        'status'
     ];
 
     public static function createVolunteer($data)
@@ -66,7 +67,18 @@ class VolunteerModel extends Model
             'birthday' => $data['birthday'],
             'church_name' => $data['church_name'],
             'pastor_name' => $data['pastor_name'],
-            'pastor_recommendation' => $data['pastor_recommendation']
+            'pastor_recommendation' => $data['pastor_recommendation'],
+            'status' => $data['status']
+        ]);
+
+        return $payload;
+    }
+
+    public static function verifyVolunteer($id){
+        $payload = self::findOrFail($id);
+        
+        $payload->update([
+            'status' => 'Approved'
         ]);
 
         return $payload;

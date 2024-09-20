@@ -105,4 +105,9 @@ class VolunteerController extends Controller
         VolunteerModel::createVolunteer($request->all());
         return redirect()->route('_volunteer')->withStatus(__('Successfully created.'));
     }
+
+    public function verify_volunteer($id){
+        VolunteerModel::verifyVolunteer($id);
+        return redirect()->route('volunteer.index')->withStatus(__('Successfully approved.'));
+    }
 }

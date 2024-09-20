@@ -4,7 +4,7 @@
 @section('content')
 <div class="card login-form">
     <div class="card-header text-center d-none">
-        <span class="h1"><b>HRIS</b>-Apps</span>
+        <span class="h1"><b>RSG</b>-mAnoL</span>
     </div>
     <div class="card-body">
         <div class="text-center">

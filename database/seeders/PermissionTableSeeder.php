@@ -50,7 +50,11 @@ class PermissionTableSeeder extends Seeder
             'volunteer-list',
             'volunteer-create',
             'volunteer-edit',
-            'volunteer-delete'
+            'volunteer-delete',
+            'customer-list',
+            'customer-create',
+            'customer-edit',
+            'customer-delete',
         ];
 
         // foreach ($permissions as $permission) {

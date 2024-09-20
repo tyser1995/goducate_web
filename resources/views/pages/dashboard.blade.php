@@ -282,7 +282,7 @@
 
     function loadBookings(timeframe) {
         $.ajax({
-            url: "{{ route('bookings.list.table') }}",  // Adjust your route
+            url: "{{ route('bookings.list.table') }}",
             type: 'GET',
             dataType: 'json',
             success: function (data) {

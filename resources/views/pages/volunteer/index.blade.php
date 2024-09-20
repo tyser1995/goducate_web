@@ -14,10 +14,12 @@
                             <div class="col-8">
                                 <h3 class="mb-0 h3_title">Volunteer</h3>
                             </div>
-                            <div class="col-4 text-right add-region-btn">
-                                <a href="{{ route('volunteer.create') }}" class="btn btn-sm btn-primary"
-                                    id="add-region-btn">{{ __('Add Volunteer') }}</a>
-                            </div>
+                            @if (Auth::user()->can('volunteer-create'))
+                                <div class="col-4 text-right add-region-btn">
+                                    <a href="{{ route('volunteer.create') }}" class="btn btn-sm btn-primary"
+                                        id="add-region-btn">{{ __('Add Volunteer') }}</a>
+                                </div>
+                            @endif
                         </div>
                     </div>
                     @include('notification.index')
@@ -44,13 +46,30 @@
                                         </td>
                                         <td>{{ $volunteer->address }}</td>
                                         <td>{{ $volunteer->created_at->format('M d, Y h:i a') }}</td>
-                                        <td class="text-right">
-                                            <a href="{{ route('volunteer.edit', $volunteer) }}" class="{{Auth::user()->can('volunteer-edit') ? 'btn btn-info btn-sm ' : 'btn btn-info btn-sm d-none'}}"><i class="fas fa-pen"></i></a>
-                                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $volunteer->id }})"><i class="fas fa-trash"></i></button>
-                                            <form id="delete-form-{{ $volunteer->id }}" action="{{ route('volunteer.destroy', $volunteer->id) }}" method="POST" style="display: none;">
-                                                @csrf
-                                                @method('DELETE')
-                                            </form>
+                                        <td class="text-right" style="display: flex;
+                                        align-items: center;">
+
+                                            @if (Auth::user()->can('volunteer-edit'))
+                                                @if (strtoupper($volunteer->status) == "APPROVED")
+                                                    <a style="pointer-events: none" class="btn-success btn-sm" title="Approved"><i class="fas fa-check-circle"></i></a>
+                                                @else
+                                                    <button type="button" data-id="{{$volunteer->id}}"
+                                                    value="{{$volunteer->name}}"
+                                                    class="btnCanVerify btn-warning btn-sm" title="Click to approve"><i
+                                                        class="fas fa-exclamation-triangle"></i></button>
+                                                    </button>
+                                                @endif
+
+                                                <a href="{{ route('volunteer.edit', $volunteer) }}" class="btn btn-info btn-sm"><i class="fas fa-pen"></i></a>
+                                            @endif
+                                            @if (Auth::user()->can('volunteer-delete'))
+                                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $volunteer->id }})"><i class="fas fa-trash"></i></button>
+                                                <form id="delete-form-{{ $volunteer->id }}" action="{{ route('volunteer.destroy', $volunteer->id) }}" method="POST" style="display: none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                            @endif
+                                            
                                         </td>
                                     </tr>
                                     @endforeach
@@ -72,6 +91,7 @@
 
 @push('scripts')
 <script>
+    $('#tblUser').DataTable();
     function confirmDelete(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -87,5 +107,27 @@
             }
         })
     }
+
+    $('#tblUser tbody').on('click','.btnCanVerify',function() {
+            Swal.fire({
+                text: 'Approve ' + $(this).val() + ' user?',
+                icon: 'question',
+                allowOutsideClick:false,
+                confirmButtonText: 'Yes',
+                showCancelButton: true,
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = base_url + "/volunteers.verify/" + $(this).data('id');
+                    Swal.fire({
+                        title: $(this).val() + ' Approved Successfully',
+                        icon: 'success',
+                        allowOutsideClick:false,
+                        confirmButtonText: 'Close',
+                    }).then(()=>{
+                        $('#tblUser').DataTable().ajax.reload();
+                    });
+                }
+            });
+        });
 </script>
 @endpush

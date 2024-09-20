@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\CustomerModel;
 use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadFile;
@@ -165,62 +166,28 @@ class UserController extends Controller
 
     public function register(Request $request)
     {
-        if($request->hasFile('image')){
-            if($request->input('password') == $request->input('confirm_password')){
-                $image = $request->file('image');
-                $image_name = $image->getClientOriginalName();
-                //
+        if($request->input('password') == $request->input('confirm_password')){
+            $check_user = User::where('email','=',$request->input('email'))
+            ->get()
+            ->first();
 
-                $input['image'] = $image_name;
+            if(!$check_user){
+                $user = new User;
+                $user->name = $request->input('name');
+                $user->email = $request->input('email');
+                $user->password = Hash::make($request->input('password'));
+                $user->role = 4;
+                $user->save();
 
-                $destination_path = "";
+                CustomerModel::createCustomer($request->all());
 
-                if(env('APP_ENV') == "local")
-                    $destination_path = public_path().'/profile_photo/';
-                else{
-                    $destination_path = base_path().'/public/profile_photo/';
-                }
-
-
-                //godaddy public_path/public/images
-                //$destination_path = base_path().'/../public/images/incidents_img';
-                //
-
-                 if(!File::exists($destination_path)){
-                     File::makeDirectory($destination_path,0777,true);
-                 }
-
-                 if(!file_exists($destination_path)){
-                    File::makeDirectory($destination_path,0755,true);
-                }
-
-                if(isset($image)){
-                    $imgFileOrig = Image::make($image)->save($destination_path.'/'.$request->input('email').'-'.$image_name);
-                }
-
-                $check_user = User::where('email','=',$request->input('email'))
-                ->get()
-                ->first();
-
-                if(!$check_user){
-                    $user = new User;
-                    $user->name = $request->input('name');
-                    $user->email = $request->input('email');
-                    $user->password = Hash::make($request->input('password'));
-                    $user->profile_photo = $request->input('email').'-'.$image_name;
-                    $user->role = 10;
-                    $user->save();
-
-                    return redirect()->route('login')->withStatus(__('User successfully created.'));
-                }
-
-                return redirect()->route('register')->withError(__('Email already exists.'));
+                return redirect()->route('login')->withStatus(__('User successfully created.'));
             }
-            else{
-                return redirect()->route('register')->withError(__('Password does not match'));
-            }
-        }else{
-            return redirect()->route('register')->withError(__('Image not found'));
+
+            return redirect()->route('register')->withError(__('Email already exists.'));
+        }
+        else{
+            return redirect()->route('register')->withError(__('Password does not match'));
         }
 
     }

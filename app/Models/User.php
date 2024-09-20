@@ -51,6 +51,6 @@ class User extends Authenticatable
         ->get()
         ->first();
 
-        return $roleName;
+        return $roleName ? $roleName->name : '';
     }
 }

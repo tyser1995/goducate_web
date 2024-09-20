@@ -108,9 +108,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('booking', 'App\Http\Controllers\BookingController');
 
     //Volunteer
-    //Activities
+    Route::get('volunteers.verify/{id}', ['as' => 'volunteers.verify', 'uses' => 'App\Http\Controllers\VolunteerController@verify_volunteer']);
     Route::get('volunteers', ['as' => 'volunteers', 'uses' => 'App\Http\Controllers\VolunteerController@index']);
     Route::resource('volunteer', 'App\Http\Controllers\VolunteerController');
+
+    //Customer
+    Route::get('customers', ['as' => 'customers', 'uses' => 'App\Http\Controllers\CustomerController@index']);
+    Route::resource('customer', 'App\Http\Controllers\CustomerController');
 
 
     //Survey

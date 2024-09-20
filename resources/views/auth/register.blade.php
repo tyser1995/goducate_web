@@ -2,36 +2,17 @@
 'class' => 'main-page'
 ])
 @section('content')
-<div class="register-box">
-    <div class="card card-outline card-primary">
+<div class="card login-form">
+    <div>
         <div class="card-header text-center d-none">
-            <span class="h1"><b>Negosyo</b>-Barbaza</span>
+            <span class="h1"><b>RSG</b>-mAnoL</span>
         </div>
         <div class="card-body ">
             <div class="text-center">
-                <img src="{{ asset('images/logo/no_logo.jpg') }}" style="width:150px" />
+                <img src="{{ asset('images/logo.webp') }}" style="width:150px"  alt="nologo"/>
+                <p class="login-box-msg">Register a new membership</p>
             </div>
-            <p class="login-box-msg">Register a new membership</p>
-            <div class="col-12">
-                @if (session('status'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('status') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @endif
-            </div>
-            <div class="col-12">
-                @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                @endif
-            </div>
+            @include('notification.index')
             <form class="form" method="POST" action="{{ route('/user/register') }}" autocomplete="off" enctype="multipart/form-data">
                 @csrf
                 <div class="input-group mb-3">
@@ -79,32 +60,14 @@
                 onchange="readURL(this);" id="choose_image">
                 </div>
 
-                <div class="row">
-                    <div class="col-8">
-                        <div class="icheck-primary d-none">
-                            <input type="checkbox" id="agreeTerms" name="terms" value="agree">
-                            <label for="agreeTerms">
-                                I agree to the <a href="#">terms</a>
-                            </label>
-                        </div>
-                    </div>
+                <div class="row mb-2">
                     <!-- /.col -->
-                    <div class="col-4">
+                    <div class="col-12">
                         <button type="submit" class="btn btn-primary btn-block">Register</button>
                     </div>
                     <!-- /.col -->
                 </div>
             </form>
-
-            <div class="social-auth-links text-center">
-                <a href="#" class="btn btn-block btn-primary d-none">
-                    <i class="fab fa-facebook mr-2"></i>
-                    Sign up using Facebook
-                </a>
-                <a href="{{ route('google.redirect') }}" class="btn btn-block btn-danger">
-                    <i class="fab fa-google-plus mr-2"></i> Login with Google
-                </a>
-            </div>
 
             <a href="{{route('login')}}" style="text-align:left !important">I already have a membership</a>
         </div>

@@ -3,10 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\CustomerModel;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Vinkla\Hashids\Facades\Hashids;
 
 class CustomerController extends Controller
 {
+    
+    function __construct()
+    {
+        $this->middleware('permission:customer-list', ['only' => ['index']]);
+        $this->middleware('permission:customer-create', ['only' => ['create','store']]);
+        $this->middleware('permission:customer-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:customer-delete', ['only' => ['destroy']]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +27,9 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        return view('customer.index',[
+            'customers' => CustomerModel::getCustomer()
+        ]);
     }
 
     /**
@@ -25,6 +40,7 @@ class CustomerController extends Controller
     public function create()
     {
         //
+        return view('customer.create');
     }
 
     /**
@@ -36,6 +52,30 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         //
+        if($request->input('password') == $request->input('confirm_password')){
+            $check_user = User::where('email','=',$request->input('email'))
+            ->get()
+            ->first();
+
+            if(!$check_user){
+                $user = new User;
+                $user->name = $request->input('first_name') .' '.$request->input('last_name');
+                $user->email = $request->input('email');
+                $user->password = Hash::make($request->input('password'));
+                $user->role = 4;
+                $user->save();
+
+                CustomerModel::createCustomer($request->all());
+
+                return redirect()->route('customer.index')->withStatus(__('Successfully created.'));
+            }
+
+            return redirect()->route('customer.index')->withError(__('Email already exists.'));
+        }else{
+            return redirect()->route('customer.create')->withError(__('Password does not match'));
+        }
+
+       
     }
 
     /**
@@ -55,9 +95,12 @@ class CustomerController extends Controller
      * @param  \App\Models\CustomerModel  $customerModel
      * @return \Illuminate\Http\Response
      */
-    public function edit(CustomerModel $customerModel)
+    public function edit($id)
     {
         //
+        return view('customer.edit',[
+            'customers' => CustomerModel::getCustomerById(Hashids::decode($id)[0])
+        ]);
     }
 
     /**
@@ -67,9 +110,11 @@ class CustomerController extends Controller
      * @param  \App\Models\CustomerModel  $customerModel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CustomerModel $customerModel)
+    public function update(Request $request, $id)
     {
         //
+        CustomerModel::updateCustomer($id, $request->all());
+        return redirect()->route('customer.index')->withStatus(__('Successfully Updated.'));
     }
 
     /**
@@ -78,8 +123,10 @@ class CustomerController extends Controller
      * @param  \App\Models\CustomerModel  $customerModel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CustomerModel $customerModel)
+    public function destroy($id)
     {
         //
+        CustomerModel::deleteCustomer($id);
+        return redirect()->route('customer.index')->withError(__('Deleted successfully'));
     }
 }

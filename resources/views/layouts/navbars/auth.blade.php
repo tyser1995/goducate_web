@@ -10,8 +10,10 @@
                 <div class="info">
                     <a>
                         <span>
-                            Resty
-                            <span class="user-level">Administrator</span>
+                            {{Auth::user()->name}}
+                            <span class="user-level">
+                                {{Auth::user()->roleName(Auth::user()->role)}}
+                            </span>
                         </span>
                     </a>
                     <div class="clearfix"></div>
@@ -57,7 +59,7 @@
                             <p>User</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ $elementActive == 'user' || $elementActive == 'roles' || $elementActive == 'employees' || $elementActive == 'volunteer' ? 'show' : '' }}" id="usermgmt">
+                        <div class="collapse {{ $elementActive == 'user' || $elementActive == 'roles' || $elementActive == 'customer' || $elementActive == 'volunteer' ? 'show' : '' }}" id="usermgmt">
                             <ul class="nav nav-collapse">
                                 @if(Auth::user()->can('role-list') || Auth::user()->role == 1)
                                     <li class="{{ $elementActive == 'roles' ? 'active' : '' }}">
@@ -73,10 +75,10 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if(Auth::user()->can('employee-list') || Auth::user()->role == 1)
-                                    <li class="{{ $elementActive == 'employees' ? 'active' : '' }}">
-                                        <a href="{{route('employees')}}">
-                                            <span class="sub-item">Employee</span>
+                                @if(Auth::user()->can('customer-list') || Auth::user()->role == 1)
+                                    <li class="{{ $elementActive == 'customer' ? 'active' : '' }}">
+                                        <a href="{{route('customers')}}">
+                                            <span class="sub-item">Customer</span>
                                         </a>
                                     </li>
                                 @endif
