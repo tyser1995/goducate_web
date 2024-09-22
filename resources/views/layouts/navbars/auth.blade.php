@@ -100,7 +100,7 @@
                         <p>Settings</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ $elementActive == 'aboutus' || $elementActive == 'activities' || $elementActive == 'booknow' ? 'show' : '' }}" id="sitemgmt">
+                    <div class="collapse {{ $elementActive == 'aboutus' || $elementActive == 'activities' || $elementActive == 'booknow' || $elementActive == 'announcement' ? 'show' : '' }}" id="sitemgmt">
                         <ul class="nav nav-collapse">
                             @if(Auth::user()->can('aboutus-list') || Auth::user()->role == 1)
                                 <li class="{{ $elementActive == 'aboutus' ? 'active' : '' }}">
@@ -109,6 +109,11 @@
                                     </a>
                                 </li>
                             @endif
+                            <li class="{{ $elementActive == 'announcement' ? 'active' : '' }}">
+                                <a href="{{route('announcements')}}">
+                                    <span class="sub-item">Announcement</span>
+                                </a>
+                            </li>
                             @if(Auth::user()->can('activity-list') || Auth::user()->role == 1)
                                 <li class="{{ $elementActive == 'activities' ? 'active' : '' }}">
                                     <a href="{{route('activities')}}">

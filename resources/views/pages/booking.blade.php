@@ -116,15 +116,24 @@
             </div>
             <div class="row">
               <div class="col-12 overnight_stay d-none">
-                <div class="form-group">
+                <div class="form-group" id="room-container">
                   <label for="children">Room Type:</label>
-                  <select name="room_type" id="room_type" class="room_type form-control">
-                    <option selected value="">Select option</option>
-                    @foreach (App\Models\BookingOvernightStayModel::ROOM_TYPE as $key => $type)
-                      <option value="{{$key}}">{{$type}}</option>
-                    @endforeach
-                  </select>
+                  <div class="input-group date">
+                      <select name="room_type" id="room_type" class="class_room_type form-control">
+                          <option selected value="">Select option</option>
+                          @foreach (App\Models\BookingOvernightStayModel::ROOM_TYPE as $key => $type)
+                              <option value="{{$key}}">{{$type}}</option>
+                          @endforeach
+                      </select>
+                      <div class="input-group-append">
+                          <button type="button" class="input-group-text btn btn-sm btn-info btn-add">
+                              <i class="fas fa-plus"></i>
+                          </button>
+                      </div>
+                  </div>
                 </div>
+              </div>
+              <div class="col-12 overnight_stay d-none">
                 <div class="form-group">
                   <label for="children">Date:</label>
                   <input type="text" class="reservationtime form-control float-right" id="reservationtimeOS">
@@ -200,7 +209,7 @@
             <input type="hidden" id="eventDate" name="date">
             <hr />
             <div style="display: flex; align-items:center" class="mt-2">
-              <button type="submit" class="mr-2 btn btn-primary">Save</button>
+              <button type="submit" class="mr-2 btn btn-primary btnSubmit">Save</button>
               <span class="errMsg text-danger d-none">All fields are required</span>
             </div>
           </form>
@@ -296,6 +305,7 @@
     loadCalendar();
 
     function loadCalendar() {
+        var originalStartDate, originalEndDate;
         document.addEventListener('DOMContentLoaded', function() {
           var calendarEl = document.getElementById('calendar');
           var today = new Date().toISOString().split('T')[0];
@@ -369,24 +379,41 @@
                               // }
                               // return false;
                           }
+                      }).on('show.daterangepicker', function(ev, picker) {
+                          // When the date picker opens, store the currently selected start and end dates
+                          originalStartDate = picker.startDate.clone();  // Clone to avoid reference issues
+                          originalEndDate = picker.endDate.clone();
                       }).on('apply.daterangepicker', function(ev, picker) {
                           var startDate = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
                           var endDate = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
                         
+                          var overlapFound = false; 
                           for (var i = 0; i < existingBookings.length; i++) {
                               var bookingStart = moment(existingBookings[i].start);
                               var bookingEnd = moment(existingBookings[i].end);
-                              if (date.isBetween(bookingStart, bookingEnd, null, '[)')) {
-                                  return true;  // Disable the date and time if it overlaps
+
+                              if (picker.startDate.isBefore(bookingEnd) && picker.endDate.isAfter(bookingStart)) {
+                                  alert("Selected dates overlap with an existing booking. Please choose another date range.");
+                                  
+                                  picker.setStartDate(originalStartDate);
+                                  picker.setEndDate(originalEndDate);
+
+                                  $('.btnSubmit').attr('disabled', 'disabled');  // Disable submit button
+                                  overlapFound = true; 
                               }
                           }
-                          // Set hidden input values
-                          $('#checkin_date').val(startDate);
-                          $('#checkout_date').val(endDate);
-                          $('#checkin_date_dt').val(startDate);
-                          $('#checkout_date_dt').val(endDate);
-                          $('#checkin_date_pr').val(startDate);
-                          $('#checkout_date_pr').val(endDate);
+
+                          if (!overlapFound) {
+                              $('.btnSubmit').removeAttr('disabled');
+                              
+                              // Set hidden input values
+                              $('#checkin_date').val(startDate);
+                              $('#checkout_date').val(endDate);
+                              $('#checkin_date_dt').val(startDate);
+                              $('#checkout_date_dt').val(endDate);
+                              $('#checkin_date_pr').val(startDate);
+                              $('#checkout_date_pr').val(endDate);
+                          }
                       });
 
                       var formattedDate = moment(info.dateStr).format('YYYY-MM-DD HH:mm:ss');
@@ -438,14 +465,21 @@
               }
           });
 
+          var roomTypes = [];
+          $('.class_room_type').each(function(){
+              roomTypes.push($(this).val());
+          });
+
+
+
           $.ajax({
               url: "{{ route('bookings.overnight_stay') }}",
               type: "POST",
               data: {
-                'email'           :$('#email').val(),
-                'room_type'       :$('#room_type').val(),
-                'checkin_date'    :$('#checkin_date').val(),
-                'checkout_date'    :$('#checkout_date').val()
+                'email'           : $('#email').val(),
+                'room_type'      : roomTypes,
+                'checkin_date'    : $('#checkin_date').val(),
+                'checkout_date'   : $('#checkout_date').val()
               },
               success: function(response) {
                   $('#eventModal').modal('hide');
@@ -571,6 +605,31 @@
           $('.no_of_cottages').addClass('d-none');
           $('#no_of_cottages').removeAttr('required');
         }
+    });
+
+    $('body').on('click', '.btn-add', function () {
+        var roomTypeHtml = `
+            <div class="input-group date mt-2">
+                <select name="room_type" class="class_room_type form-control">
+                    <option selected value="">Select option</option>
+                    @foreach (App\Models\BookingOvernightStayModel::ROOM_TYPE as $key => $type)
+                        <option value="{{$key}}">{{$type}}</option>
+                    @endforeach
+                </select>
+                <div class="input-group-append">
+                    <button type="button" class="input-group-text btn btn-sm btn-danger btn-remove">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>`;
+
+        // Append the new room dropdown to the container
+        $('#room-container').append(roomTypeHtml);
+    });
+
+    // Function to remove a room dropdown
+    $('body').on('click', '.btn-remove', function () {
+        $(this).closest('.input-group').remove();  // Remove the closest room type input group
     });
     
   </script>

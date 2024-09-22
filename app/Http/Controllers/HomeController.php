@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\ActivityHeader;
 use App\Models\ActivityList;
+use App\Models\AnnouncementModel;
 use Vinkla\Hashids\Facades\Hashids;
 
 class HomeController extends Controller
@@ -27,7 +28,8 @@ class HomeController extends Controller
 
         return view('pages.home',[
             'headers' => ActivityHeader::getActivityHeader(),
-            'lists' => ActivityList::getActivityList()
+            'lists' => ActivityList::getActivityList(),
+            'announcements' => AnnouncementModel::getAnnouncement()
         ]);
     }
 

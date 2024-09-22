@@ -8,172 +8,235 @@
 </div>
 
 <div class="page-inner mt--5">
-    <div class="row mt--2">
-        <div class="col-md-12">
-            <div class="card full-height">
-                <div class="card-body">
-                    <div class="card-title">Overall statistics</div>
-                    <div class="card-category">Daily information about statistics in system</div>
-                    <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
-                        <div class="px-2 pb-2 pb-md-0 text-center">
-                            <div id="circles-1"></div>
-                            <h6 class="fw-bold mt-3 mb-0">
-                                <i class="fas fa-angry mr-2" style="color: red;"></i>Angry
-                            </h6>
+    @if (Auth::user()->role == 4)
+        <div class="row mt--2">
+            <div class="col-12">
+                <div class="card full-height">
+                    <div class="card-header">
+                        <div class="card-head-row">
+                            <div class="card-title">Booked List</div>
                         </div>
-                        <div class="px-2 pb-2 pb-md-0 text-center">
-                            <div id="circles-2"></div>
-                            <h6 class="fw-bold mt-3 mb-0"> <i class="fas fa-sad-tear mr-2" style="color: orange;"></i>
-                                Sad</h6>
-                        </div>
-                        <div class="px-2 pb-2 pb-md-0 text-center">
-                            <div id="circles-3"></div>
-                            <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-meh mr-2" style="color: gray;"></i>Neutral</h6>
-                        </div>
-                        <div class="px-2 pb-2 pb-md-0 text-center">
-                            <div id="circles-4"></div>
-                            <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-smile mr-2" style="color: green;"></i>Smile</h6>
-                        </div>
-                        <div class="px-2 pb-2 pb-md-0 text-center">
-                            <div id="circles-5"></div>
-                            <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-grin-stars mr-2" style="color: gold;"></i>Happy</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table table-responsive-sm">
+                            <table id="tblUser" class="table">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th  class="d-none" scope="col">{{ __('#') }}</th>
+                                        <th scope="col">{{ __('Booking Type') }}</th>
+                                        <th scope="col">{{ __('# of Adults') }}</th>
+                                        <th scope="col">{{ __('# of Children') }}</th>
+                                        <th scope="col">{{ __('Creation Date') }}</th>
+                                        <th scope="col">{{ __('Booking Status') }}</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if ($bookings->count())
+                                    @foreach ($bookings as $booking)
+                                    <tr>
+                                        <td class="d-none">{{ $booking->id }}</td>
+                                        <td>{{ $booking->boooking_status }}</td>
+                                        <td>{{ $booking->no_of_adults }}</td>
+                                        <td>{{ $booking->no_of_children }}</td>
+                                        <td>{{ $booking->created_at->format('M d, Y h:i a') }}</td>
+                                        <td> 
+                                            @if ($booking->status == "cancel")
+                                                <span class="badge badge-danger">
+                                                    Cancel booking
+                                                </span>
+                                            @elseif ($booking->status == "booked")
+                                                <span class="badge badge-info">
+                                                    Booked
+                                                </span>
+                                            @else
+                                                <span class="badge badge-success">
+                                                    Approved
+                                                </span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    @else
+                                    <tr style=" text-align: center;font-size: large;vertical-align: middle;">
+                                        <td colspan="6">{{ __('No Records found.') }}</td>
+                                    </tr>
+                                    @endif
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        {{-- <div class="col-md-6">
-            <div class="card full-height">
-                <div class="card-body">
-                    <div class="card-title">Group statistics</div>
-                    <div class="card-category">Group information (Family, Organization, Compnay, Church, Others) about statistics in system</div>
-                    <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
-                        <div class="px-2 pb-2 pb-md-0 text-center">
-                            <div id="circles-1"></div>
-                            <h6 class="fw-bold mt-3 mb-0">New Users</h6>
-                        </div>
-                        <div class="px-2 pb-2 pb-md-0 text-center">
-                            <div id="circles-2"></div>
-                            <h6 class="fw-bold mt-3 mb-0">Sales</h6>
-                        </div>
-                        <div class="px-2 pb-2 pb-md-0 text-center">
-                            <div id="circles-3"></div>
-                            <h6 class="fw-bold mt-3 mb-0">Subscribers</h6>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        <div class="col-md-6 d-none">
-            <div class="card full-height">
-                <div class="card-body">
-                    <div class="card-title">Total income & spend statistics</div>
-                    <div class="row py-3">
-                        <div class="col-md-4 d-flex flex-column justify-content-around">
-                            <div>
-                                <h6 class="fw-bold text-uppercase text-success op-8">Total Income</h6>
-                                <h3 class="fw-bold">$9.782</h3>
+    @else
+        <div class="row mt--2">
+            <div class="col-md-12">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="card-title">Overall statistics</div>
+                        <div class="card-category">Daily information about statistics in system</div>
+                        <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <div id="circles-1"></div>
+                                <h6 class="fw-bold mt-3 mb-0">
+                                    <i class="fas fa-angry mr-2" style="color: red;"></i>Angry
+                                </h6>
                             </div>
-                            <div>
-                                <h6 class="fw-bold text-uppercase text-danger op-8">Total Spend</h6>
-                                <h3 class="fw-bold">$1,248</h3>
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <div id="circles-2"></div>
+                                <h6 class="fw-bold mt-3 mb-0"> <i class="fas fa-sad-tear mr-2" style="color: orange;"></i>
+                                    Sad</h6>
+                            </div>
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <div id="circles-3"></div>
+                                <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-meh mr-2" style="color: gray;"></i>Neutral</h6>
+                            </div>
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <div id="circles-4"></div>
+                                <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-smile mr-2" style="color: green;"></i>Smile</h6>
+                            </div>
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <div id="circles-5"></div>
+                                <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-grin-stars mr-2" style="color: gold;"></i>Happy</h6>
                             </div>
                         </div>
-                        <div class="col-md-8">
-                            <div id="chart-container">
-                                <canvas id="totalIncomeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            {{-- <div class="col-md-6">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="card-title">Group statistics</div>
+                        <div class="card-category">Group information (Family, Organization, Compnay, Church, Others) about statistics in system</div>
+                        <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <div id="circles-1"></div>
+                                <h6 class="fw-bold mt-3 mb-0">New Users</h6>
+                            </div>
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <div id="circles-2"></div>
+                                <h6 class="fw-bold mt-3 mb-0">Sales</h6>
+                            </div>
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <div id="circles-3"></div>
+                                <h6 class="fw-bold mt-3 mb-0">Subscribers</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+            <div class="col-md-6 d-none">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="card-title">Total income & spend statistics</div>
+                        <div class="row py-3">
+                            <div class="col-md-4 d-flex flex-column justify-content-around">
+                                <div>
+                                    <h6 class="fw-bold text-uppercase text-success op-8">Total Income</h6>
+                                    <h3 class="fw-bold">$9.782</h3>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-uppercase text-danger op-8">Total Spend</h6>
+                                    <h3 class="fw-bold">$1,248</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div id="chart-container">
+                                    <canvas id="totalIncomeChart"></canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row  d-none">
-        <div class="col-md-4">
-            <div class="card card-primary bg-primary-gradient">
-                <div class="card-body">
-                    <h4 class="mt-3 b-b1 pb-2 mb-4 fw-bold">Active user right now</h4>
-                    <h1 class="mb-4 fw-bold">17</h1>
-                    <h4 class="mt-3 b-b1 pb-2 mb-5 fw-bold">Page view per minutes</h4>
-                    <div id="activeUsersChart"></div>
-                    <h4 class="mt-5 pb-3 mb-0 fw-bold">Top active pages</h4>
-                    <ul class="list-unstyled">
-                        <li class="d-flex justify-content-between pb-1 pt-1"><small>/product/readypro/index.html</small> <span>7</span></li>
-                        <li class="d-flex justify-content-between pb-1 pt-1"><small>/product/atlantis/demo.html</small> <span>10</span></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <div class="card-title">Daily Sales</div>
-                    <div class="card-category">March 25 - April 02</div>
-                </div>
-                <div class="card-body pb-0">
-                    <div class="mb-4 mt-2">
-                        <h1>$4,578.58</h1>
-                    </div>
-                    <div class="pull-in">
-                        <canvas id="dailySalesChart"></canvas>
+        <div class="row  d-none">
+            <div class="col-md-4">
+                <div class="card card-primary bg-primary-gradient">
+                    <div class="card-body">
+                        <h4 class="mt-3 b-b1 pb-2 mb-4 fw-bold">Active user right now</h4>
+                        <h1 class="mb-4 fw-bold">17</h1>
+                        <h4 class="mt-3 b-b1 pb-2 mb-5 fw-bold">Page view per minutes</h4>
+                        <div id="activeUsersChart"></div>
+                        <h4 class="mt-5 pb-3 mb-0 fw-bold">Top active pages</h4>
+                        <ul class="list-unstyled">
+                            <li class="d-flex justify-content-between pb-1 pt-1"><small>/product/readypro/index.html</small> <span>7</span></li>
+                            <li class="d-flex justify-content-between pb-1 pt-1"><small>/product/atlantis/demo.html</small> <span>10</span></li>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body pb-0">
-                    <div class="h1 fw-bold float-right text-warning">+7%</div>
-                    <h2 class="mb-2">213</h2>
-                    <p class="text-muted">Transactions</p>
-                    <div class="pull-in sparkline-fix">
-                        <div id="lineChart"></div>
+            <div class="col-md-4">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <div class="card-title">Daily Sales</div>
+                        <div class="card-category">March 25 - April 02</div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card full-height">
-                <div class="card-header">
-                    <div class="card-title">User Feedback Activity</div>
-                </div>
-                <div class="card-body">
-                    <ol class="activity-feed" id="feedback-activity-feed">
-                        
-                    </ol>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card full-height">
-                <div class="card-header">
-                    <div class="card-head-row">
-                        <div class="card-title">Booking Tickets</div>
-                        <div class="card-tools">
-                            <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab">Today</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="pills-week" data-toggle="pill" href="#pills-week" role="tab">Week</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="pills-month" data-toggle="pill" href="#pills-month" role="tab">Month</a>
-                                </li>
-                            </ul>
+                    <div class="card-body pb-0">
+                        <div class="mb-4 mt-2">
+                            <h1>$4,578.58</h1>
+                        </div>
+                        <div class="pull-in">
+                            <canvas id="dailySalesChart"></canvas>
                         </div>
                     </div>
                 </div>
-                <div class="card-body" id="booking-list">
-                    <!-- Booking tickets will be injected here dynamically -->
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body pb-0">
+                        <div class="h1 fw-bold float-right text-warning">+7%</div>
+                        <h2 class="mb-2">213</h2>
+                        <p class="text-muted">Transactions</p>
+                        <div class="pull-in sparkline-fix">
+                            <div id="lineChart"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>        
-    </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card full-height">
+                    <div class="card-header">
+                        <div class="card-title">User Feedback Activity</div>
+                    </div>
+                    <div class="card-body">
+                        <ol class="activity-feed" id="feedback-activity-feed">
+                            
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card full-height">
+                    <div class="card-header">
+                        <div class="card-head-row">
+                            <div class="card-title">Booking Tickets</div>
+                            <div class="card-tools">
+                                <ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab">Today</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="pills-week" data-toggle="pill" href="#pills-week" role="tab">Week</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="pills-month" data-toggle="pill" href="#pills-month" role="tab">Month</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" id="booking-list">
+                        <!-- Booking tickets will be injected here dynamically -->
+                    </div>
+                </div>
+            </div>        
+        </div>
+    @endif
 </div>
 @endsection
 

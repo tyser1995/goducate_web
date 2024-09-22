@@ -23,7 +23,8 @@ class BookingModel extends Model
         'contact_no',
         'no_of_adults',
         'no_of_children',
-        'boooking_status'
+        'boooking_status',
+        'status'
     ];
 
     // protected $attributes = [
@@ -49,7 +50,8 @@ class BookingModel extends Model
             'contact_no' => $data['contact_no'],
             'no_of_adults' => $data['no_of_adults'],
             'no_of_children' => $data['no_of_children'],
-            'boooking_status' => $data['boooking_status']
+            'boooking_status' => $data['boooking_status'],
+            'status' => 'booked'
         ]);
 
         return $payload;
@@ -63,6 +65,7 @@ class BookingModel extends Model
                 bookings.email,
                 bookings.address,
                 bookings.contact_no,
+                bookings.status,
                 CASE 
                     WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkin_date 
                     WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkin_date 
@@ -165,6 +168,13 @@ class BookingModel extends Model
         return self::findOrFail($id);
     }
 
+    public static function getBookingByEmail($email)
+    {
+        return self::where('email','=',$email)
+        ->orderBy('created_at','DESC')
+        ->get();
+    }
+
     public static function updateBooking($id, $data)
     {
         $payload = self::findOrFail($id);
@@ -179,6 +189,17 @@ class BookingModel extends Model
             'no_of_adults' => $data['no_of_adults'],
             'no_of_children' => $data['no_of_children'],
             'boooking_status' => $data['boooking_status']
+        ]);
+
+        return $payload;
+    }
+
+    public static function updateBookingStatus($id, $data)
+    {
+        $payload = self::findOrFail($id);
+        
+        $payload->update([
+            'status' => $data['status']
         ]);
 
         return $payload;

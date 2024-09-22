@@ -22,15 +22,17 @@
                     </div>
                     @include('notification.index')
                     <div class="card-body">
-                        <div class="table-responsive-sm">
+                        <div class="table table-responsive-sm">
                             <table id="tblUser" class="table">
                                 <thead class="thead-light">
                                     <tr>
+                                        <th  class="d-none" scope="col">{{ __('#') }}</th>
                                         <th scope="col">{{ __('Name') }}</th>
                                         <th scope="col">{{ __('Email') }}</th>
                                         <th scope="col">{{ __('Address') }}</th>
                                         <th scope="col">{{ __('Contact no') }}</th>
                                         <th scope="col">{{ __('Creation Date') }}</th>
+                                        <th scope="col">{{ __('Booking Status') }}</th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
@@ -38,6 +40,7 @@
                                     @if ($bookings->count())
                                     @foreach ($bookings as $booking)
                                     <tr>
+                                        <td class="d-none">{{ $booking->id }}</td>
                                         <td>{{ $booking->name }}</td>
                                         <td>
                                             <a href="mailto:{{ $booking->email }}">{{ $booking->email }}
@@ -46,8 +49,26 @@
                                         <td>{{ $booking->address }}</td>
                                         <td>{{ $booking->contact_no }}</td>
                                         <td>{{ $booking->created_at->format('M d, Y h:i a') }}</td>
-                                        <td class="text-right">
-                                            <a href="{{ route('booking.edit', $booking) }}" class="d-none {{Auth::user()->can('booknow-edit') ? 'btn btn-info btn-sm ' : 'btn btn-info btn-sm d-none'}}"><i class="fas fa-pen"></i></a>
+                                        <td> 
+                                            @if ($booking->status == "cancel")
+                                                <span class="badge badge-danger">
+                                                    Cancel booking
+                                                </span>
+                                            @elseif ($booking->status == "booked")
+                                                <span class="badge badge-info">
+                                                    Booked
+                                                </span>
+                                            @else
+                                                <span class="badge badge-success">
+                                                    Approved
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td style="display: flex;
+                                        align-items: center;">
+                                            @if ($booking->status == "booked")
+                                                <a href="{{ route('booking.edit', Hashids::encode($booking->id)) }}" class="mr-2 btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                            @endif
                                             <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $booking->id }})"><i class="fas fa-trash"></i></button>
                                             <form id="delete-form-{{ $booking->id }}" action="{{ route('booking.destroy', $booking->id) }}" method="POST" style="display: none;">
                                                 @csrf

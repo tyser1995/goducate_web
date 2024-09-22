@@ -229,8 +229,8 @@
                                 <a class="dropdown-item" href="#">My Balance</a>
                                 <a class="dropdown-item" href="#">Inbox</a>
                                 <div class="dropdown-divider"></div> --}}
-                                <a class="dropdown-item" href="{{url('user/'.Auth::user()->id.'/edit')}}">Account Setting</a>
-                                <div class="dropdown-divider"></div>
+                                {{-- <a class="dropdown-item" href="{{url('user/'.Auth::user()->id.'/edit')}}">Account Setting</a>
+                                <div class="dropdown-divider"></div> --}}
                                 <form class="dropdown-item" action="{{ route('logout') }}" id="formLogOut" method="POST"
                                     style="display: none;">
                                     @csrf

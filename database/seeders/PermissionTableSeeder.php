@@ -55,6 +55,10 @@ class PermissionTableSeeder extends Seeder
             'customer-create',
             'customer-edit',
             'customer-delete',
+            'announcement-list',
+            'announcement-create',
+            'announcement-edit',
+            'announcement-delete',
         ];
 
         // foreach ($permissions as $permission) {

@@ -8,6 +8,7 @@ use App\Models\BookingDayTourModel;
 use App\Models\BookingPlaceReservationModel;
 use App\Models\CustomerModel;
 use Illuminate\Http\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 class BookingController extends Controller
 {
@@ -66,7 +67,13 @@ class BookingController extends Controller
     public function edit($id)
     {
         //
-       
+        $booking = BookingModel::getBookingById(Hashids::decode($id)[0]);
+        return view('pages.booking.edit',[
+            'bookings' => BookingModel::getBookingById(Hashids::decode($id)[0]),
+            'overnight_stays' => BookingOvernightStayModel::getOvernightStayByEmail($booking->email),
+            'day_tours' => BookingDayTourModel::getDayTourByEmail($booking->email),
+            'place_reservations' => BookingPlaceReservationModel::getPlaceReservationByEmail($booking->email)
+        ]);  
     }
 
     /**
@@ -78,7 +85,14 @@ class BookingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $booking = BookingModel::getBookingById($id);
+        BookingModel::updateBookingStatus($id,$request->all());
+
+        BookingOvernightStayModel::updateOvernightStayStatus($booking->email,$request->all());
+        BookingDayTourModel::updateDayTourStatus($booking->email,$request->all());
+        BookingPlaceReservationModel::updatePlaceReservationStatus($booking->email,$request->all());
+
+        return redirect()->route('booking.index')->withStatus(__('Updated successfully'));
     }
 
     /**

@@ -55,7 +55,8 @@
                                         <td>{{ $customer->address}}</td>
                                         <td>{{ $customer->contact_no}}</td>
                                         <td>{{ $customer->created_at->format('M d, Y h:i a') }}</td>
-                                        <td class="text-right">
+                                        <td class="text-right" style="display: flex;
+                                        align-items: center;">
                                             @if (Auth::user()->can('customer-edit'))
                                                 <a href="{{ route('customer.edit', Hashids::encode($customer->id)) }}" class="btn btn-info btn-sm"><i class="fas fa-pen"></i></a>
                                             @endif

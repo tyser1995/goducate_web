@@ -249,6 +249,35 @@
     </div>
   </section>
 
+  <section class="mb-5">
+    <div class="container content">
+        @if (count($announcements) > 0)
+        <h2>Announcements</h2>
+        <div class="activities">
+          @foreach ($announcements as $announcement)
+            @if ($announcement->attachment)
+              <img src="{{ asset('images/announcement/' . $announcement->attachment) }}" class="mb-2" style="width: 100px; height:100px" alt="{{ $announcement->title }}" />
+              <div> 
+                <?php
+                echo html_entity_decode($announcement['description']);
+                ?>
+              </div>
+            @else
+              <div> 
+                <?php
+                echo html_entity_decode($announcement['description']);
+                ?>
+              </div>
+            @endif
+           
+          @endforeach
+        </div>
+      @else
+        <p>No Announcement.</p>
+      @endif
+    </div>
+  </section>
+
   <script>
      const itemsPerPage = 3;
       let currentPage = 1;

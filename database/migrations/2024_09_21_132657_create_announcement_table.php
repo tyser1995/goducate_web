@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAnnouncementsTable extends Migration
+class CreateAnnouncementTable extends Migration
 {
     /**
      * Run the migrations.
@@ -19,7 +19,8 @@ class CreateAnnouncementsTable extends Migration
             $table->string('who');
             $table->string('what');
             $table->string('where');
-            $table->datetime('when');
+            $table->string('when');
+            $table->longText('description')->nullable();
             $table->string('attachment')->nullable();
             $table->softDeletes();
             $table->timestamps();
