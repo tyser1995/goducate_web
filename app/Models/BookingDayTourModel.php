@@ -21,7 +21,8 @@ class BookingDayTourModel extends Model
         'group_type',
         'no_of_persons',
         'checkin_date',
-        'checkout_date'
+        'checkout_date',
+        'status'
     ];
 
     public const TOUR_TYPE = [
@@ -47,7 +48,8 @@ class BookingDayTourModel extends Model
             'group_type' => $data['group_type'] ?? 0,
             'no_of_persons' => $data['no_of_persons'] ?? 0,
             'checkin_date' => $data['checkin_date'],
-            'checkout_date' => $data['checkout_date']
+            'checkout_date' => $data['checkout_date'],
+            'status' => 'booked'
         ]);
 
         return $payload;
@@ -61,6 +63,19 @@ class BookingDayTourModel extends Model
     public static function getDayTourById($id)
     {
         return self::findOrFail($id);
+    }
+
+    public static function getDayTourByEmail($email,$IsBook=true)
+    {
+        if($IsBook){
+            return self::where('email','=',$email)
+            ->where('status','=','booked')
+            ->get();
+        }else{
+            return self::where('email','=',$email)
+            ->get();
+        }
+        
     }
 
     public static function updateDayTour($id, $data)
@@ -78,6 +93,23 @@ class BookingDayTourModel extends Model
             'checkin_date' => $data['checkin_date'],
             'checkout_date' => $data['checkout_date']
         ]);
+
+        return $payload;
+    }
+
+    public static function updateDayTourStatus($email, $data)
+    {
+        $payload = self::where('email', '=', $email)
+        ->where('status','booked')
+        ->get();
+    
+        if ($payload->isNotEmpty()) {
+            foreach ($payload as $record) {
+                $record->update([
+                    'status' => $data['status']
+                ]);
+            }
+        }
 
         return $payload;
     }

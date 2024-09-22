@@ -10,10 +10,12 @@ use App\Models\PushSubscription;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Announcement;
+use App\Models\BookingModel;
 
 use App\Events\MyEvent;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -38,23 +40,24 @@ class DashboardController extends Controller
     {
 
         $totals = [
-        'usercount' => User::count()
+            'usercount' => User::count()
         ];
 
 
-        $announcement = Announcement::where('when','<=',Carbon::now()->format('Y-m-d H:m'))
-        ->get();
+        // $announcement = Announcement::where('when','<=',Carbon::now()->format('Y-m-d H:m'))
+        // ->get();
 
-        foreach($announcement as $announcements){
-            $announcement_ = Announcement::find($announcements->id);
-            $announcement_->delete();
-        }
+        // foreach($announcement as $announcements){
+        //     $announcement_ = Announcement::find($announcements->id);
+        //     $announcement_->delete();
+        // }
 
         if (view()->exists("pages.dashboard")) {
             return view("pages.dashboard", [
-                'totals' => $totals,
+                'totals'        => $totals,
                 'subscriptions' => PushSubscription::all(),
-                'announcement' => Announcement::orderBy('created_at','DESC')->get()
+                'bookings'       => BookingModel::getBookingByEmail(Auth::user()->email)
+                // 'announcement' => Announcement::orderBy('created_at','DESC')->get()
             ]);
         }
 

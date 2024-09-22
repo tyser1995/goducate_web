@@ -20,7 +20,8 @@ class BookingPlaceReservationModel extends Model
         'no_of_cottages',
         'no_of_persons',
         'checkin_date',
-        'checkout_date'
+        'checkout_date',
+        'status'
     ];
 
     public const ROOM_TYPE = [
@@ -41,7 +42,8 @@ class BookingPlaceReservationModel extends Model
             'no_of_cottages' => $data['no_of_cottages'] ?? 0,
             'no_of_persons' => $data['no_of_persons'] ?? 0,
             'checkin_date' => $data['checkin_date'],
-            'checkout_date' => $data['checkout_date']
+            'checkout_date' => $data['checkout_date'],
+            'status' => 'booked'
         ]);
 
         return $payload;
@@ -55,6 +57,19 @@ class BookingPlaceReservationModel extends Model
     public static function getPlaceReservationById($id)
     {
         return self::findOrFail($id);
+    }
+
+    public static function getPlaceReservationByEmail($email,$IsBook=true)
+    {
+        if($IsBook){
+            return self::where('email','=',$email)
+            ->where('status','=','booked')
+            ->get();
+        }else{
+            return self::where('email','=',$email)
+            ->get();
+        }
+        
     }
 
     public static function updatePlaceReservation($id, $data)
@@ -74,6 +89,24 @@ class BookingPlaceReservationModel extends Model
 
         return $payload;
     }
+
+    public static function updatePlaceReservationStatus($email, $data)
+    {
+        $payload = self::where('email', '=', $email)
+        ->where('status','booked')
+        ->get();
+    
+        if ($payload->isNotEmpty()) {
+            foreach ($payload as $record) {
+                $record->update([
+                    'status' => $data['status']
+                ]);
+            }
+        }
+
+        return $payload;
+    }
+    
 
     public static function deletePlaceReservation($id)
     {

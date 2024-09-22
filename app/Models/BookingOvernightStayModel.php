@@ -18,7 +18,8 @@ class BookingOvernightStayModel extends Model
         'email',
         'room_type',
         'checkin_date',
-        'checkout_date'
+        'checkout_date',
+        'status'
     ];
 
     public const ROOM_TYPE = [
@@ -31,14 +32,19 @@ class BookingOvernightStayModel extends Model
 
     public static function createOvernightStay($data)
     {
-        $payload = self::create([
-            'created_by_user_id' => $data['created_by_users_id'] ?? 0,
-            'customer_id' => $data['customer_id'] ?? 0,
-            'email' => $data['email'],
-            'room_type' => $data['room_type'],
-            'checkin_date' => $data['checkin_date'],
-            'checkout_date' => $data['checkout_date']
-        ]);
+        $roomTypes = is_array($data['room_type']) ? $data['room_type'] : [$data['room_type']];
+        $payload = [];
+        foreach ($roomTypes as $roomType) {
+            $payload[] = self::create([
+                'created_by_user_id' => $data['created_by_users_id'] ?? 0,
+                'customer_id'        => $data['customer_id'] ?? 0,
+                'email'              => $data['email'],
+                'room_type'          => $roomType,
+                'checkin_date'       => $data['checkin_date'],
+                'checkout_date'      => $data['checkout_date'],
+                'status'             => 'booked'
+            ]);
+        }
 
         return $payload;
     }
@@ -53,6 +59,19 @@ class BookingOvernightStayModel extends Model
         return self::findOrFail($id);
     }
 
+    public static function getOvernightStayByEmail($email,$IsBook=true)
+    {
+        if($IsBook){
+            return self::where('email','=',$email)
+            ->where('status','=','booked')
+            ->get();
+        }else{
+            return self::where('email','=',$email)
+            ->get();
+        }
+        
+    }
+
     public static function updateOvernightStay($id, $data)
     {
         $payload = self::findOrFail($id);
@@ -65,6 +84,23 @@ class BookingOvernightStayModel extends Model
             'checkin_date' => $data['checkin_date'],
             'checkout_date' => $data['checkout_date']
         ]);
+
+        return $payload;
+    }
+
+    public static function updateOvernightStayStatus($email, $data)
+    {
+        $payload = self::where('email', '=', $email)
+        ->where('status','booked')
+        ->get();
+    
+        if ($payload->isNotEmpty()) {
+            foreach ($payload as $record) {
+                $record->update([
+                    'status' => $data['status']
+                ]);
+            }
+        }
 
         return $payload;
     }

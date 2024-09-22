@@ -30,6 +30,9 @@
 	<link rel="stylesheet" href="{{asset('atlantis')}}/css/atlantis.min.css">
     <link rel="stylesheet" href="{{asset('atlantis')}}/css/global.css">
     <link rel="stylesheet" href="{{asset('atlantis')}}/plugins/summernote/summernote-bs4.min.css">
+     <!-- daterange picker -->
+  	<link rel="stylesheet" href="{{asset('atlantis')}}/plugins/daterangepicker/daterangepicker.css">
+    
     <style>
         body {
             background-image: url('images/A14.jpg');
@@ -104,12 +107,16 @@
     <!-- Summernote -->
     <script src="{{ asset('atlantis') }}/plugins/summernote/summernote-bs4.min.js"></script>
     
+    <!-- date-range-picker -->
+	<script src="{{ asset('atlantis') }}/plugins/daterangepicker/daterangepicker.js"></script>
+    
     <!-- InputMask -->
     <script src="{{ asset('atlantis') }}/plugins/moment/moment.min.js"></script>
     <script src="{{ asset('atlantis') }}/plugins/inputmask/jquery.inputmask.min.js"></script>
 
     <!-- Atlantis JS -->
 	<script src="{{ asset('atlantis') }}/js/atlantis.min.js"></script>
+	
 
     <script>
     var base_url = "{{ url('/') }}";
