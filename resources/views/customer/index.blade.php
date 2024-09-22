@@ -57,8 +57,14 @@
                                         <td>{{ $customer->created_at->format('M d, Y h:i a') }}</td>
                                         <td class="text-right" style="display: flex;
                                         align-items: center;">
+                                            {{-- <button type="button" data-id="{{Hashids::encode($customer->id)}}"
+                                            value="{{$customer->name}}"
+                                            class="btnGenerateQR btn btn-default btn-sm" ><i
+                                                class="fas fa-qrcode"></i>
+                                            </button> --}}
+                                            <a href="{{ route('customer.generate_qrcode', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-qrcode"></i></a>
                                             @if (Auth::user()->can('customer-edit'))
-                                                <a href="{{ route('customer.edit', Hashids::encode($customer->id)) }}" class="btn btn-info btn-sm"><i class="fas fa-pen"></i></a>
+                                                <a href="{{ route('customer.edit', Hashids::encode($customer->id)) }}" class="btn btn-info btn-sm mr-1"><i class="fas fa-pen"></i></a>
                                             @endif
                                             @if (Auth::user()->can('customer-delete'))
                                                 <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $customer->id }})"><i class="fas fa-trash"></i></button>
@@ -88,6 +94,48 @@
 
 @push('scripts')
 <script>
+    // $('.btnGenerateQR').click(function(){
+    //     let $id = $(this).data('id');
+    //     $.ajax({
+    //         url: `/customer.generate_qrcode/${$id}`,
+    //         method: 'GET',
+    //         headers: {
+    //             'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    //         },
+    //         success: function(response) {
+    //             if (response.success) {
+    //                 // If successful, display the QR code inside the SweetAlert modal
+    //                 Swal.fire({
+    //                     title: 'Your QR Code',
+    //                     // html: `<img src="data:image/png;base64,${response.qr_code}" alt="QR Code" style="max-width: 100%; height: auto;" />`,
+    //                     html: `<div style="max-width: 100%; height: auto;">${response.qr_code}</div>`,
+    //                     showCancelButton: true,
+    //                     confirmButtonText: 'Download QR Code',
+    //                     cancelButtonText: 'Close',
+    //                     confirmButtonColor: '#3085d6',
+    //                     cancelButtonColor: '#d33'
+    //                 }).then((result) => {
+    //                     if (result.isConfirmed) {
+    //                         // If the user clicks "Download", trigger the download of the QR code
+    //                         const link = document.createElement('a');
+    //                         link.href = `data:image/png;base64,${response.qr_code}`;
+    //                         link.download = `qrcode_${id}.png`;  // Set the filename
+    //                         link.click();  // Programmatically click the link to start the download
+    //                     }
+    //                 });
+    //             } else {
+    //                 // Handle failure to generate the QR code
+    //                 Swal.fire('Error', 'Unable to generate QR code.', 'error');
+    //             }
+    //         },
+    //         error: function(xhr, status, error) {
+    //             // Handle any AJAX errors
+    //             Swal.fire('Error', 'An unexpected error occurred.', 'error');
+    //             console.error('AJAX Error:', error);
+    //         }
+    //     });
+    // });
+    
     function confirmDelete(id) {
         Swal.fire({
             title: 'Are you sure?',

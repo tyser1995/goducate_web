@@ -72,6 +72,8 @@ The above copyright notice and this permission notice shall be included in all c
 	
      <!-- daterange picker -->
   	<link rel="stylesheet" href="{{asset('atlantis')}}/plugins/daterangepicker/daterangepicker.css">
+
+	<script src="{{ asset('js/html5-qrcode.min.js') }}"></script>
 </head>
 
 <x-head.tinymce-config />

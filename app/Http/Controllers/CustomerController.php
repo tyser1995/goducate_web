@@ -7,7 +7,12 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Crypt;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+
 
 class CustomerController extends Controller
 {
@@ -128,5 +133,35 @@ class CustomerController extends Controller
         //
         CustomerModel::deleteCustomer($id);
         return redirect()->route('customer.index')->withError(__('Deleted successfully'));
+    }
+
+    public function generateQrCode($id)
+    {
+        $user = CustomerModel::find(Hashids::decode($id)[0]);
+
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not found.']);
+        }
+
+        // Prepare the data for the QR code
+        // $data = json_encode([
+        //     'user_id' => Hashids::encode($user->id),
+        //     'email' => $user->email
+        // ]);
+        $encryptedData = Crypt::encryptString(json_encode([
+            'user_id' => Hashids::encode($user->id),
+            'email' => $user->email
+        ]));
+
+        // Generate the QR code as base64
+        // $qrCode = base64_encode(QrCode::format('png')->size(400)->generate($data));
+        $qrCode =QrCode::size(400)->generate($encryptedData);
+
+        // Send back the QR code as a response
+        // return response()->json(['success' => true, 'qr_code' => $qrCode.'.png']);
+        
+
+        return view('customer.qrcode', compact('qrCode'));
+        $fileName = 'qrcode_' . Hashids::encode($user->id) . '.png';
     }
 }

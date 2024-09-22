@@ -42,6 +42,7 @@
         }
     </style>
     <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+    <script src="{{ asset('js/html5-qrcode.min.js') }}"></script>
 </head>
 
 <x-head.tinymce-config />
