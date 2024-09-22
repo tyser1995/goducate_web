@@ -54,6 +54,11 @@ Route::post('bookings.place_reservation', ['as' => 'bookings.place_reservation',
 Route::get('/google/redirect', ['as' => 'google.redirect', 'uses' => 'App\Http\Controllers\Auth\LoginController@redirectToGoogle']);
 Route::get('/google/callback', ['as' => 'google.callback', 'uses' => 'App\Http\Controllers\Auth\LoginController@handleGoogleCallback']);
 
+//QR Code
+Route::get('qr.code', ['as' => 'qr.code', 'uses' => 'App\Http\Controllers\QRCodeController@generateQRCode']);
+Route::get('download-code', ['as' => 'download-code', 'uses' => 'App\Http\Controllers\QRCodeController@downloadQrCode']);
+Route::post('verify-code', ['as' => 'verify-code', 'uses' => 'App\Http\Controllers\QRCodeController@verifyQRCode']);
+
 Route::get('user/{id}/avatar', function ($id) {
     // Find the user
     $user = App\Models\User::find(1);
@@ -114,6 +119,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Customer
     Route::get('customers', ['as' => 'customers', 'uses' => 'App\Http\Controllers\CustomerController@index']);
+    Route::get('customer.generate_qrcode/{id}', ['as' => 'customer.generate_qrcode', 'uses' => 'App\Http\Controllers\CustomerController@generateQrCode']);
     Route::resource('customer', 'App\Http\Controllers\CustomerController');
 
 
