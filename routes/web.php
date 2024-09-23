@@ -124,6 +124,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('customer.payment.store', ['as' => 'customer.payment.store', 'uses' => 'App\Http\Controllers\CustomerController@addPayments']);
     Route::resource('customer', 'App\Http\Controllers\CustomerController');
 
+    //QR Code Generator
+    Route::get('qrcodes', ['as' => 'qrcodes', 'uses' => 'App\Http\Controllers\QRCodeController@index']);
+    Route::post('generate-code',['as' => 'generate-code', 'uses' => 'App\Http\Controllers\QRCodeController@_generateQRCode']);
+    Route::post('funds.update',['as' => 'funds.update', 'uses' => 'App\Http\Controllers\QRCodeController@updateFunds']);
+    Route::resource('qrcode', 'App\Http\Controllers\QRCodeController');
+
     //Survey
     Route::get('surveys', ['as' => 'surveys', 'uses' => 'App\Http\Controllers\SurveyController@index']);
     Route::get('surveys.list', ['as' => 'surveys.list', 'uses' => 'App\Http\Controllers\SurveyController@survey_data']);

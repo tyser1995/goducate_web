@@ -69,15 +69,6 @@
   <div class="overlay"></div>
   <!-- Header -->
   @include('pages.header')
-  {{-- <div class="container">
-    <div class="card mt-3">
-      <h1>User QR Code</h1>
-
-      <div>
-          {!! $qrCode !!}
-      </div>
-    </div>
-  </div> --}}
   <div class="container">
     <div class="card mt-2">
       <div id="reader"></div>
@@ -90,8 +81,7 @@
       function onScanSuccess(decodedText, decodedResult) {
           // Handle the scanned data
           console.log(`Code scanned = ${decodedText}`, decodedResult);
-
-          // Send the scanned data to the server for decryption and verification
+          console.log(decodedText);
           $.ajax({
               url: '/verify-code',
               type: 'POST',
@@ -102,25 +92,28 @@
               },
               success: function(data) {
                   if (data.success) {
-                      document.getElementById('result').innerHTML = "QR Code Verified! by customer " .data.customer;
+                      document.getElementById('result').innerHTML = "Successfully deducted";
                   } else {
                       document.getElementById('result').innerHTML = "Invalid QR Code!";
                   }
+
+                  setTimeout(() => {
+                    document.getElementById('result').innerHTML = "";
+                  }, 5000);
               },
               error: function(xhr, status, error) {
-                  console.error('Error:', error);
                   document.getElementById('result').innerHTML = "Error verifying QR Code.";
+
+                  setTimeout(() => {
+                    document.getElementById('result').innerHTML = "";
+                  }, 5000);
               }
           });
       }
 
-      setTimeout(() => {
-        document.getElementById('result').innerHTML = "";
-      }, 5000);
-
 
         function onScanFailure(error) {
-            console.warn(`QR Code scan failed. Reason: ${error}`);
+            //console.warn(`QR Code scan failed. Reason: ${error}`);
         }
 
         let html5QrcodeScanner = new Html5QrcodeScanner(

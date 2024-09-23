@@ -221,5 +221,6 @@
     "/js/tinymce/tinymce.d.ts": "/js/tinymce/tinymce.d.ts",
     "/js/tinymce/tinymce.js": "/js/tinymce/tinymce.js",
     "/js/tinymce/tinymce.min.js": "/js/tinymce/tinymce.min.js",
-    "/js/html5-qrcode.min.js": "/js/html5-qrcode.min.js"
+    "/js/html5-qrcode.min.js": "/js/html5-qrcode.min.js",
+    "/js/print.js": "/js/print.js"
 }
