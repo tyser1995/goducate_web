@@ -173,8 +173,6 @@ class CustomerController extends Controller
     }
 
     public function addPayments(Request $request){
-        return view('customer.index',[
-            'customers' => CustomerModel::getCustomer()
-        ]);
+        return redirect()->route('customer.index')->withStatus(__('Created successfully'));
     }
 }
