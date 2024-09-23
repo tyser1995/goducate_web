@@ -107,9 +107,27 @@ class AnnouncementController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        AnnouncementModel::updateAnnouncement($id,$request->all());
+        $input = $request->all();
+
+        if ($request->hasFile('attachment')) {
+            $image = $request->file('attachment');
+            
+            $image_name = time() . '_' . $image->getClientOriginalName();
+            
+            $destination_path = public_path('/images/announcement/');
+    
+            if (!File::exists($destination_path)) {
+                File::makeDirectory($destination_path, 0755, true);
+            }
+    
+            $image->move($destination_path, $image_name);
+            $input['attachment'] = $image_name;
+        }
+    
+        AnnouncementModel::updateAnnouncement($id, $input);
+    
         return redirect()->route('announcement.index')->withStatus(__('Successfully updated.'));
+       
     }
 
     /**
