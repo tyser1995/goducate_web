@@ -59,6 +59,10 @@ class PermissionTableSeeder extends Seeder
             'announcement-create',
             'announcement-edit',
             'announcement-delete',
+            'qrcode-list',
+            'qrcode-create',
+            'qrcode-edit',
+            'qrcode-delete',
         ];
 
         // foreach ($permissions as $permission) {

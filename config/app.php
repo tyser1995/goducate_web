@@ -180,7 +180,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\HelperServiceProvider::class,
         App\Providers\PublicPathServiceProvider::class,
-
+        // Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -236,7 +236,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Excel'=> \Maatwebsite\Excel\Facades\Excel::class,
         'LaravelPwa' => \Ladumor\LaravelPwa\LaravelPwa::class,
-
+        // 'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];
