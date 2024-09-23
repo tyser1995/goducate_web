@@ -80,7 +80,7 @@
   </div> --}}
   <div class="container">
     <div class="card mt-2">
-      <div id="reader" style="width:100%; height:350px"></div>
+      <div id="reader"></div>
       <div id="result"></div>
     </div>
   </div>
