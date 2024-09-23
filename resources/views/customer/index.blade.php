@@ -61,7 +61,9 @@
                                             value="{{$customer->name}}"
                                             class="btnGenerateQR btn btn-default btn-sm" ><i
                                                 class="fas fa-qrcode"></i>
-                                            </button> --}}
+                                            </button>
+                                             <a href="{{ route('customer.generate_qrcode', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-qrcode"></i></a> --}}
+                                            <a href="{{ route('customer.payment', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-money-check"></i></a>
                                             <a href="{{ route('customer.generate_qrcode', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-qrcode"></i></a>
                                             @if (Auth::user()->can('customer-edit'))
                                                 <a href="{{ route('customer.edit', Hashids::encode($customer->id)) }}" class="btn btn-info btn-sm mr-1"><i class="fas fa-pen"></i></a>

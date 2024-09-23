@@ -102,7 +102,7 @@
               },
               success: function(data) {
                   if (data.success) {
-                      document.getElementById('result').innerHTML = "QR Code Verified!";
+                      document.getElementById('result').innerHTML = "QR Code Verified! by customer " .data.customer;
                   } else {
                       document.getElementById('result').innerHTML = "Invalid QR Code!";
                   }
