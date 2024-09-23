@@ -57,14 +57,8 @@
                                         <td>{{ $customer->created_at->format('M d, Y h:i a') }}</td>
                                         <td class="text-right" style="display: flex;
                                         align-items: center;">
-                                            {{-- <button type="button" data-id="{{Hashids::encode($customer->id)}}"
-                                            value="{{$customer->name}}"
-                                            class="btnGenerateQR btn btn-default btn-sm" ><i
-                                                class="fas fa-qrcode"></i>
-                                            </button>
-                                             <a href="{{ route('customer.generate_qrcode', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-qrcode"></i></a> --}}
-                                            <a href="{{ route('customer.payment', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-money-check"></i></a>
-                                            <a href="{{ route('customer.generate_qrcode', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-qrcode"></i></a>
+                                            <a href="{{ route('customer.payment', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-money-check" title="Add Billing"></i></a>
+                                            {{-- <a href="{{ route('customer.generate_qrcode', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-qrcode"></i></a> --}}
                                             @if (Auth::user()->can('customer-edit'))
                                                 <a href="{{ route('customer.edit', Hashids::encode($customer->id)) }}" class="btn btn-info btn-sm mr-1"><i class="fas fa-pen"></i></a>
                                             @endif

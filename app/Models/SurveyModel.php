@@ -17,6 +17,7 @@ class SurveyModel extends Model
         'person_type',
         'address',
         'ratings',
+        'services',
         'type'
     ];
 
@@ -30,6 +31,14 @@ class SurveyModel extends Model
     public const PERSON_TYPE = [
         'adults'  => '18 y.o and above',
         'kids'    => '17 and below'
+    ];
+
+    public const SERVICE_TYPE = [
+        'food_resto'        => 'Food/Resto',
+        'accomodations'     => 'Accomodations',
+        'recreations_act'   => 'Recreations Activities',
+        'place'             => 'Place',
+        'services'          => 'Services',
     ];
 
     public static function createSurvey($data)
@@ -79,7 +88,8 @@ class SurveyModel extends Model
     {
         $payload = self::create([
             'ratings' => $data['ratings'],
-            'type'    => 'feedback'
+            'type'    => 'feedback',
+            'services' => $data['services'],
         ]);
 
         return $payload;
@@ -102,7 +112,8 @@ class SurveyModel extends Model
         
         $payload->update([
             'ratings' => $data['ratings'],
-            'type'    => 'feedback'
+            'type'    => 'feedback',
+            'services' => $data['services'],
         ]);
 
         return $payload;

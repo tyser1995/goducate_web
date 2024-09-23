@@ -78,6 +78,16 @@
           @include('notification.index')
           <form class="form" method="POST" action="{{ route('survey.feedback') }}" autocomplete="off">
               @csrf
+              <div class="form-group">
+                <label for="name">Services</label>
+                <select name="services" id="description" class="form-control" required>
+                    <option selected value="">Select option</option>
+                    @foreach (App\Models\SurveyModel::SERVICE_TYPE as $key => $type)
+                        <option value="{{ $key }}">{{ $type }}</option>
+                    @endforeach
+                </select>
+            </div>
+
               <div class="form-group text-center" style="cursor: pointer">
                 <i class="fas fa-angry mood_icon" data-value="angry" style="color: red;"></i>
                 <i class="fas fa-sad-tear mood_icon" data-value="sad" style="color: orange;"></i>
