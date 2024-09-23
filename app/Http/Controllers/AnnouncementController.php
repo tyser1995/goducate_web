@@ -108,6 +108,8 @@ class AnnouncementController extends Controller
     public function update(Request $request, $id)
     {
         //
+        AnnouncementModel::updateAnnouncement($id,$request->all());
+        return redirect()->route('announcement.index')->withStatus(__('Successfully updated.'));
     }
 
     /**

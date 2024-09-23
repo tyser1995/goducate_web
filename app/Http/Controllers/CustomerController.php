@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CustomerModel;
 use App\Models\User;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -143,36 +144,30 @@ class CustomerController extends Controller
             return response()->json(['success' => false, 'message' => 'User not found.']);
         }
 
-        // Prepare the data for the QR code
-        // $data = json_encode([
-        //     'user_id' => Hashids::encode($user->id),
-        //     'email' => $user->email
-        // ]);
         $encryptedData = Crypt::encryptString(json_encode([
             'user_id' => Hashids::encode($user->id),
             'email' => $user->email
         ]));
 
-        // Generate the QR code as base64
-        // $qrCode = base64_encode(QrCode::format('png')->size(400)->generate($data));
+      
         $qrCode = QrCode::size(400)->generate($encryptedData);
 
-        // Send back the QR code as a response
-        // return response()->json(['success' => true, 'qr_code' => $qrCode.'.png']);
-        
-
+      
         return view('customer.qrcode', compact('qrCode'));
         $fileName = 'qrcode_' . Hashids::encode($user->id) . '.png';
     }
 
     public function getPayments($id){
         $customer = CustomerModel::find(Hashids::decode($id)[0]);
+        $transaction = Transaction::getTransaction(Hashids::decode($id)[0]);
         return view('customer.payment',[
-            'customers' => $customer
+            'customers'     => $customer,
+            'transactions'  => $transaction
         ]);
     }
 
     public function addPayments(Request $request){
-        return redirect()->route('customer.index')->withStatus(__('Created successfully'));
+        Transaction::createTransaction($request->all());
+        return redirect()->route('customer.payment',Hashids::encode($request->customer_id))->withStatus(__('Created successfully'));
     }
 }
