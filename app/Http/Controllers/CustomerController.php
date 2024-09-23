@@ -155,7 +155,7 @@ class CustomerController extends Controller
 
         // Generate the QR code as base64
         // $qrCode = base64_encode(QrCode::format('png')->size(400)->generate($data));
-        $qrCode =QrCode::size(400)->generate($encryptedData);
+        $qrCode = QrCode::size(400)->generate($encryptedData);
 
         // Send back the QR code as a response
         // return response()->json(['success' => true, 'qr_code' => $qrCode.'.png']);
@@ -163,5 +163,18 @@ class CustomerController extends Controller
 
         return view('customer.qrcode', compact('qrCode'));
         $fileName = 'qrcode_' . Hashids::encode($user->id) . '.png';
+    }
+
+    public function getPayments($id){
+        $customer = CustomerModel::find(Hashids::decode($id)[0]);
+        return view('customer.payment',[
+            'customers' => $customer
+        ]);
+    }
+
+    public function addPayments(Request $request){
+        return view('customer.index',[
+            'customers' => CustomerModel::getCustomer()
+        ]);
     }
 }

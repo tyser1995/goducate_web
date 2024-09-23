@@ -102,6 +102,7 @@ class QRCodeController extends Controller
             // Validate user information
             if (User::find(Hashids::decode($userDetails['user_id'])[0])) {
                 return response()->json([
+                    'customer' => $userDetails['email'],
                     'success' => true]
                 );
             } else {
