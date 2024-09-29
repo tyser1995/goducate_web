@@ -171,7 +171,7 @@
                                     
                                     <div class="form-group">
                                         <label for="name">Status</label>
-                                        <select required class="form-control" name="status" id="status">
+                                        <select required class="form-control" name="status" id="status"  {{$bookings->status == "approved" ? 'disabled' : ''}}>
                                             <option value="">Select option</option>
                                             <option value="approved" {{ $bookings->status == 'approved' ? 'selected' : '' }}>Approved</option>
                                             <option value="cancel" {{ $bookings->status == 'cancel' ? 'selected' : '' }}>Cancel Booking</option>
@@ -179,7 +179,7 @@
                                     </div>
                       
                                 <div class="">
-                                    <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
+                                    <button type="submit" class="btn btn-success mt-4" {{$bookings->status == "approved" ? 'hidden' : ''}}>{{ __('Save') }}</button>
                                 </div>
                             </div>
                         </form>

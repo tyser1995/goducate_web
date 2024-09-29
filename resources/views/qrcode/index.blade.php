@@ -32,6 +32,9 @@
                             @foreach ($qrcodes as $qrcode)
                                 <div class="col-4">
                                     <div class="card shadow">
+                                        <div class="card-header">
+                                            <h3>{{$qrcode->created_at}}{{$qrcode->id}}</h3>
+                                        </div>
                                         <div class="card-body" id="card-body-{{ $qrcode->id }}">
                                             {{QrCode::size(300)->generate($qrcode->qrcode_generated)}}
                                         </div>
@@ -47,8 +50,8 @@
                                                 @csrf
                                                 @method('DELETE')
                                             </form>
+                                            <p>Recreational Remaining: {{$qrcode->amount}}</p>
                                         </div>
-                                      
                                     </div>
                                 </div>
                             @endforeach

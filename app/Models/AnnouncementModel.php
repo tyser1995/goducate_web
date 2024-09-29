@@ -76,7 +76,7 @@ class AnnouncementModel extends Model
 
     public static function getAnnouncement()
     {
-        return self::get();
+        return self::orderBy('created_at','DESC')->get();
     }
 
     public static function getAnnouncementById($id)

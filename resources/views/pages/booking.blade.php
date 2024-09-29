@@ -209,10 +209,30 @@
             <input type="hidden" id="eventDate" name="date">
             <hr />
             <div style="display: flex; align-items:center" class="mt-2">
-              <button type="submit" class="mr-2 btn btn-primary btnSubmit">Save</button>
+              <button type="submit" class="mr-2 btn btn-primary btnSubmit">
+                <span class="fas fa-sync-alt d-none" role="status" aria-hidden="true"></span>
+                Save</button>
               <span class="errMsg text-danger d-none">All fields are required</span>
             </div>
           </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="bookingMessage" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-dark" id="eventModalLabel">Successful</h5>
+        </div>
+        <div class="modal-body">
+         <p>Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default btnClose">
+            Close
+          </button>
         </div>
       </div>
     </div>
@@ -354,12 +374,12 @@
 
                       // Initialize the time picker
                       $('.reservationtime').daterangepicker({
-                          timePicker: true,
-                          timePickerIncrement: 30,
+                          timePicker: false,
+                          // timePickerIncrement: 30,
                           startDate: selectedDate, 
                           endDate: selectedDate,
                           locale: {
-                              format: 'MM/DD/YYYY hh:mm A'
+                              format: 'MM/DD/YYYY'
                           },
                           autoApply: true,
                           drops: 'up',
@@ -387,33 +407,31 @@
                           var startDate = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
                           var endDate = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
                         
-                          var overlapFound = false; 
-                          for (var i = 0; i < existingBookings.length; i++) {
-                              var bookingStart = moment(existingBookings[i].start);
-                              var bookingEnd = moment(existingBookings[i].end);
+                          // var overlapFound = false; 
+                          // for (var i = 0; i < existingBookings.length; i++) {
+                          //     var bookingStart = moment(existingBookings[i].start);
+                          //     var bookingEnd = moment(existingBookings[i].end);
 
-                              if (picker.startDate.isBefore(bookingEnd) && picker.endDate.isAfter(bookingStart)) {
-                                  alert("Selected dates overlap with an existing booking. Please choose another date range.");
+                          //     if (picker.startDate.isBefore(bookingEnd) && picker.endDate.isAfter(bookingStart)) {
+                          //         alert("Selected dates overlap with an existing booking. Please choose another date range.");
                                   
-                                  picker.setStartDate(originalStartDate);
-                                  picker.setEndDate(originalEndDate);
+                          //         picker.setStartDate(originalStartDate);
+                          //         picker.setEndDate(originalEndDate);
 
-                                  $('.btnSubmit').attr('disabled', 'disabled');  // Disable submit button
-                                  overlapFound = true; 
-                              }
-                          }
+                          //         $('.btnSubmit').attr('disabled', 'disabled');  // Disable submit button
+                          //         overlapFound = true; 
+                          //     }
+                          // }
 
-                          if (!overlapFound) {
-                              $('.btnSubmit').removeAttr('disabled');
+                          $('.btnSubmit').removeAttr('disabled');
                               
-                              // Set hidden input values
-                              $('#checkin_date').val(startDate);
-                              $('#checkout_date').val(endDate);
-                              $('#checkin_date_dt').val(startDate);
-                              $('#checkout_date_dt').val(endDate);
-                              $('#checkin_date_pr').val(startDate);
-                              $('#checkout_date_pr').val(endDate);
-                          }
+                          // Set hidden input values
+                          $('#checkin_date').val(startDate);
+                          $('#checkout_date').val(endDate);
+                          $('#checkin_date_dt').val(startDate);
+                          $('#checkout_date_dt').val(endDate);
+                          $('#checkin_date_pr').val(startDate);
+                          $('#checkout_date_pr').val(endDate);
                       });
 
                       var formattedDate = moment(info.dateStr).format('YYYY-MM-DD HH:mm:ss');
@@ -443,6 +461,10 @@
         event.preventDefault();
         
         var selectedOption = $('.booking_option').val();
+        var $btn = $(this);
+
+        $('.btnSubmit').attr('disabled', 'disabled');
+        $btn.find('.fa-sync-alt').removeClass('d-none');
 
         if (selectedOption === '0') {
             $.ajax({
@@ -461,7 +483,7 @@
                   
               },
               error: function(error) {
-                  alert('Error saving event');
+                  console.log(error)
               }
           });
 
@@ -484,10 +506,11 @@
               success: function(response) {
                   $('#eventModal').modal('hide');
                   loadCalendar();
-                  location.reload();
+                  //location.reload();
+                  $('#bookingMessage').modal('show');
               },
               error: function(error) {
-                  alert('Error saving event');
+                  console.log(error)
               }
           });
         } else if (selectedOption === '1') {
@@ -507,7 +530,7 @@
                   
               },
               error: function(error) {
-                  alert('Error saving event');
+                  console.log(error)
               }
           });
           $.ajax({
@@ -525,10 +548,10 @@
               success: function(response) {
                   $('#eventModal').modal('hide');
                   loadCalendar();
-                  location.reload();
+                  $('#bookingMessage').modal('show');
               },
               error: function(error) {
-                  alert('Error saving event');
+                  console.log(error)
               }
           });
         } else if (selectedOption === '2') {
@@ -549,7 +572,7 @@
                   
               },
               error: function(error) {
-                  alert('Error saving event');
+                  console.log(error)
               }
           });
 
@@ -566,10 +589,10 @@
               success: function(response) {
                   $('#eventModal').modal('hide');
                   loadCalendar();
-                  location.reload();
+                  $('#bookingMessage').modal('show');
               },
               error: function(error) {
-                  alert('Error saving event');
+                  console.log(error)
               }
           });
         }
@@ -632,6 +655,9 @@
         $(this).closest('.input-group').remove();  // Remove the closest room type input group
     });
     
+    $('.btnClose').click(function (e) { 
+      location.reload();
+    });
   </script>
 @endpush
 

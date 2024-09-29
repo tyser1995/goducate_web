@@ -14,7 +14,7 @@
                             <div class="col-8">
                                 <h3 class="mb-0 h3_title">Announcement</h3>
                             </div>
-                            <div class="col-4 text-right add-region-btn {{$announcements->count() > 0 ? 'd-none' :''}}">
+                            <div class="col-4 text-right add-region-btn">
                                 <a href="{{ route('announcement.create') }}" class="btn btn-sm btn-primary"
                                     id="add-region-btn">{{ __('Add Announcement') }}</a>
                             </div>
@@ -41,6 +41,7 @@
                                 @csrf
                                 @method('DELETE')
                             </form>
+                            <hr/>
                         @endforeach
                     </div>
                 </div>

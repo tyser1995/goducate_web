@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Mail;
 
 class BookingOvernightStayModel extends Model
 {
@@ -42,10 +43,18 @@ class BookingOvernightStayModel extends Model
                 'room_type'          => $roomType,
                 'checkin_date'       => $data['checkin_date'],
                 'checkout_date'      => $data['checkout_date'],
-                'status'             => 'booked'
+                'status'             => 'pending'
             ]);
         }
 
+        $emailDetails = [
+            'title' => 'Reservation Confirmation',
+            'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
+            'reservation' => $payload, 
+            'booking_status' => 'overnight_stay', 
+        ];
+    
+        Mail::to($data['email'])->send(new \App\Mail\SendMail($emailDetails));
         return $payload;
     }
 
@@ -63,7 +72,7 @@ class BookingOvernightStayModel extends Model
     {
         if($IsBook){
             return self::where('email','=',$email)
-            ->where('status','=','booked')
+            ->where('status','=','pending')
             ->get();
         }else{
             return self::where('email','=',$email)
@@ -91,7 +100,7 @@ class BookingOvernightStayModel extends Model
     public static function updateOvernightStayStatus($email, $data)
     {
         $payload = self::where('email', '=', $email)
-        ->where('status','booked')
+        ->where('status','pending')
         ->get();
     
         if ($payload->isNotEmpty()) {

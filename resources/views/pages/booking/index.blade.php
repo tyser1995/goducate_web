@@ -54,9 +54,9 @@
                                                 <span class="badge badge-danger">
                                                     Cancel booking
                                                 </span>
-                                            @elseif ($booking->status == "booked")
+                                            @elseif ($booking->status == "pending")
                                                 <span class="badge badge-info">
-                                                    Booked
+                                                    Pending
                                                 </span>
                                             @else
                                                 <span class="badge badge-success">
@@ -66,7 +66,7 @@
                                         </td>
                                         <td style="display: flex;
                                         align-items: center;">
-                                            @if ($booking->status == "booked")
+                                            @if ($booking->status != "cancel")
                                                 <a href="{{ route('booking.edit', Hashids::encode($booking->id)) }}" class="mr-2 btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
                                             @endif
                                             <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $booking->id }})"><i class="fas fa-trash"></i></button>
@@ -95,6 +95,7 @@
 
 @push('scripts')
 <script>
+    $('#tblUser').DataTable();
     function confirmDelete(id) {
         Swal.fire({
             title: 'Are you sure?',

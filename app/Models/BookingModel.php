@@ -51,7 +51,7 @@ class BookingModel extends Model
             'no_of_adults' => $data['no_of_adults'],
             'no_of_children' => $data['no_of_children'],
             'boooking_status' => $data['boooking_status'],
-            'status' => 'booked'
+            'status' => 'pending'
         ]);
 
         return $payload;
@@ -190,6 +190,8 @@ class BookingModel extends Model
             'no_of_children' => $data['no_of_children'],
             'boooking_status' => $data['boooking_status']
         ]);
+
+        Mail::to($data['email'])->send(new SendMail());
 
         return $payload;
     }
