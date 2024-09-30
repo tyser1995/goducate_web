@@ -79,6 +79,60 @@
       flex-direction: column;
       justify-content: center;
     }
+    .volunteer {
+      background-color: #444;
+      color: #fff;
+      padding: 50px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    .volunteer h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .volunteer p {
+      font-size: 1.2em;
+      line-height: 1.6;
+    }
+    .volunteer .image-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .volunteer .image-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .volunteer .description {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .volunteer .description img {
+      max-width: 50%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .volunteer .description .text {
+      flex: 1;
+      padding: 20px;
+    }
+    .volunteer .description .text p {
+      margin: 0;
+    }
+    .volunteer .description button {
+      padding: 10px 20px;
+      background-color: #ff9900;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .volunteer .description button:hover {
+      background-color: #e68a00;
+    }
+
 </style>
 
 <div class="background-overlay" id="background-overlay"></div>
