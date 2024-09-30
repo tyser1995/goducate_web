@@ -225,14 +225,14 @@ class BookingModel extends Model
             'contact_no' => 0
         ]);
 
-        // $emailDetails = [
-        //     'title' => 'Reservation Approved',
-        //     'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
-        //     'reservation' => $payload, 
-        //     'booking_status' => $payload['boooking_status']
-        // ];
+        $emailDetails = [
+            'title' => 'Reservation Approved',
+            'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
+            'reservation' => $payload, 
+            'booking_status' => $payload['boooking_status']
+        ];
     
-        // Mail::to($payload['email'])->send(new \App\Mail\SendMail($emailDetails));
+        Mail::to($payload['email'])->send(new \App\Mail\SendMail($emailDetails));
 
         return $payload;
     }
