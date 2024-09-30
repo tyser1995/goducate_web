@@ -41,12 +41,22 @@ class AnnouncementModel extends Model
 
     public static function getAnnouncementList()
     {
-        $announcement = self::where('when','<=',Carbon::now()->format('Y-m-d H:m'))
-        ->get();
+        $announcements = self::all(); 
 
-        foreach($announcement as $announcements){
-            $announcement_ = self::find($announcements->id);
-            $announcement_->delete();
+        foreach ($announcements as $announcement) {
+            $dateRange = $announcement->when;
+
+            $dates = explode(' - ', $dateRange);
+            
+            $endDateStr = $dates[1];
+
+            $endDate = Carbon::createFromFormat('m/d/Y h:i A', $endDateStr);
+            $now = Carbon::now();
+
+            // If the current time is after or equal to the end date, delete the announcement
+            if ($endDate->lessThanOrEqualTo($now)) {
+                $announcement->delete();
+            }
         }
 
         return self::selectRaw("
@@ -86,12 +96,22 @@ class AnnouncementModel extends Model
 
     public static function getAnnouncement()
     {
-        $announcement = self::where('when','<=',Carbon::now()->format('Y-m-d H:m'))
-        ->get();
+        $announcements = self::all(); 
 
-        foreach($announcement as $announcements){
-            $announcement_ = self::find($announcements->id);
-            $announcement_->delete();
+        foreach ($announcements as $announcement) {
+            $dateRange = $announcement->when;
+
+            $dates = explode(' - ', $dateRange);
+            
+            $endDateStr = $dates[1];
+
+            $endDate = Carbon::createFromFormat('m/d/Y h:i A', $endDateStr);
+            $now = Carbon::now();
+
+            // If the current time is after or equal to the end date, delete the announcement
+            if ($endDate->lessThanOrEqualTo($now)) {
+                $announcement->delete();
+            }
         }
 
         return self::orderBy('created_at','DESC')->get();
