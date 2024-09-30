@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Carbon\Carbon;
+
 class AnnouncementModel extends Model
 {
     use HasFactory, SoftDeletes;
@@ -39,6 +41,14 @@ class AnnouncementModel extends Model
 
     public static function getAnnouncementList()
     {
+        $announcement = self::where('when','<=',Carbon::now()->format('Y-m-d H:m'))
+        ->get();
+
+        foreach($announcement as $announcements){
+            $announcement_ = self::find($announcements->id);
+            $announcement_->delete();
+        }
+
         return self::selectRaw("
                 Announcements.id,
                 Announcements.name,
@@ -76,6 +86,14 @@ class AnnouncementModel extends Model
 
     public static function getAnnouncement()
     {
+        $announcement = self::where('when','<=',Carbon::now()->format('Y-m-d H:m'))
+        ->get();
+
+        foreach($announcement as $announcements){
+            $announcement_ = self::find($announcements->id);
+            $announcement_->delete();
+        }
+
         return self::orderBy('created_at','DESC')->get();
     }
 

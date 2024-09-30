@@ -139,19 +139,14 @@ Route::group(['middleware' => 'auth'], function () {
     //Announcement
     Route::get('announcements', ['as' => 'announcements', 'uses' => 'App\Http\Controllers\AnnouncementController@index']);
     Route::resource('announcement', 'App\Http\Controllers\AnnouncementController');
+
+    //Accomodation
+    Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'App\Http\Controllers\AccomodationController@index']);
+    Route::resource('accomodation', 'App\Http\Controllers\AccomodationController');
     
     //Price Monitoring
     Route::get('price_monitorings', ['as' => 'price_monitorings', 'uses' => 'App\Http\Controllers\PriceMonitoringController@index']);
     Route::resource('price_monitoring', 'App\Http\Controllers\PriceMonitoringController');
-
-    //Consumer Rights
-    Route::get('consumer_rights', ['as' => 'consumer_rights', 'uses' => 'App\Http\Controllers\ConsumerRightsController@index']);
-    Route::get('consumer_rights/preview/{id}', ['as' => 'consumer_rights/preview', 'uses' => 'App\Http\Controllers\ConsumerRightsController@preview_page']);
-    Route::resource('consumer_right', 'App\Http\Controllers\ConsumerRightsController');
-
-    //Business Permit
-    Route::get('business_permits', ['as' => 'business_permits', 'uses' => 'App\Http\Controllers\BusinessPermitController@index']);
-    Route::resource('business_permit', 'App\Http\Controllers\BusinessPermitController');
     
     //Nofication
     Route::get("/admin/notify", function () {

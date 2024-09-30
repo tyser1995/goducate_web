@@ -33,7 +33,8 @@
                                 <div class="col-4">
                                     <div class="card shadow">
                                         <div class="card-header">
-                                            <h3>{{$qrcode->created_at}}{{$qrcode->id}}</h3>
+                                            <h3>QR #: {{$qrcode->id}}</h3>
+                                            <p>Created: {{$qrcode->created_at}}</p>
                                         </div>
                                         <div class="card-body" id="card-body-{{ $qrcode->id }}">
                                             {{QrCode::size(300)->generate($qrcode->qrcode_generated)}}
@@ -131,7 +132,7 @@
             title: 'QR Funds',
             html: `<label>Balance:</label>
                 <input type="number" disabled value="${amount}" class="swal2-input" placeholder="Enter amount"><br/>
-                <label>Amount:</label>
+                <label>Add Amount:</label>
                 <input type="number" id="fundsAmount" class="swal2-input" placeholder="Enter amount">
                 <input type="hidden" id="qrcodeId" value="${id}">
             `,

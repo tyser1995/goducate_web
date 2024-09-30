@@ -25,7 +25,7 @@ class QRCodeModel extends Model
         $payload = self::create([
             'created_by_user_id' => Auth::user()->id,
             'qrcode_number' => $data['number'] ?? '',
-            'amount' => $data['amount'] ?? 75,
+            'amount' => $data['amount'] ?? 1,
             'qrcode_generated' => $data['qrcode_generated'] ?? ''
         ]);
 

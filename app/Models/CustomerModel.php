@@ -40,23 +40,25 @@ class CustomerModel extends Model
     public static function getCustomer()
     {
 
-        return self::selectRaw('
-            customers.id,
-            customers.created_by_user_id,
-            customers.first_name,
-            customers.middle_name,
-            customers.last_name,
-            customers.email,
-            customers.address,
-            customers.contact_no,
-            users.id as users_id,
-            users.name,
-            users.email as users_email,
-            users.created_at
-        ')
-        ->join('users', 'users.email', '=', 'customers.email') 
-        ->where('users.role', 4) 
-        ->orderBy('users.created_at', 'DESC')
+        // return self::selectRaw('
+        //     customers.id,
+        //     customers.created_by_user_id,
+        //     customers.first_name,
+        //     customers.middle_name,
+        //     customers.last_name,
+        //     customers.email,
+        //     customers.address,
+        //     customers.contact_no,
+        //     users.id as users_id,
+        //     users.name,
+        //     users.email as users_email,
+        //     users.created_at
+        // ')
+        // ->join('users', 'users.email', '=', 'customers.email') 
+        // ->where('users.role', 4) 
+        // ->orderBy('users.created_at', 'DESC')
+        // ->get();
+        return self::orderBy('created_at', 'DESC')
         ->get();
     }
 

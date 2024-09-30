@@ -237,6 +237,25 @@
       </div>
     </div>
   </div>
+
+  <div id="validationModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="validationMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -245,6 +264,14 @@
     $('[data-mask]').inputmask();
     $('.book_now')[0].innerHTML = "Booking";
     
+    const roomCapacity = {
+        'courtyard_small_room': 4,   // Courtyard Small Room (2 to 4 persons)
+        'family_room': 5,            // Family Room (3 to 5 persons)
+        'jungle_huts': 8,            // Jungle Huts (6 to 8 persons)
+        'courtyard_big_room': 10,    // Courtyard Big Room (8 to 10 persons)
+        'hillside_villa': 12         // Hillside Villa (8 to 12 persons)
+    };
+
     $('.booking_option').change(function (e) { 
         e.preventDefault();
         // Hide all sections by default
@@ -456,18 +483,36 @@
     }
 
 
+    function showValidationModal(message) {
+        $('#validationMessage').text(message);
+        $('#validationModal').modal('show');
+    }
+    
     $('#quickForm').submit(function(event) {
       
         event.preventDefault();
         
         var selectedOption = $('.booking_option').val();
-        var $btn = $(this);
-
-        $('.btnSubmit').attr('disabled', 'disabled');
-        $btn.find('.fa-sync-alt').removeClass('d-none');
 
         if (selectedOption === '0') {
-            $.ajax({
+          const adults = parseInt($('#no_of_adults').val()) || 0;
+          const children = parseInt($('#no_of_children').val()) || 0;
+          const totalPersons = adults + children;
+          const selectedRoomType = $('#room_type').val();
+          const maxCapacity = roomCapacity[selectedRoomType];
+
+          if (totalPersons > maxCapacity) {
+              showValidationModal(`The selected room can accommodate up to ${maxCapacity} persons, but you have selected ${totalPersons} persons.`);
+
+              return;
+          }
+
+          var $btn = $(this);
+
+          $('.btnSubmit').attr('disabled', 'disabled');
+          $btn.find('.fa-sync-alt').removeClass('d-none');
+
+          $.ajax({
               url: "{{ route('bookings.store') }}",
               type: "POST",
               data: {

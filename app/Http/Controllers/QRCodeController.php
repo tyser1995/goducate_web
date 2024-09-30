@@ -76,6 +76,7 @@ class QRCodeController extends Controller
        return view('pages.qrcode');
     }
 
+    //test function
     public function downloadQrCode(Request $request)
     {
         $user = User::find(6);
@@ -112,7 +113,7 @@ class QRCodeController extends Controller
                 ]);
             }
 
-            $deductionAmount = 50; // Set the amount to deduct
+            $deductionAmount = 1; // Set the amount to deduct
             if ($qrcode->amount < $deductionAmount) {
                 return response()->json([
                     'success' => false,

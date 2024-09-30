@@ -69,7 +69,7 @@
                                             @if ($booking->status != "cancel")
                                                 <a href="{{ route('booking.edit', Hashids::encode($booking->id)) }}" class="mr-2 btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
                                             @endif
-                                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $booking->id }})"><i class="fas fa-trash"></i></button>
+                                            <button type="button" class="btn btn-sm btn-danger {{$booking->status == "approved" ? 'd-none' : ''}}" onclick="confirmDelete({{ $booking->id }})"><i class="fas fa-trash" ></i></button>
                                             <form id="delete-form-{{ $booking->id }}" action="{{ route('booking.destroy', $booking->id) }}" method="POST" style="display: none;">
                                                 @csrf
                                                 @method('DELETE')

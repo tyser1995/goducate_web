@@ -7,7 +7,7 @@
         <a href="{{url('/_activities')}}">Activities</a>
         <a href="{{url('/_booking')}}" class="book_now">Book Now</a>
         <a href="{{url('/_volunteer')}}">Volunteer</a>
-        <a href="{{url('/login')}}">Login</a>
+        <a href="{{url('/login')}}" hidden>Login</a>
         <div class="hambuger" id="hamburger-menu">
           <div class="bar"></div>
           <div class="bar"></div>

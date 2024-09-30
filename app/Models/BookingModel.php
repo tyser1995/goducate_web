@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\CustomerModel;
 
 use DB;
 
@@ -191,7 +195,14 @@ class BookingModel extends Model
             'boooking_status' => $data['boooking_status']
         ]);
 
-        Mail::to($data['email'])->send(new SendMail());
+        $emailDetails = [
+            'title' => 'Reservation Confirmation',
+            'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
+            'reservation' => $payload, 
+            'booking_status' => $data['boooking_status']
+        ];
+    
+        Mail::to($data['email'])->send(new \App\Mail\SendMail($emailDetails));
 
         return $payload;
     }
@@ -203,6 +214,25 @@ class BookingModel extends Model
         $payload->update([
             'status' => $data['status']
         ]);
+        
+        CustomerModel::create([
+            'created_by_user_id' => Auth::user()->id ?? 0,
+            'first_name' => $payload->name ?? '',
+            'middle_name' => '',
+            'last_name' =>  '',
+            'email' => $payload->email,
+            'address' => '',
+            'contact_no' => 0
+        ]);
+
+        // $emailDetails = [
+        //     'title' => 'Reservation Approved',
+        //     'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
+        //     'reservation' => $payload, 
+        //     'booking_status' => $payload['boooking_status']
+        // ];
+    
+        // Mail::to($payload['email'])->send(new \App\Mail\SendMail($emailDetails));
 
         return $payload;
     }
