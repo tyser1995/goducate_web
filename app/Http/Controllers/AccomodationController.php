@@ -95,4 +95,15 @@ class AccomodationController extends Controller
         Accomodation::deleteAccomodation($id);
         return redirect()->route('accomodation.index')->withError(__('Successfully deleted.'));
     }
+
+    public function getRoomCapacity($id)
+    {
+        $room = Accomodation::find($id);
+        
+        if ($room) {
+            return response()->json(['capacity' => $room->capacity]);
+        } else {
+            return response()->json(['error' => 'Room not found'], 404);
+        }
+    }
 }

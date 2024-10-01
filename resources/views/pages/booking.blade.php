@@ -121,8 +121,8 @@
                   <div class="input-group date">
                       <select name="room_type" id="room_type" class="class_room_type form-control">
                           <option selected value="">Select option</option>
-                          @foreach (App\Models\BookingOvernightStayModel::ROOM_TYPE as $key => $type)
-                              <option value="{{$key}}">{{$type}}</option>
+                          @foreach (App\Models\Accomodation::getAccomodationOvernightStay() as $value)
+                              <option value="{{$value->id}}">{{$value->type}} &nbsp;&nbsp;&nbsp; (capacity: {{$value->capacity}})</option>
                           @endforeach
                       </select>
                       <div class="input-group-append">
@@ -351,6 +351,14 @@
 
     loadCalendar();
 
+    // function formatRoomType(type) {
+    //     return type
+    //         .replace(/_/g, ' ')
+    //         .split(' ')
+    //         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    //         .join(' ');
+    // }
+
     function loadCalendar() {
         var originalStartDate, originalEndDate;
         document.addEventListener('DOMContentLoaded', function() {
@@ -373,17 +381,18 @@
                       dataType: 'json',
                       success: function(data) {
                           var events = [];
-                          for (let i = 0; i < data.data.length; i++) {
+                          for (let i = 0; i < data.booking_list.length; i++) {
                               events.push({
-                                  title: "Unavailable",
-                                  start: data.data[i].checkin_date,
-                                  end: data.data[i].checkout_date
+                                title: data.booking_list[i].type,
+                                start:    data.booking_list[i].combined_checkin_datetime,
+                                end:  data.booking_list[i].combined_checkout_datetime,
+                                allDay: true
                               });
                               // Store bookings for time disabling
-                              existingBookings.push({
-                                  start: data.data[i].checkin_date,
-                                  end: data.data[i].checkout_date
-                              });
+                              // existingBookings.push({
+                              //     start: data.data[i].checkin_date,
+                              //     end: data.data[i].checkout_date
+                              // });
                           }
                           successCallback(events);
                       },
@@ -498,11 +507,34 @@
           const adults = parseInt($('#no_of_adults').val()) || 0;
           const children = parseInt($('#no_of_children').val()) || 0;
           const totalPersons = adults + children;
-          const selectedRoomType = $('#room_type').val();
-          const maxCapacity = roomCapacity[selectedRoomType];
 
-          if (totalPersons > maxCapacity) {
-              showValidationModal(`The selected room can accommodate up to ${maxCapacity} persons, but you have selected ${totalPersons} persons.`);
+          let totalCapacity = 0;
+          let validationFailed = false;
+
+          $('.class_room_type').each(function() {
+              const roomId = $(this).val();
+              if (roomId) {
+                  // Fetch room capacity via AJAX synchronously (could be async, but for simplicity, do it in sync)
+                  $.ajax({
+                      url: '/room-capacity/' + roomId,
+                      type: 'GET',
+                      async: false, // Ensures this runs in order; not recommended for large operations
+                      success: function(response) {
+                          if (response.capacity) {
+                              totalCapacity += response.capacity;  // Add the room capacity to the total
+                          }
+                      },
+                      error: function() {
+                          alert('Could not fetch room capacity. Please try again.');
+                          validationFailed = true;
+                      }
+                  });
+              }
+          });
+
+          if (validationFailed) return;
+          if (totalCapacity < totalPersons) {
+              showValidationModal(`The total capacity of the selected rooms is ${totalCapacity}, but you have selected ${totalPersons} persons.`);
 
               return;
           }
@@ -511,6 +543,11 @@
 
           $('.btnSubmit').attr('disabled', 'disabled');
           $btn.find('.fa-sync-alt').removeClass('d-none');
+
+          var roomTypes = [];
+          $('.class_room_type').each(function(){
+              roomTypes.push($(this).val());
+          });
 
           $.ajax({
               url: "{{ route('bookings.store') }}",
@@ -522,7 +559,10 @@
                 'contact_no'      :$('#contact_no').val(),
                 'no_of_adults'    :$('#no_of_adults').val(),
                 'no_of_children'  :$('#no_of_children').val(),
-                'boooking_status' :$('#boooking_status').val()
+                'boooking_status' :$('#boooking_status').val(),
+                'checkin_date'    : $('#checkin_date').val(),
+                'checkout_date'   : $('#checkout_date').val()
+                //'accomodation_id' :roomTypes
               },
               success: function(response) {
                   
@@ -531,13 +571,6 @@
                   console.log(error)
               }
           });
-
-          var roomTypes = [];
-          $('.class_room_type').each(function(){
-              roomTypes.push($(this).val());
-          });
-
-
 
           $.ajax({
               url: "{{ route('bookings.overnight_stay') }}",
@@ -569,7 +602,9 @@
                 'contact_no'      :$('#contact_no').val(),
                 'no_of_adults'    :$('#no_of_adults').val(),
                 'no_of_children'  :$('#no_of_children').val(),
-                'boooking_status' :$('#boooking_status').val()
+                'boooking_status' :$('#boooking_status').val(),
+                'checkin_date'    : $('#checkin_date_dt').val(),
+                'checkout_date'   : $('#checkout_date_dt').val()
               },
               success: function(response) {
                   
@@ -611,7 +646,9 @@
                 'contact_no'      :$('#contact_no').val(),
                 'no_of_adults'    :$('#no_of_adults').val(),
                 'no_of_children'  :$('#no_of_children').val(),
-                'boooking_status' :$('#boooking_status').val()
+                'boooking_status' :$('#boooking_status').val(),
+                'checkin_date'    : $('#checkin_date_pr').val(),
+                'checkout_date'   : $('#checkout_date_pr').val()
               },
               success: function(response) {
                   
@@ -680,8 +717,8 @@
             <div class="input-group date mt-2">
                 <select name="room_type" class="class_room_type form-control">
                     <option selected value="">Select option</option>
-                    @foreach (App\Models\BookingOvernightStayModel::ROOM_TYPE as $key => $type)
-                        <option value="{{$key}}">{{$type}}</option>
+                    @foreach (App\Models\Accomodation::getAccomodationOvernightStay() as $value)
+                        <option value="{{$value->id}}">{{$value->type}} &nbsp;&nbsp;&nbsp; (capacity: {{$value->capacity}})</option>
                     @endforeach
                 </select>
                 <div class="input-group-append">

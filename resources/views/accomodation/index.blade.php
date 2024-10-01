@@ -33,6 +33,7 @@
                                     <th>Booking Status</th>
                                     <th>Type</th>
                                     <th>Qty</th>
+                                    <th>Capacity</th>
                                     <th>Price</th>
                                     <th>Created date</th>
                                     <th></th>
@@ -46,6 +47,7 @@
                                         <td>{{ $accomodation->bookig_status == 0 ? 'Overnight Stay' : ($accomodation->bookig_status == 1 ? 'Day Tour' : 'Place Reservation') }}</td>
                                         <td>{{ $accomodation->type}}</td>
                                         <td>{{ $accomodation->qty}}</td>
+                                        <td>{{ $accomodation->capacity}}</td>
                                         <td>{{ $accomodation->amount}}</td>
                                         <td>{{ $accomodation->created_at->format('M d, Y h:i a') }}</td>
                                         <td class="text-right" style="display: flex;

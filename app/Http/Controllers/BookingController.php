@@ -110,10 +110,11 @@ class BookingController extends Controller
 
     public function booking_list(){
         $bookings = BookingModel::getBooking();
-
+        $booking_list = BookingModel::getBookingListv2();
         return response()->json([
             'success' => true,
-            'data' => $bookings
+            'data' => $bookings,
+            'booking_list' =>$booking_list
         ], 200);
     }
 

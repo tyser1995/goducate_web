@@ -20,6 +20,7 @@ class Accomodation extends Model
         'bookig_status',
         'type',
         'qty',
+        'capacity',
         'tour_type',
         'group_type',
         'amount'
@@ -38,6 +39,7 @@ class Accomodation extends Model
             'bookig_status' => $data['bookig_status'],
             'type' => $data['type'],
             'qty' => $data['qty'],
+            'capacity' => $data['capacity'],
             'tour_type' => $data['tour_type'] ?? 'NA',
             'group_type' => $data['group_type'] ?? 'NA',
             'amount' => $data['amount'] ?? '0'
@@ -49,6 +51,13 @@ class Accomodation extends Model
     public static function getAccomodation()
     {
         return self::orderBy('created_at','DESC')->get();
+    }
+
+    public static function getAccomodationOvernightStay()
+    {
+        return self::where('bookig_status','=','0')
+            ->orderBy('created_at','DESC')
+            ->get();
     }
 
     public static function getAccomodationById($id)
@@ -65,6 +74,7 @@ class Accomodation extends Model
             'bookig_status' => $data['bookig_status'],
             'type' => $data['type'],
             'qty' => $data['qty'],
+            'capacity' => $data['capacity'],
             'tour_type' => $data['tour_type'] ?? 'NA',
             'group_type' => $data['group_type'] ?? 'NA',
             'amount' => $data['amount'] ?? '0'

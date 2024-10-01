@@ -44,7 +44,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="name">Quantity</label>
-                                        <input type="text" class="form-control" name="qty" id="qty" required autofocus  placeholder="{{ __('Enter Quantity') }}" value="{{old('qty',$accomodations->qty)}}">
+                                        <input type="number" class="form-control" name="qty" id="qty" required autofocus  placeholder="{{ __('Enter number of units') }}" value="{{old('qty',$accomodations->qty)}}" min="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Capacity</label>
+                                        <input type="number" class="form-control" name="capacity" id="capacity" required autofocus  placeholder="{{ __('Enter Capacity') }}" value="{{old('capacity',$accomodations->capacity)}}" min="1">
                                     </div>
                         
                                     <div class="form-group">

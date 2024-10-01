@@ -87,4 +87,9 @@ class CustomerModel extends Model
     {
         return self::findOrFail($id)->delete();
     }
+
+    public static function getCustomerByEmail($email)
+    {
+        return self::where('email','=',$email)->first();
+    }
 }

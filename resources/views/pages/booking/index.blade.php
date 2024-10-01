@@ -39,6 +39,17 @@
                                 <tbody>
                                     @if ($bookings->count())
                                     @foreach ($bookings as $booking)
+                                    <?php
+                                        $overnight_stay = \App\Models\BookingOvernightStayModel::getOvernightStayByEmail($booking->email);
+
+                                        $day_tour = \App\Models\BookingDayTourModel::getDayTourByEmail($booking->email);
+
+                                        $place_reservation = \App\Models\BookingPlaceReservationModel::getPlaceReservationByEmail($booking->email);
+
+                                        if (is_null($overnight_stay) && is_null($day_tour) && is_null($place_reservation)) {
+                                            \App\Models\BookingModel::find($booking->id)->delete(); 
+                                        }
+                                    ?>
                                     <tr>
                                         <td class="d-none">{{ $booking->id }}</td>
                                         <td>{{ $booking->name }}</td>

@@ -40,13 +40,21 @@
                                         <label for="name">Type</label>
                                         <input type="text" class="form-control" name="type" id="type" required autofocus  placeholder="{{ __('Enter Type') }}">
                                     </div>
+                                    {{-- <div class="form-group">
+                                        <label for="name">Sub-Type</label>
+                                        <input type="text" class="form-control" name="group_type" id="group_type" autofocus  placeholder="{{ __('Enter Type') }}">
+                                    </div> --}}
                                     <div class="form-group">
                                         <label for="name">Quantity</label>
-                                        <input type="text" class="form-control" name="qty" id="qty" required autofocus  placeholder="{{ __('Enter Quantity') }}">
+                                        <input type="number" class="form-control" name="qty" id="qty" required autofocus  placeholder="{{ __('Enter number of units') }}" min="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Capacity</label>
+                                        <input type="number" class="form-control" name="capacity" id="capacity" required autofocus  placeholder="{{ __('Enter Capacity') }}" min="1">
                                     </div>
                         
                                     <div class="form-group">
-                                        <label for="email">Amount</label>
+                                        <label for="email">Price</label>
                                         <input type="number" class="form-control" name="amount" id="amount" required autofocus  placeholder="{{ __('Enter Amount') }}" min="1">
                                     </div>
                                 <div class="">
@@ -65,6 +73,13 @@
 @include('employees.script')
 @push('scripts')
 <script>
+    // $('#bookig_status').change(function () { 
+    //     $('#group_type').removeAttr('required');
+    //     if($(this).val() == 1){
+    //         $('#group_type').attr('required','required');
 
+    //         $('#qty').removeAttr('required');
+    //     }
+    // });
 </script>
 @endpush

@@ -28,6 +28,9 @@ class BookingModel extends Model
         'no_of_adults',
         'no_of_children',
         'boooking_status',
+        'accomodation_id',
+        'checkin_date',
+        'checkout_date',
         'status'
     ];
 
@@ -55,6 +58,8 @@ class BookingModel extends Model
             'no_of_adults' => $data['no_of_adults'],
             'no_of_children' => $data['no_of_children'],
             'boooking_status' => $data['boooking_status'],
+            'checkin_date' => $data['checkin_date'],
+            'checkout_date' => $data['checkout_date'],
             'status' => 'pending'
         ]);
 
@@ -96,6 +101,35 @@ class BookingModel extends Model
             })
             ->distinct()
             ->orderBy('bookings.created_at','DESC')
+            ->get();
+    }
+
+    public static function getBookingListv2()
+    {
+        return self::selectRaw("
+                accomodations.type,
+                CONCAT(
+                    DATE(bookings.checkin_date), ' ',TIME(bookings.created_at)
+                ) as 
+                combined_checkin_datetime,
+                CONCAT(
+                    DATE(bookings.checkout_date), ' ',TIME(bookings.created_at)
+                ) as combined_checkout_datetime,
+                accomodations.qty,
+                accomodations.capacity
+            ")
+            ->leftJoin('accomodations', function($join) {
+                $join->on('accomodations.bookig_status', '=', 'bookings.boooking_status');
+            })
+            // ->groupBy(
+            //     'type',
+            //     'combined_checkin_datetime',
+            //     'combined_checkout_datetime',
+            //     'accomodations.qty',
+            //     'accomodations.capacity'
+            // )
+            ->distinct()
+            // ->orderBy('bookings.created_at','DESC')
             ->get();
     }
 
@@ -215,21 +249,36 @@ class BookingModel extends Model
             'status' => $data['status']
         ]);
         
-        CustomerModel::create([
-            'created_by_user_id' => Auth::user()->id ?? 0,
-            'first_name' => $payload->name ?? '',
-            'middle_name' => '',
-            'last_name' =>  '',
-            'email' => $payload->email,
-            'address' => '',
-            'contact_no' => 0
-        ]);
+        $customer = CustomerModel::getCustomerByEmail($payload->email);
+        if(!$customer){
+            CustomerModel::create([
+                'created_by_user_id' => Auth::user()->id ?? 0,
+                'first_name' => $payload->name ?? '',
+                'middle_name' => '',
+                'last_name' =>  '',
+                'email' => $payload->email,
+                'address' => '',
+                'contact_no' => 0
+            ]);
+        }
 
+        $booking_status = 0;
+        if($payload['boooking_status'] == 0){
+            $booking_status = 'overnight_stay';
+        }else if($payload['boooking_status'] == 1){
+            $booking_status = 'day_tour';
+        }
+        else if($payload['boooking_status'] == 2){
+            $booking_status = 'place_reservation';
+        }else{
+            //
+        }
+            
         $emailDetails = [
             'title' => 'Reservation Approved',
             'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
             'reservation' => $payload, 
-            'booking_status' => $payload['boooking_status']
+            'booking_status' => $booking_status
         ];
     
         Mail::to($payload['email'])->send(new \App\Mail\SendMail($emailDetails));
