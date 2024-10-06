@@ -133,6 +133,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Survey
     Route::get('surveys', ['as' => 'surveys', 'uses' => 'App\Http\Controllers\SurveyController@index']);
+    Route::get('feedbacks', ['as' => 'feedbacks', 'uses' => 'App\Http\Controllers\SurveyController@index_feedback']);
     Route::get('surveys.list', ['as' => 'surveys.list', 'uses' => 'App\Http\Controllers\SurveyController@survey_data']);
     Route::get('feedback.list', ['as' => 'feedback.list', 'uses' => 'App\Http\Controllers\SurveyController@feedback_data']);
     Route::resource('survey', 'App\Http\Controllers\SurveyController');

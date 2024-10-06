@@ -20,7 +20,15 @@ class SurveyController extends Controller
     public function index()
     {
         //
-        return view('pages.survey.index');
+        return view('pages.survey.index',[
+            'surveys' => SurveyModel::getSurvey()
+        ]);
+    }
+
+    public function index_feedback()
+    {
+        $feedbacks = SurveyModel::getFeedbackCount();
+        return view('pages.feedback_form.index', compact('feedbacks'));
     }
 
     /**
