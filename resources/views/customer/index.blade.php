@@ -14,12 +14,12 @@
                             <div class="col-8">
                                 <h3 class="mb-0 h3_title">Customer</h3>
                             </div>
-                            @can('customer-create')
+                            {{-- @can('customer-create')
                                 <div class="col-4 text-right add-region-btn">
                                     <a href="{{ route('customer.create') }}" class="btn btn-sm btn-primary"
                                         id="add-region-btn">{{ __('Add Customer') }}</a>
                                 </div>
-                            @endcan
+                            @endcan --}}
                         </div>
                     </div>
 
@@ -59,9 +59,9 @@
                                         align-items: center;">
                                             <a href="{{ route('customer.payment', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-money-check" title="Add Billing"></i></a>
                                             {{-- <a href="{{ route('customer.generate_qrcode', Hashids::encode($customer->id)) }}" class="btn btn-default btn-sm mr-1"><i class="fas fa-qrcode"></i></a> --}}
-                                            @if (Auth::user()->can('customer-edit'))
+                                            {{-- @if (Auth::user()->can('customer-edit'))
                                                 <a href="{{ route('customer.edit', Hashids::encode($customer->id)) }}" class="btn btn-info btn-sm mr-1"><i class="fas fa-pen"></i></a>
-                                            @endif
+                                            @endif --}}
                                             @if (Auth::user()->can('customer-delete'))
                                                 <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete({{ $customer->id }})"><i class="fas fa-trash"></i></button>
                                                 <form id="delete-form-{{ $customer->id }}" action="{{ route('customer.destroy', $customer->id) }}" method="POST" style="display: none;">

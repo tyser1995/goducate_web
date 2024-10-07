@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
+use Vinkla\Hashids\Facades\Hashids;
+use App\Models\CustomerModel;
+
 class Transaction extends Model
 {
     use HasFactory, SoftDeletes;
@@ -29,9 +32,10 @@ class Transaction extends Model
 
     public static function createTransaction($data)
     {
+        $customer = CustomerModel::getCustomerByEmail($data['email']);
         $payload = self::create([
-            'created_by_user_id' => Auth::user()->id,
-            'customer_id' => $data['customer_id'] ?? '',
+            'created_by_user_id' => Auth::user()->id ?? 0,
+            'customer_id' => $customer->id ?? '',
             'description' => $data['description'] ?? '',
             'amount' => $data['amount'] ?? ''
         ]);
@@ -48,7 +52,7 @@ class Transaction extends Model
             transactions.amount
         ')
         ->join('customers', 'customers.id', '=', 'transactions.customer_id') 
-        ->where('transactions.customer_id','=',$customer_id) 
+        ->where('transactions.customer_id','=',$customer_id)
         ->get();
     }
 

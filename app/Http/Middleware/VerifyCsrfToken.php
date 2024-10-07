@@ -19,6 +19,8 @@ class VerifyCsrfToken extends Middleware
         'bookings.overnight_stay',
         'bookings.day_tour',
         'bookings.place_reservation',
-        'volunteer.register'
+        'volunteer.register',
+        'checkout',
+        'checkout.process'
     ];
 }

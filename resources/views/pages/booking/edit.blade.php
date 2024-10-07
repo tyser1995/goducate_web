@@ -108,7 +108,10 @@
                                                 @endphp
                                             @endif
                                         
-                                            <span>{{ $value->room_type }}</span><br/>
+                                            <?php 
+                                                $room_types = \App\Models\Accomodation::getAccomodationOvernightStayName($value->room_type);
+                                            ?>
+                                            <span>{{ $room_types }}</span><br/>
                                         @endforeach
                                     
                                     @elseif ($day_tour->count() > 0)

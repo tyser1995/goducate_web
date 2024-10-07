@@ -39,7 +39,6 @@ class CustomerModel extends Model
 
     public static function getCustomer()
     {
-
         // return self::selectRaw('
         //     customers.id,
         //     customers.created_by_user_id,

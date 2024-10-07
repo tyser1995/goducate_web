@@ -173,7 +173,7 @@ class BookingModel extends Model
     public static function getBooking()
     {
         return self::selectRaw("
-                CASE 
+                CASE
                     WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkin_date 
                     WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkin_date 
                     ELSE booking_place_reservations.checkin_date 
@@ -229,11 +229,32 @@ class BookingModel extends Model
             'boooking_status' => $data['boooking_status']
         ]);
 
+        $customer = CustomerModel::getCustomerByEmail($data['email']);
+        $customer_id = 0;
+
+        if(!$customer){
+            $new_customer = CustomerModel::create([
+                'created_by_user_id' => Auth::user()->id ?? 0,
+                'first_name' => $payload->name ?? '',
+                'middle_name' => '',
+                'last_name' => $data['address'] ?? '',
+                'email' => $payload->email,
+                'address' => '',
+                'contact_no' => $data['contact_no'] ?? 0
+            ]);
+
+            $customer_id = $new_customer->id;
+        } else {
+            $customer_id = $customer->id;
+        }
+
+
         $emailDetails = [
             'title' => 'Reservation Confirmation',
             'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
-            'reservation' => $payload, 
-            'booking_status' => $data['boooking_status']
+            'reservation' => $payload,
+            'booking_status' => $data['boooking_status'],
+            'customer_id' => $customer_id
         ];
     
         Mail::to($data['email'])->send(new \App\Mail\SendMail($emailDetails));
@@ -255,20 +276,42 @@ class BookingModel extends Model
                 'created_by_user_id' => Auth::user()->id ?? 0,
                 'first_name' => $payload->name ?? '',
                 'middle_name' => '',
-                'last_name' =>  '',
+                'last_name' =>  $payload->address ?? '',
                 'email' => $payload->email,
                 'address' => '',
-                'contact_no' => 0
+                'contact_no' => $payload->contact_no ?? 0
+            ]);
+        }else{
+            $customer->update([
+                'created_by_user_id' => Auth::user()->id ?? 0,
+                'first_name' => $payload->name ?? '',
+                'middle_name' => '',
+                'last_name' =>  $payload->address ?? '',
+                'email' => $payload->email,
+                'address' => '',
+                'contact_no' => $payload->contact_no ?? 0
             ]);
         }
+
+        $accomodation = Accomodation::getAccomodationById($payload->accomodation_id);
+
+        $data = [
+            'email' => $payload->email,
+            'created_by_user_id' => Auth::user()->id ?? 0,
+            'customer_id' => $customer->id ?? '',
+            'description' => $accomodation->type ?? '',
+            'amount' => $accomodation->amount ?? 0
+        ];
+
+        Transaction::createTransaction($data);
 
         $booking_status = 0;
         if($payload['boooking_status'] == 0){
             $booking_status = 'overnight_stay';
-        }else if($payload['boooking_status'] == 1){
+        }elseif($payload['boooking_status'] == 1){
             $booking_status = 'day_tour';
         }
-        else if($payload['boooking_status'] == 2){
+        elseif($payload['boooking_status'] == 2){
             $booking_status = 'place_reservation';
         }else{
             //
@@ -276,12 +319,13 @@ class BookingModel extends Model
             
         $emailDetails = [
             'title' => 'Reservation Approved',
-            'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
-            'reservation' => $payload, 
-            'booking_status' => $booking_status
+            'body' => 'Your reservation details have been approved. Kindly check your Goducate for other concerns. Thank you for choosing Goducate!',
+            'reservation' => $payload,
+            'booking_status' => $booking_status,
+            'email' => $payload->email
         ];
     
-        Mail::to($payload['email'])->send(new \App\Mail\SendMail($emailDetails));
+        Mail::to($payload['email'])->send(new \App\Mail\SendApprovedMail($emailDetails));
 
         return $payload;
     }

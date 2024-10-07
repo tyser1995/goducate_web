@@ -60,6 +60,12 @@ Route::get('qr.code', ['as' => 'qr.code', 'uses' => 'App\Http\Controllers\QRCode
 Route::get('download-code', ['as' => 'download-code', 'uses' => 'App\Http\Controllers\QRCodeController@downloadQrCode']);
 Route::post('verify-code', ['as' => 'verify-code', 'uses' => 'App\Http\Controllers\QRCodeController@verifyQRCode']);
 
+
+//Stripe Payment
+Route::get('checkout/{id}', ['as' => 'checkout/{id}', 'uses' => 'App\Http\Controllers\TransactionController@showCheckoutForm']);
+Route::post('checkout.process', ['as' => 'checkout.process', 'uses' => 'App\Http\Controllers\TransactionController@processPayment']);
+
+
 Route::get('user/{id}/avatar', function ($id) {
     // Find the user
     $user = App\Models\User::find(1);

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class BookingDayTourModel extends Model
 {
@@ -52,13 +53,24 @@ class BookingDayTourModel extends Model
             'checkout_date' => $data['checkout_date'],
             'status' => 'pending'
         ]);
+        
+        $customer = CustomerModel::getCustomerByEmail($data['email']);
+        $customer_id = 0;
 
+        if(!$customer){
+            $customer_id = $new_customer->id;
+        } else {
+            $customer_id = $customer->id;
+        }
+        
         $emailDetails = [
             'title' => 'Reservation Confirmation',
             'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
-            'reservation' => $payload, 
-            'booking_status' => 'day_tour'
+            'reservation' => $payload,
+            'booking_status' => 'day_tour',
+            'customer_id' => $customer_id
         ];
+
     
         Mail::to($data['email'])->send(new \App\Mail\SendMail($emailDetails));
         return $payload;
