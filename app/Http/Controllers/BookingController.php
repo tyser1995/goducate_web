@@ -21,7 +21,7 @@ class BookingController extends Controller
     {
         //
         return view('pages.booking.index',[
-            'bookings' => BookingModel::getBookingList()
+            'bookings' => BookingModel::getBooking()
         ]);
     }
 
@@ -73,7 +73,7 @@ class BookingController extends Controller
             'overnight_stays' => BookingOvernightStayModel::getOvernightStayByEmail($booking->email),
             'day_tours' => BookingDayTourModel::getDayTourByEmail($booking->email),
             'place_reservations' => BookingPlaceReservationModel::getPlaceReservationByEmail($booking->email)
-        ]);  
+        ]);
     }
 
     /**
