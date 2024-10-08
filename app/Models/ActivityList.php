@@ -52,12 +52,21 @@ class ActivityList extends Model
         $aboutUs = self::findOrFail($id);
 
         // Update the instance with the provided data
-        $aboutUs->update([
-            'created_by_user_id' => $data['created_by_users_id'],
-            'description' => htmlentities($data['summernote']),
-            'title' => $data['title'],
-            'image' => $data['image']
-        ]);
+        if(!empty($data['image'])){
+            $aboutUs->update([
+                'created_by_user_id' => $data['created_by_users_id'],
+                'description' => htmlentities($data['summernote']),
+                'title' => $data['title'],
+                'image' => $data['image']
+            ]);
+        }else{
+            $aboutUs->update([
+                'created_by_user_id' => $data['created_by_users_id'],
+                'description' => htmlentities($data['summernote']),
+                'title' => $data['title']
+            ]);
+        }
+        
 
         return $aboutUs;
     }

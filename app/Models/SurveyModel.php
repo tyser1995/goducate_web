@@ -101,6 +101,14 @@ class SurveyModel extends Model
         ->get();
     }
 
+    public static function getFeedbackCount()
+    {
+        return self::selectRaw('services, ratings, count(*) as rating_count')
+        ->where('type', '=', 'feedback')
+        ->groupBy('services', 'ratings')
+        ->get();
+    }
+
     public static function getFeedbackById($id)
     {
         return self::findOrFail($id);

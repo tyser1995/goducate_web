@@ -182,9 +182,10 @@ class ActivityPageController extends Controller
             // Create the activity list entry
             ActivityList::updateActivityList($id, $input);
             return redirect()->route('activity.index')->withStatus(__('Successfully Updated.'));
+        }else{
+            ActivityList::updateActivityList($id, $request->all());
+            return redirect()->route('activity.index')->withStatus(__('Successfully Updated.'));
         }
-    
-        return redirect()->route('activity.index')->withError(__('Error.'));
        
     }
 

@@ -36,6 +36,7 @@
                                     </div>
                                     <div class="col-6">
                                         <label for="name">Email</label>
+                                        <input type="hidden" name="email" value="{{$customers->email}}" />
                                         <p>{{ $customers->email }}</p>
                                     </div>
                                     <div class="col-6">
