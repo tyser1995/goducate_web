@@ -561,8 +561,8 @@
                 'no_of_children'  :$('#no_of_children').val(),
                 'boooking_status' :$('#boooking_status').val(),
                 'checkin_date'    : $('#checkin_date').val(),
-                'checkout_date'   : $('#checkout_date').val()
-                //'accomodation_id' :roomTypes
+                'checkout_date'   : $('#checkout_date').val(),
+                'accomodation_id' : roomTypes
               },
               success: function(response) {
                   

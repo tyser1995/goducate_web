@@ -48,20 +48,25 @@ class BookingModel extends Model
 
     public static function createBooking($data)
     {
-        $payload = self::create([
-            'created_by_user_id' => $data['created_by_users_id'] ?? 0,
-            'customer_id' => $data['customer_id'] ?? 0,
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'address' => $data['address'],
-            'contact_no' => $data['contact_no'],
-            'no_of_adults' => $data['no_of_adults'],
-            'no_of_children' => $data['no_of_children'],
-            'boooking_status' => $data['boooking_status'],
-            'checkin_date' => $data['checkin_date'],
-            'checkout_date' => $data['checkout_date'],
-            'status' => 'pending'
-        ]);
+        $roomTypes = is_array($data['accomodation_id']) ? $data['accomodation_id'] : [$data['accomodation_id']];
+        $payload = [];
+        foreach ($roomTypes as $roomType) {
+            $payload[] = self::create([
+                'created_by_user_id' => $data['created_by_users_id'] ?? 0,
+                'customer_id' => $data['customer_id'] ?? 0,
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'address' => $data['address'],
+                'contact_no' => $data['contact_no'],
+                'no_of_adults' => $data['no_of_adults'],
+                'no_of_children' => $data['no_of_children'],
+                'boooking_status' => $data['boooking_status'],
+                'checkin_date' => $data['checkin_date'],
+                'checkout_date' => $data['checkout_date'],
+                'accomodation_id' => $roomType,
+                'status' => 'pending'
+            ]);
+        }
 
         return $payload;
     }
@@ -110,7 +115,7 @@ class BookingModel extends Model
                 accomodations.type,
                 CONCAT(
                     DATE(bookings.checkin_date), ' ',TIME(bookings.created_at)
-                ) as 
+                ) as
                 combined_checkin_datetime,
                 CONCAT(
                     DATE(bookings.checkout_date), ' ',TIME(bookings.created_at)
@@ -172,33 +177,7 @@ class BookingModel extends Model
 
     public static function getBooking()
     {
-        return self::selectRaw("
-                CASE
-                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkin_date 
-                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkin_date 
-                    ELSE booking_place_reservations.checkin_date 
-                END as checkin_date,
-                CASE 
-                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkout_date 
-                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkout_date 
-                    ELSE booking_place_reservations.checkout_date 
-                END as checkout_date
-            ")
-            ->leftJoin('booking_overnight_stays', function($join) {
-                $join->on('booking_overnight_stays.customer_id', '=', 'bookings.customer_id')
-                    ->where('bookings.boooking_status', '=', 0);
-            })
-            ->leftJoin('booking_day_tours', function($join) {
-                $join->on('booking_day_tours.customer_id', '=', 'bookings.customer_id')
-                    ->where('bookings.boooking_status', '=', 1); 
-            })
-            ->leftJoin('booking_place_reservations', function($join) {
-                $join->on('booking_place_reservations.customer_id', '=', 'bookings.customer_id')
-                    ->where('bookings.boooking_status', '!=', 0)
-                    ->where('bookings.boooking_status', '!=', 1); 
-            })
-            ->distinct()
-            ->get();
+        return self::get();
     }
 
     public static function getBookingById($id)
@@ -295,7 +274,7 @@ class BookingModel extends Model
 
         $accomodation = Accomodation::getAccomodationById($payload->accomodation_id);
 
-        $data = [
+        $data_new = [
             'email' => $payload->email,
             'created_by_user_id' => Auth::user()->id ?? 0,
             'customer_id' => $customer->id ?? '',
@@ -303,7 +282,8 @@ class BookingModel extends Model
             'amount' => $accomodation->amount ?? 0
         ];
 
-        Transaction::createTransaction($data);
+        
+        Transaction::createTransaction($data_new);
 
         $booking_status = 0;
         if($payload['boooking_status'] == 0){

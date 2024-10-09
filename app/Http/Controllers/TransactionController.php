@@ -124,7 +124,7 @@ class TransactionController extends Controller
                 $input['attachment'] = $image_name;
                 $input['customer_id'] = Hashids::decode($request->customer_id)[0];
                 Payment::createPayment($input);
-                return back()->withStatus('Payment successful!');
+                return redirect('/home');
             }
             return back()->withErrors('Error! ' . $e->getMessage());
            
