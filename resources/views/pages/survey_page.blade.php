@@ -99,6 +99,20 @@
                       <option selected value="">Select Municipality</option>
                   </select>
               </div>
+
+              <div class="form-group">
+                <label for="children">Religion:</label>
+                <select name="religion" id="religion" class="religion form-control" required>
+                  <option selected value="">Select option</option>
+                  @foreach (App\Models\SurveyModel::RELIGION as $key => $type)
+                    <option value="{{$key}}">{{$type}}</option>
+                  @endforeach
+                </select>
+              </div>
+              <div class="form-group d-none other_religion_containter">
+                <label for="other_religion">Other Religion:</label>
+                <input type="text" class="form-control" name="other_religion" id="other_religion" disabled />
+              </div>
           
               <div class="form-group">
                   <button type="submit" class="btn btn-primary btn-block">Submit Survey</button>
@@ -116,6 +130,17 @@
                 '<option value="' + municipality.name + '">' + municipality.name + '</option>'
             );
         });
+    });
+
+    $('#religion').change(function () {
+      console.log($(this).val());
+      if($(this).val() == "Other"){
+        $('.other_religion_containter').removeClass('d-none');
+        $('#other_religion').removeAttr('disabled');
+      }else{
+        $('.other_religion_containter').addClass('d-none');
+        $('#other_religion').attr('disabled','disabled');
+      }
     });
 
   </script>

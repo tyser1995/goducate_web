@@ -59,62 +59,116 @@
       display: none;
     }
 
-    i{
+    i {
       font-size: 150px;
       padding: 5px;
+      cursor: pointer;
     }
 </style>
 
 <div class="background-overlay" id="background-overlay"></div>
-  <div class="overlay"></div>
-  <!-- Header -->
-  @include('pages.header')
-  <div class="container">
+<div class="overlay"></div>
+<!-- Header -->
+@include('pages.header')
+<div class="container">
     <div class="card mt-3">
-      <div class="card-header">
-        <h3>Feedback Survey</h3>
-      </div>
-      <div class="card-body">
-          @include('notification.index')
-          <form class="form" method="POST" action="{{ route('survey.feedback') }}" autocomplete="off">
-              @csrf
-              <div class="form-group">
-                <label for="name">Services</label>
-                <select name="services" id="description" class="form-control" required>
-                    <option selected value="">Select option</option>
-                    @foreach (App\Models\SurveyModel::SERVICE_TYPE as $key => $type)
-                        <option value="{{ $key }}">{{ $type }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <div class="card-header">
+            <h3>Feedback Survey</h3>
+        </div>
+        <div class="card-body">
+            @include('notification.index')
+            <form class="form" method="POST" action="{{ route('survey.feedback') }}" autocomplete="off">
+                @csrf
+                <!-- Food/Resto -->
+                <div class="form-group">
+                    <label for="food_resto">Food/Resto</label>
+                    <input type="hidden" id="food_resto" name="food_resto"/>
+                </div>
 
-              <div class="form-group text-center" style="cursor: pointer">
-                <i class="fas fa-angry mood_icon" data-value="angry" style="color: red;"></i>
-                <i class="fas fa-sad-tear mood_icon" data-value="sad" style="color: orange;"></i>
-                <i class="fas fa-meh mood_icon" data-value="neutral"  style="color: gray;"></i>
-                <i class="fas fa-smile mood_icon" data-value="smile"  style="color: green;"></i>
-                <i class="fas fa-grin-stars mood_icon" data-value="happy"  style="color: gold;"></i>
-              </div>
-              <input type="hidden" id="ratings" name="ratings"/>
-          
-              <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-block">Submit Feedback</button>
-              </div>
-          </form>
-      </div>
+                <div class="form-group text-center">
+                    <i class="fas fa-angry mood_icon" data-value="angry" data-target="food_resto" style="color: red;"></i>
+                    <i class="fas fa-sad-tear mood_icon" data-value="sad" data-target="food_resto" style="color: orange;"></i>
+                    <i class="fas fa-meh mood_icon" data-value="neutral" data-target="food_resto" style="color: gray;"></i>
+                    <i class="fas fa-smile mood_icon" data-value="smile" data-target="food_resto" style="color: green;"></i>
+                    <i class="fas fa-grin-stars mood_icon" data-value="happy" data-target="food_resto" style="color: gold;"></i>
+                </div>
+
+                <!-- Accommodations -->
+                <div class="form-group">
+                    <label for="accommodation">Accommodations</label>
+                    <input type="hidden" id="accommodation" name="accommodation"/>
+                </div>
+
+                <div class="form-group text-center">
+                    <i class="fas fa-angry mood_icon" data-value="angry" data-target="accommodation" style="color: red;"></i>
+                    <i class="fas fa-sad-tear mood_icon" data-value="sad" data-target="accommodation" style="color: orange;"></i>
+                    <i class="fas fa-meh mood_icon" data-value="neutral" data-target="accommodation" style="color: gray;"></i>
+                    <i class="fas fa-smile mood_icon" data-value="smile" data-target="accommodation" style="color: green;"></i>
+                    <i class="fas fa-grin-stars mood_icon" data-value="happy" data-target="accommodation" style="color: gold;"></i>
+                </div>
+
+                <!-- Recreation Activities -->
+                <div class="form-group">
+                    <label for="recreation">Recreation Activities</label>
+                    <input type="hidden" id="recreation" name="recreation"/>
+                </div>
+
+                <div class="form-group text-center">
+                    <i class="fas fa-angry mood_icon" data-value="angry" data-target="recreation" style="color: red;"></i>
+                    <i class="fas fa-sad-tear mood_icon" data-value="sad" data-target="recreation" style="color: orange;"></i>
+                    <i class="fas fa-meh mood_icon" data-value="neutral" data-target="recreation" style="color: gray;"></i>
+                    <i class="fas fa-smile mood_icon" data-value="smile" data-target="recreation" style="color: green;"></i>
+                    <i class="fas fa-grin-stars mood_icon" data-value="happy" data-target="recreation" style="color: gold;"></i>
+                </div>
+
+                <!-- Place -->
+                <div class="form-group">
+                    <label for="place">Place</label>
+                    <input type="hidden" id="place" name="place"/>
+                </div>
+
+                <div class="form-group text-center">
+                    <i class="fas fa-angry mood_icon" data-value="angry" data-target="place" style="color: red;"></i>
+                    <i class="fas fa-sad-tear mood_icon" data-value="sad" data-target="place" style="color: orange;"></i>
+                    <i class="fas fa-meh mood_icon" data-value="neutral" data-target="place" style="color: gray;"></i>
+                    <i class="fas fa-smile mood_icon" data-value="smile" data-target="place" style="color: green;"></i>
+                    <i class="fas fa-grin-stars mood_icon" data-value="happy" data-target="place" style="color: gold;"></i>
+                </div>
+
+                <!-- Services -->
+                <div class="form-group">
+                    <label for="services">Services</label>
+                    <input type="hidden" id="services" name="services"/>
+                </div>
+
+                <div class="form-group text-center">
+                    <i class="fas fa-angry mood_icon" data-value="angry" data-target="services" style="color: red;"></i>
+                    <i class="fas fa-sad-tear mood_icon" data-value="sad" data-target="services" style="color: orange;"></i>
+                    <i class="fas fa-meh mood_icon" data-value="neutral" data-target="services" style="color: gray;"></i>
+                    <i class="fas fa-smile mood_icon" data-value="smile" data-target="services" style="color: green;"></i>
+                    <i class="fas fa-grin-stars mood_icon" data-value="happy" data-target="services" style="color: gold;"></i>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block">Submit Feedback</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
 @endsection
+
 @push('scripts')
-  <script>
+<script>
     $('.mood_icon').click(function() {
         var selectedMood = $(this).attr('data-value');
+        var targetField = $(this).attr('data-target');
         
-        $('#ratings').val(selectedMood);
+        $('#' + targetField).val(selectedMood);
         
-        $('.mood_icon').css('opacity', '0.2');
+        // Reset the opacity for all mood icons in the current section
+        $(this).parent().find('.mood_icon').css('opacity', '0.2');
         $(this).css('opacity', '1');
     });
-  </script>
+</script>
 @endpush
-

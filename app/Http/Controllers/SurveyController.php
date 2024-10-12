@@ -135,9 +135,6 @@ class SurveyController extends Controller
 
     public function feedback(Request $request)
     {
-        if($request['ratings'] == null)
-            return redirect()->route('_feedback')->withError(__('Please select a mood rating.'));
-
         SurveyModel::createFeedback($request->all());
         return redirect()->route('_feedback')->withStatus(__('Successfully submitted.'));
     }
