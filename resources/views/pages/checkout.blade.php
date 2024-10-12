@@ -58,18 +58,37 @@
   <section class="about" id="about">
     <div class="container">
         @include('notification.index')
-        <form action="{{ route('checkout.process') }}" method="post" id="payment-form" enctype="multipart/form-data">
+        <form id="quickForm" method="post" id="payment-form" enctype="multipart/form-data">
             @csrf
             <input type="hidden" class="form-control" name="customer_id" id="customer_id">
             <div class="row">
                 <div class="form-group col-6">
                   <label for="name">Upload Payment Screenshot:</label>
-                  <input type="file" class="form-control" id="name" name="attachment" required>
+                  <input type="file" class="form-control" id="attachment" name="attachment" required>
                 </div>
             </div>
            
             <button type="submit" class="btn btn-primary">Submit Payment</button>
         </form>
+    </div>
+
+    <div id="confirmModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" style="color:#000 !important">Payment</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <p style="color:#000 !important">Payment successfully submitted!</p>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary btnClose">Close</button>
+              </div>
+          </div>
+      </div>
     </div>
   </section>
 @endsection
@@ -87,6 +106,32 @@
         }
     });
 
-   $('#customer_id').val(id_value);
+    $('#customer_id').val(id_value);
+
+    $('#quickForm').submit(function(event) {
+      
+      event.preventDefault();
+      
+      $.ajax({
+          url: "{{ route('checkout.process') }}",
+          type: "POST",
+          data: {
+            'customer_id'     : $('#customer_id').val(),
+            'attachment'      : $('#attachment').val(),
+          },
+          success: function(response) {
+              $('#confirmModal').modal('show');
+          },
+          error: function(error) {
+              console.log(error)
+          }
+      });
+  });
+
+  $('.btnClose').click(function(){
+    window.location.href ="/home";
+  });
+
+  
 </script>
 @endpush

@@ -123,8 +123,12 @@ class TransactionController extends Controller
                 $input = $request->all();
                 $input['attachment'] = $image_name;
                 $input['customer_id'] = Hashids::decode($request->customer_id)[0];
-                Payment::createPayment($input);
-                return redirect('/home');
+                $data = Payment::createPayment($input);
+                
+                return response()->json([
+                    'success' => true,
+                    'data' => $data,
+                ], 200);
             }
             return back()->withErrors('Error! ' . $e->getMessage());
            
