@@ -18,7 +18,8 @@ class Payment extends Model
         'created_by_user_id',
         'customer_id',
         'amount',
-        'attachment'
+        'attachment',
+        'payment_status'
     ];
 
     public static function createPayment($data)
@@ -27,7 +28,8 @@ class Payment extends Model
             'created_by_user_id' => Auth::user()->id ?? 0,
             'customer_id' => $data['customer_id'] ?? 0,
             'amount' => $data['amount'] ?? 0,
-            'attachment' => $data['attachment'] ?? ''
+            'attachment' => $data['attachment'] ?? '',
+            'payment_status' => 'Partial'
         ]);
     }
 
@@ -43,6 +45,13 @@ class Payment extends Model
         return self::findOrFail($id);
     }
 
+    public static function getPaymentPartialOnly()
+    {
+        return self::where('payment_status','=','Partial')
+        ->orderBy('created_at','DESC')
+        ->get();
+    }
+
     public static function updatePayment($id, $data)
     {
         $payload = self::findOrFail($id);
@@ -52,6 +61,18 @@ class Payment extends Model
             'customer_id' => $data['customer_id'] ?? 0,
             'amount' => $data['amount'] ?? 0,
             'attachment' => $data['attachment'] ?? ''
+        ]);
+
+        return $payload;
+    }
+
+    public static function updatePaymentStatus($customer_id)
+    {
+        $payload = self::where('customer_id','=',$customer_id);
+        
+        $payload->update([
+            'created_by_user_id' => Auth::user()->id ?? 0,
+            'payment_status' => 'Viewed by '.Auth::user()->name
         ]);
 
         return $payload;

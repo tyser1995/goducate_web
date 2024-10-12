@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CustomerModel;
 use App\Models\User;
 use App\Models\Transaction;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -20,10 +21,10 @@ class CustomerController extends Controller
     
     function __construct()
     {
-        $this->middleware('permission:customer-list', ['only' => ['index']]);
-        $this->middleware('permission:customer-create', ['only' => ['create','store']]);
-        $this->middleware('permission:customer-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:customer-delete', ['only' => ['destroy']]);
+        // $this->middleware('permission:customer-list', ['only' => ['index']]);
+        // $this->middleware('permission:customer-create', ['only' => ['create','store']]);
+        // $this->middleware('permission:customer-edit', ['only' => ['edit','update']]);
+        // $this->middleware('permission:customer-delete', ['only' => ['destroy']]);
     }
 
     /**
@@ -160,10 +161,25 @@ class CustomerController extends Controller
     public function getPayments($id){
         $customer = CustomerModel::find(Hashids::decode($id)[0]);
         $transaction = Transaction::getTransaction(Hashids::decode($id)[0]);
+       
+        Payment::updatePaymentStatus(Hashids::decode($id)[0]);
         return view('customer.payment',[
             'customers'     => $customer,
             'transactions'  => $transaction
         ]);
+    }
+
+    public function getVerifyPayments($id){
+        $customer = CustomerModel::find(Hashids::decode($id)[0]);
+        if(!$customer){
+            return redirect()->back()->withErrors('No customer found')->withInput();
+        }
+
+        // $transaction = Transaction::getTransaction(Hashids::decode($id)[0]);
+        // return view('customer.payment',[
+        //     'customers'     => $customer,
+        //     'transactions'  => $transaction
+        // ]);
     }
 
     public function addPayments(Request $request){
