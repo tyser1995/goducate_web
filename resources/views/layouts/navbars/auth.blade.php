@@ -117,7 +117,7 @@
                             @if(Auth::user()->can('booknow-list') || Auth::user()->role == 1)
                                 <li class="{{ $elementActive == 'booknow' ? 'active' : '' }}">
                                     <a href="{{route('bookings')}}">
-                                        <span class="sub-item">Book Now</span>
+                                        <span class="sub-item">Bookings</span>
                                     </a>
                                 </li>
                             @endif

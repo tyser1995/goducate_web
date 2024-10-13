@@ -94,7 +94,7 @@
                   if (data.success) {
                       document.getElementById('result').innerHTML = "Successfully deducted";
                   } else {
-                      document.getElementById('result').innerHTML = "Invalid QR Code!";
+                      document.getElementById('result').innerHTML = "Insuficient Balance!";
                   }
 
                   setTimeout(() => {

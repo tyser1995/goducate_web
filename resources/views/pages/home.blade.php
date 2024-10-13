@@ -22,7 +22,7 @@
       background-repeat: no-repeat;
       background-position: center;
       z-index: -1;
-      opacity: 10;
+      background-image: url("{{asset('images/bckgrnd.png')}}");
     }
 
     .overlay {
@@ -77,7 +77,7 @@
       justify-content: center;
       align-items: center;
       padding: 50px 0;
-      min-height: 80vh;
+      min-height: 100vh; /* Full screen height */
     }
 
     .home .content {
@@ -112,39 +112,13 @@
       cursor: pointer;
     }
 
-    .home .image {
-      display: none;
-    }
-
-    .image_item {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
-      padding: 10px;
-      border-radius: 10px;
-    }
-
-    .image_item img {
-      width: 100px;
-      cursor: pointer;
-      opacity: 0.6;
-      transition: opacity 0.3s;
-      border-radius: 5px;
-    }
-
-    .image_item img.active {
-      opacity: 1;
-      border: 2px solid #ff9900;
-    }
-
     .Promo-section {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 20px;
-      margin: 20px 0;
-      background-color: rgba(248, 249, 250, 0.9);
+      margin: 50px 0 20px 0; /* Adds a 50px margin-top */
+      background-color: rgba(255, 255, 255, 0.9); /* Light background with some transparency */
       color: #333;
     }
 
@@ -162,114 +136,88 @@
       border-radius: 10px;
     }
 
-    .Promo-section .center {
-      text-align: center;
+    .Promo-section .right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
 
     .Promo-section .right .activities {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 20px;
+    }
+
+    .Promo-section .right .activity-item {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-    }
-
-    .Promo-section .right .activities div {
-      display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      text-align: center;
     }
 
-    .Promo-section .right .activities div img {
+    .Promo-section .right .activity-item img {
       width: 100px;
-      height: auto;
+      height: 100px;
       border-radius: 5px;
       transition: transform 0.3s ease-in-out;
     }
 
-    .Promo-section .right .activities div img:hover {
+    .Promo-section .right .activity-item img:hover {
       transform: scale(1.5);
+    }
+
+    /* Keyframes for sliding effect */
+    @keyframes slide-left {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: -100% 0;
+      }
+    }
+
+    .background-overlay {
+      animation: slide-left 5s infinite ease-in-out;
     }
 </style>
 
 <div class="background-overlay" id="background-overlay"></div>
-  <div class="overlay"></div>
-  <!-- Header -->
-  @include('pages.header')
-  <!-- Home -->
-  <section class="home" id="home">
-    <div class="container content">
-      <div class="text">
-        <h1>Welcome to Camp Goducate Iloilo</h1>
-        <p>Relax and enjoy your stay at Camp Goducate.</p>
-        <a href="booking.php"><button>Book Now</button></a>
-      </div>
-      <div class="image_item">
-        <img src="{{asset('images')}}/bckgrnd.png" alt="Image 1" class="slide active" onclick="setBackground('{{asset('images')}}/bckgrnd.png')">
-        <img src="{{asset('images')}}/A11.jpg" alt="Image 2" class="slide" onclick="setBackground('{{asset('images')}}/A11.jpg')">
-        <img src="{{asset('images')}}/A12.jpg" alt="Image 3" class="slide" onclick="setBackground('{{asset('images')}}/A12.jpg')">
-        <img src="{{asset('images')}}/A13.jpg" alt="Image 4" class="slide" onclick="setBackground('{{asset('images')}}/A13.jpg')">
-        <img src="{{asset('images')}}/A14.jpg" alt="Image 5" class="slide" onclick="setBackground('{{asset('images')}}/A14.jpg')">
-      </div>
-    </div>
-  </section>
+<div class="overlay"></div>
 
-  <!-- Promo and announcement  -->
-  <section class="Promo-section">
-    <div class="left">
-      <img src="{{asset('images')}}/about.jpg" alt="Left Image">
-    </div>
-    <div class="center">
-      <p>Description of the Promo.</p>
-    </div>
-    <div class="right">
-      @if (count($lists) > 0)
-        <h2>Activities</h2>
-        <div class="activities" id="activities-container">
-          @foreach ($lists as $list)
-            <div class="activity-item">
-              <img src="{{ asset('images/header_list/' . $list->image) }}" class="mb-2" style="width: 100px; height:100px" alt="{{ $list->title }}" />
-              <p>{{$list->title}}</p>
-            </div>
-          @endforeach
-        </div>
-      
-        <!-- Pagination controls -->
-        <div id="pagination-controls">
-          <button id="prevPage" class="btn btn-sm btn-info">
-            <i class="fa fa-angle-left"></i>
-          </button>
-          <button id="nextPage" class="btn btn-sm btn-info">
-            <i class="fa fa-angle-right"></i>
-          </button>
-        </div>
-      @else
-        <p>No Activites.</p>
-      @endif
+<!-- Header -->
+@include('pages.header')
 
-      
+<!-- Home Section -->
+<section class="home" id="home">
+  <div class="container content">
+    <div class="text">
+      <h1>Welcome to Camp Goducate Iloilo</h1>
+      <p>Relax and enjoy your stay at Camp Goducate.</p>
+      <a href="http://127.0.0.1:8000/_booking"><button>Book Now</button></a>
     </div>
-  </section>
+  </div>
+</section>
 
+<!-- Promo and Announcements Section -->
+<section class="Promo-section">
   <section class="mb-5">
     <div class="container content">
-        @if (count($announcements) > 0)
+      @if (count($announcements) > 0)
         <h2>Announcements</h2>
-        <div class="activities">
+        <div class="activities" style=" display: flex; align-items: center; justify-content: center;">
           @foreach ($announcements as $announcement)
             @if ($announcement->attachment)
-              <img src="{{ asset('images/announcement/' . $announcement->attachment) }}" class="mb-2" style="width: 100px; height:100px" alt="{{ $announcement->title }}" />
+              <img src="{{ asset('images/announcement/' . $announcement->attachment) }}" class="mb-2" style="width: 300px; height:300px; margin-right: 15px;" alt="{{ $announcement->title }}" />
               <div> 
-                <?php
-                echo html_entity_decode($announcement['description']);
-                ?>
+                {!! html_entity_decode($announcement['description']) !!}
               </div>
             @else
               <div> 
-                <?php
-                echo html_entity_decode($announcement['description']);
-                ?>
+                {!! html_entity_decode($announcement['description']) !!}
               </div>
             @endif
-           
           @endforeach
         </div>
       @else
@@ -277,54 +225,59 @@
       @endif
     </div>
   </section>
+  <div class="right">
+    @if (count($lists) > 0)
+      <h2>Activities</h2>
+      <div class="activities" id="activities-container">
+        @foreach ($lists as $list)
+          <div class="activity-item">
+            <img src="{{ asset('images/header_list/' . $list->image) }}" class="mb-2" style="width: 100px; height:100px" alt="{{ $list->title }}" />
+            <p>{{$list->title}}</p>
+          </div>
+        @endforeach
+      </div>
 
-  <script>
-     const itemsPerPage = 3;
-      let currentPage = 1;
+      <!-- Pagination controls -->
+      <div id="pagination-controls">
+        <button id="prevPage" class="btn btn-sm btn-info">
+          <i class="fa fa-angle-left"></i>
+        </button>
+        <button id="nextPage" class="btn btn-sm btn-info">
+          <i class="fa fa-angle-right"></i>
+        </button>
+      </div>
+    @else
+      <p>No Activities.</p>
+    @endif
+  </div>
+</section>
 
-      const items = document.querySelectorAll('.activity-item');
-      const totalPages = Math.ceil(items.length / itemsPerPage);
+<!-- JavaScript for background slideshow -->
+<script>
+  const backgroundOverlay = document.getElementById('background-overlay');
+  const backgroundImages = [
+    "{{asset('images/bckgrnd.png')}}",
+    "{{asset('images/A11.jpg')}}",
+    "{{asset('images/A12.jpg')}}",
+    "{{asset('images/A13.jpg')}}",
+    "{{asset('images/A14.jpg')}}"
+  ];
+  let currentIndex = 0;
 
-      function showPage(page) {
-          const start = (page - 1) * itemsPerPage;
-          const end = start + itemsPerPage;
+  // Function to change the background image
+  function changeBackground() {
+    currentIndex = (currentIndex + 1) % backgroundImages.length;
+    backgroundOverlay.style.backgroundImage = `url(${backgroundImages[currentIndex]})`;
+    backgroundOverlay.style.animation = 'slide-left 3s ease-in-out'; // Apply the slide-left animation
+  }
 
-          items.forEach((item, index) => {
-              item.style.display = (index >= start && index < end) ? 'flex' : 'none';
-          });
-      }
+  // Change background every 5 seconds
+  setInterval(changeBackground, 3000);
 
-      document.getElementById('nextPage').addEventListener('click', () => {
-          if (currentPage < totalPages) {
-              currentPage++;
-              showPage(currentPage);
-          }
-      });
+  // Set initial background image on page load
+  window.onload = function() {
+    backgroundOverlay.style.backgroundImage = `url(${backgroundImages[currentIndex]})`;
+  };
+</script>
 
-      document.getElementById('prevPage').addEventListener('click', () => {
-          if (currentPage > 1) {
-              currentPage--;
-              showPage(currentPage);
-          }
-      });
-
-      // Show the first page initially
-      showPage(currentPage);
-
-    function setBackground(imageUrl) {
-        var backgroundOverlay = document.getElementById('background-overlay');
-        backgroundOverlay.style.backgroundImage = 'url(' + imageUrl + ')';
-    
-        var slides = document.querySelectorAll('.slide');
-        slides.forEach(function(slide) {
-            slide.classList.remove('active');
-        });
-    
-        var activeSlide = document.querySelector('img[src="' + imageUrl + '"]');
-        if (activeSlide) {
-            activeSlide.classList.add('active');
-        }
-    }
-    </script>
 @endsection
-
