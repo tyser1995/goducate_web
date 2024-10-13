@@ -114,7 +114,7 @@
                 </select>
               </div>
             </div>
-            <div class="row">
+            <div class="row" style="overflow-x: auto; height:150px">
               <div class="col-12 overnight_stay d-none">
                 <div class="form-group" id="room-container">
                   <label for="children">Room Type:</label>
@@ -256,6 +256,36 @@
         </div>
     </div>
   </div>
+
+  <!-- Modal for Booking Details Review -->
+<div class="modal fade" id="bookingReviewModal" tabindex="-1" role="dialog" aria-labelledby="bookingReviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="bookingReviewModalLabel">Review Your Booking Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <h6>Selected Option: <span id="selectedOptionText"></span></h6>
+              <div id="bookingDetails" class="d-none"></div>
+              <p><strong>Name:</strong> <span id="confirm_name"></span></p>
+              <p><strong>Email:</strong> <span id="confirm_email"></span></p>
+              <p><strong>Address:</strong> <span id="confirm_address"></span></p>
+              <p><strong>Contact No.:</strong> <span id="confirm_contact_no"></span></p>
+              <p><strong>Number of Adults:</strong> <span id="confirm_no_of_adults"></span></p>
+              <p><strong>Number of Children:</strong> <span id="confirm_no_of_children"></span></p>
+              <p><strong>Room Types:</strong> <span id="confirm_room_types"></span></p>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>
+              <button type="button" class="btn btn-primary btnConfirmBooking">Confirm Booking</button>
+          </div>
+      </div>
+  </div>
+</div>
+
 @endsection
 
 @include('pages.scripts.booking_script')

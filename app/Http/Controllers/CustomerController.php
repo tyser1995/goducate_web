@@ -163,6 +163,8 @@ class CustomerController extends Controller
         $transaction = Transaction::getTransaction(Hashids::decode($id)[0]);
        
         Payment::updatePaymentStatus(Hashids::decode($id)[0]);
+        
+        \App\Models\Notification::updateNotificationStatus(Hashids::decode($id)[0],'payment');
         return view('customer.payment',[
             'customers'     => $customer,
             'transactions'  => $transaction

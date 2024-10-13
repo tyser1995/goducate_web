@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\Accomodation;
+
 class BookingOvernightStayModel extends Model
 {
     use HasFactory, SoftDeletes;
@@ -36,12 +38,15 @@ class BookingOvernightStayModel extends Model
     {
         $roomTypes = is_array($data['room_type']) ? $data['room_type'] : [$data['room_type']];
         $payload = [];
-        foreach ($roomTypes as $roomType) {
+        foreach ($roomTypes as $roomTypeId) {
+            $roomType = Accomodation::find($roomTypeId); // Adjust according to your model method
+            $roomTypeName = $roomType ? $roomType->type : null; // Replace 'name' with the actual column name
+
             $payload[] = self::create([
                 'created_by_user_id' => $data['created_by_users_id'] ?? 0,
                 'customer_id'        => $data['customer_id'] ?? 0,
                 'email'              => $data['email'],
-                'room_type'          => $roomType,
+                'room_type'          => $roomTypeName,
                 'checkin_date'       => $data['checkin_date'],
                 'checkout_date'      => $data['checkout_date'],
                 'status'             => 'pending'
@@ -75,6 +80,15 @@ class BookingOvernightStayModel extends Model
             'customer_id' => $customer_id
         ];
     
+        $notification = [
+            'created_by_user_id' => $data['created_by_users_id'] ?? 0,
+            'customer_id' => $customer_id,
+            'type' => 'booking',
+            'status' => 'pending',
+        ];
+        
+        \App\Models\Notification::createNotification($notification);
+
         Mail::to($data['email'])->send(new \App\Mail\SendMail($emailDetails));
         return $payload;
     }

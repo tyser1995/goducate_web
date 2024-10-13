@@ -97,39 +97,58 @@ class TransactionController extends Controller
 
     public function processPayment(Request $request)
     {
-        //Stripe::setApiKey(env('STRIPE_SECRET'));
-
         try {
-            // Transaction::createTransaction($request->all());
-            // $charge = Charge::create([
-            //     'amount' => $request->amount * 1000, // Amount in cents
-            //     'currency' => 'usd',
-            //     'source' => $request->stripeToken,
-            //     'description' => 'Payment from Laravel app',
-            // ]);
-
             if ($request->hasFile('attachment')) {
                 $image = $request->file('attachment');
-                $image_name = $image->getClientOriginalName();
                 
+                // Generate a unique image name
+                $image_name = uniqid() . '_' . $image->getClientOriginalName();
+                // Define destination path
                 $destination_path = public_path('/images/payment/');
-
-                // Check if the directory exists, if not, create it
+            
+                // Check if directory exists, if not, create it
                 if (!File::exists($destination_path)) {
                     File::makeDirectory($destination_path, 0755, true);
                 }
+            
+                // Move the image to the destination
                 $image->move($destination_path, $image_name);
-
+            
+                // Create notification
+                $notification = [
+                    'created_by_user_id' =>  0,  // Consider replacing 0 with auth()->id() if applicable
+                    'customer_id' => Hashids::decode($request->customer_id)[0],
+                    'type' => 'payment',
+                    'status' => 'pending',
+                ];
+            
+                \App\Models\Notification::createNotification($notification);
+            
+                // Prepare input data for payment creation
                 $input = $request->all();
                 $input['attachment'] = $image_name;
                 $input['customer_id'] = Hashids::decode($request->customer_id)[0];
-                $data = Payment::createPayment($input);
                 
+                // Create payment record
+                $data = Payment::createPayment($input);
+            
+                // Return success response
                 return response()->json([
                     'success' => true,
                     'data' => $data,
+                    'notification' =>$notification
                 ], 200);
             }
+            
+
+            $notification = [
+                'created_by_user_id' =>  0,
+                'customer_id' => Hashids::decode($request->customer_id)[0],
+                'type' => 'payment',
+                'status' => 'pending',
+            ];
+            
+            \App\Models\Notification::createNotification($notification);
             return back()->withErrors('Error! ' . $e->getMessage());
            
         } catch (\Exception $e) {

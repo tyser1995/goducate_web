@@ -96,22 +96,22 @@
                 </li>
                 <li class="nav-item dropdown hidden-caret">
                     <?php
-                        $payment = \App\Models\Payment::getPaymentPartialOnly(); 
-                        $payment_count = \App\Models\Payment::getPaymentPartialOnly()->count(); 
+                        $notification = \App\Models\Notification::getNotificationPartialOnly();
+                        $notification_count = \App\Models\Notification::getNotificationPartialOnly()->count();
                     ?>
                     <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-bell"></i>
-                        @if ($payment_count > 0)
+                        @if ($notification_count > 0)
                             <span class="notification">
-                                {{$payment_count}}
+                                {{$notification_count}}
                             </span>
                         @endif
                        
                     </a>
                     <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
                         <li>
-                            @if ($payment_count > 0)
-                            <div class="dropdown-title">You have {{$payment_count}} new notification</div>
+                            @if ($notification_count > 0)
+                            <div class="dropdown-title">You have {{$notification_count}} new notification</div>
                             @else
                                 <div class="dropdown-title">No notification</div>
                             @endif
@@ -120,16 +120,16 @@
                         <li>
                             <div class="notif-scroll scrollbar-outer">
                                 <div class="notif-center">
-                                    @foreach ($payment as $payments)
-                                    <a href="{{ route('customer.payment', Hashids::encode($payments->customer_id)) }}">
-                                        <div class="notif-icon notif-primary"> <i class="fa fa-user-alt"></i> </div>
-                                        <div class="notif-content">
-                                            <span class="block">
-                                                New payment
-                                            </span>
-                                            <span class="time"> {{ \Carbon\Carbon::parse($payments->created_at)->diffForHumans() }}</span>
-                                        </div>
-                                    </a>
+                                    @foreach ($notification as $notifications)
+                                        <a href="{{$notifications->type == "booking" ? 'javascript::void(0)' : route('customer.payment', Hashids::encode($notifications->customer_id)) }}">
+                                            <div class="notif-icon notif-primary"> <i class="fa fa-user-alt"></i> </div>
+                                            <div class="notif-content">
+                                                <span class="block">
+                                                    New {{$notifications->type == "booking" ? 'booking request' : 'payment made'}}
+                                                </span>
+                                                <span class="time"> {{ \Carbon\Carbon::parse($notifications->created_at)->diffForHumans() }}</span>
+                                            </div>
+                                        </a>
                                   @endforeach
                                     
                                 </div>

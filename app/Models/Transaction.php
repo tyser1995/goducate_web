@@ -36,7 +36,7 @@ class Transaction extends Model
         $payload = self::create([
             'created_by_user_id' => Auth::user()->id ?? 0,
             'customer_id' => $customer->id ?? '',
-            'description' => $data['description'] ?? '',
+            'description' => $data['description'] == "others" ? $data['others'] :  $data['description'],
             'amount' => $data['amount'] ?? ''
         ]);
 

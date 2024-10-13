@@ -4,7 +4,7 @@
     $('[data-mask]').inputmask();
     $('.book_now')[0].innerHTML = "Booking";
     
-    $('.booking_option').change(function (e) { 
+    $('.booking_option').change(function (e) {
         e.preventDefault();
         // Hide all sections by default
         $('.overnight_stay, .day_tour, .place_reservation').addClass('d-none');
@@ -103,7 +103,7 @@
               selectable: true,
               initialView: 'dayGridMonth',
               validRange: {
-                  start: today 
+                  start: today
               },
               // Fetch existing bookings
               events: function(fetchInfo, successCallback, failureCallback) {
@@ -152,8 +152,8 @@
                           autoApply: true,
                           drops: 'up',
                           isInvalidDate: function(date) {
-                              // Disable past dates or Sundays
-                              if (date.isBefore(selectedDate) || date.day() === 0) {
+                              // Disable past dates or Sundays (date.day() === 0)
+                              if (date.isBefore(selectedDate)) {
                                   return true;
                               }
 
@@ -228,102 +228,158 @@
         $('#validationMessage').text(message);
         $('#validationModal').modal('show');
     }
-    
+
+    var roomTypes = [];
+    var selectedRoomTypesText = [];
     $('#quickForm').submit(function(event) {
-      
         event.preventDefault();
-        
+
         var selectedOption = $('.booking_option').val();
+        var bookingDetails = ''; // To store details dynamically
+        var optionText = '';
+       
+       
+
+        var name = $('#name').val();
+        var email = $('#email').val();
+        var address = $('#address').val();
+        var contactNo = $('#contact_no').val();
+        var noOfAdults = $('#no_of_adults').val();
+        var noOfChildren = $('#no_of_children').val();
 
         if (selectedOption === '0') {
-          const adults = parseInt($('#no_of_adults').val()) || 0;
-          const children = parseInt($('#no_of_children').val()) || 0;
-          const totalPersons = adults + children;
+            const adults = parseInt($('#no_of_adults').val()) || 0;
+            const children = parseInt($('#no_of_children').val()) || 0;
+            const totalPersons = adults + children;
 
-          let totalCapacity = 0;
-          let validationFailed = false;
+            let totalCapacity = 0;
+            let validationFailed = false;
 
-          $('.class_room_type').each(function() {
-              const roomId = $(this).val();
-              if (roomId) {
-                  // Fetch room capacity via AJAX synchronously (could be async, but for simplicity, do it in sync)
-                  $.ajax({
-                      url: '/room-capacity/' + roomId,
-                      type: 'GET',
-                      async: false, // Ensures this runs in order; not recommended for large operations
-                      success: function(response) {
-                          if (response.capacity) {
-                              totalCapacity += response.capacity;  // Add the room capacity to the total
-                          }
-                      },
-                      error: function() {
-                          alert('Could not fetch room capacity. Please try again.');
-                          validationFailed = true;
-                      }
-                  });
-              }
-          });
+            // Collect room types and validate capacities
+            $('.class_room_type').each(function() {
+                const roomId = $(this).val();
+                var roomText = $(this).find('option:selected').text(); // Get selected room text
 
-          if (validationFailed) return;
-          if (totalCapacity < totalPersons) {
-              showValidationModal(`The total capacity of the selected rooms is ${totalCapacity}, but you have selected ${totalPersons} persons.`);
+                if (roomText) {
+                    selectedRoomTypesText.push(roomText); // Store room text
+                }
 
-              return;
-          }
+                if (roomId) {
+                    roomTypes.push(roomId); // Store room type IDs
 
-          var $btn = $(this);
+                    // Fetch room capacity via AJAX (synchronously)
+                    $.ajax({
+                        url: '/room-capacity/' + roomId,
+                        type: 'GET',
+                        async: false,
+                        success: function(response) {
+                            if (response.capacity) {
+                                totalCapacity += response.capacity;
+                            }
+                        },
+                        error: function() {
+                            alert('Could not fetch room capacity. Please try again.');
+                            validationFailed = true;
+                        }
+                    });
+                }
+            });
 
-          $('.btnSubmit').attr('disabled', 'disabled');
-          $btn.find('.fa-sync-alt').removeClass('d-none');
+            if (validationFailed) return;
+            if (totalCapacity < totalPersons) {
+                showValidationModal(`The total capacity of the selected rooms is ${totalCapacity}, but you have selected ${totalPersons} persons.`);
+                return;
+            }
 
-          var roomTypes = [];
-          $('.class_room_type').each(function(){
-              roomTypes.push($(this).val());
-          });
-
-          $.ajax({
-              url: "{{ route('bookings.store') }}",
-              type: "POST",
-              data: {
-                'name'            :$('#name').val(),
-                'email'           :$('#email').val(),
-                'address'         :$('#address').val(),
-                'contact_no'      :$('#contact_no').val(),
-                'no_of_adults'    :$('#no_of_adults').val(),
-                'no_of_children'  :$('#no_of_children').val(),
-                'boooking_status' :$('#boooking_status').val(),
-                'checkin_date'    : $('#checkin_date').val(),
-                'checkout_date'   : $('#checkout_date').val(),
-                'accomodation_id' : roomTypes
-              },
-              success: function(response) {
-                  
-              },
-              error: function(error) {
-                  console.log(error)
-              }
-          });
-
-          $.ajax({
-              url: "{{ route('bookings.overnight_stay') }}",
-              type: "POST",
-              data: {
-                'email'           : $('#email').val(),
-                'room_type'      : roomTypes,
-                'checkin_date'    : $('#checkin_date').val(),
-                'checkout_date'   : $('#checkout_date').val()
-              },
-              success: function(response) {
-                  $('#eventModal').modal('hide');
-                  loadCalendar();
-                  //location.reload();
-                  $('#bookingMessage').modal('show');
-              },
-              error: function(error) {
-                  console.log(error)
-              }
-          });
+            optionText = 'Overnight Stay';
+            bookingDetails += `<p><strong>Room Type:</strong> ${selectedRoomTypesText.join(', ')}</p>`;
+            bookingDetails += `<p><strong>Check-in Date:</strong> ${$('#checkin_date').val()}</p>`;
+            bookingDetails += `<p><strong>Check-out Date:</strong> ${$('#checkout_date').val()}</p>`;
+            bookingDetails += `<p><strong>No. of Adults:</strong> ${$('#no_of_adults').val()}</p>`;
+            bookingDetails += `<p><strong>No. of Children:</strong> ${$('#no_of_children').val()}</p>`;
         } else if (selectedOption === '1') {
+            optionText = 'Day Tour';
+            selectedRoomTypesText.push($('#tour_type').val().replace("_",""))
+            selectedRoomTypesText.push($('#group_type').val().replace("_",""))
+            bookingDetails += `<p><strong>Tour Name:</strong> ${$('#dt_name').val()}</p>`;
+            bookingDetails += `<p><strong>Tour Type:</strong> ${$('#tour_type').val()}</p>`;
+            bookingDetails += `<p><strong>Group Type:</strong> ${$('#group_type').val()}</p>`;
+            bookingDetails += `<p><strong>No. of Persons:</strong> ${$('#no_of_persons').val()}</p>`;
+            bookingDetails += `<p><strong>Check-in Date:</strong> ${$('#checkin_date_dt').val()}</p>`;
+            bookingDetails += `<p><strong>Check-out Date:</strong> ${$('#checkout_date_dt').val()}</p>`;
+        } else if (selectedOption === '2') {
+            optionText = 'Place Reservation';
+            selectedRoomTypesText.push($('#room_type_pr').val().replace("_",""))
+            bookingDetails += `<p><strong>Room Type:</strong> ${$('#room_type_pr').val()}</p>`;
+            bookingDetails += `<p><strong>No. of Cottages:</strong> ${$('#no_of_cottages').val()}</p>`;
+            bookingDetails += `<p><strong>Check-in Date:</strong> ${$('#checkin_date_pr').val()}</p>`;
+            bookingDetails += `<p><strong>Check-out Date:</strong> ${$('#checkout_date_pr').val()}</p>`;
+        }
+
+        // Update confirmation modal
+        $('#selectedOptionText').text(optionText);
+        $('#confirm_name').text(name);
+        $('#confirm_email').text(email);
+        $('#confirm_address').text(address);
+        $('#confirm_contact_no').text(contactNo);
+        $('#confirm_no_of_adults').text(noOfAdults);
+        $('#confirm_no_of_children').text(noOfChildren);
+        $('#confirm_room_types').text(selectedRoomTypesText.join(', '));
+        $('#bookingDetails').html(bookingDetails);
+
+        // Show the review modal
+        $('#bookingReviewModal').modal('show');
+    });
+
+    // Confirm booking and submit via AJAX
+    $('.btnConfirmBooking').click(function() {
+        $('.btnConfirmBooking').attr('disabled','disabled');
+        $('.btnConfirmBooking').text('Loading...');
+        if (selectedOptionText.textContent == 'Overnight Stay'){
+            $.ajax({
+                url: "{{ route('bookings.store') }}",
+                type: "POST",
+                data: {
+                    'name': $('#name').val(),
+                    'email': $('#email').val(),
+                    'address': $('#address').val(),
+                    'contact_no': $('#contact_no').val(),
+                    'no_of_adults': $('#no_of_adults').val(),
+                    'no_of_children': $('#no_of_children').val(),
+                    'boooking_status': $('#boooking_status').val(),
+                    'checkin_date': $('#checkin_date').val(),
+                    'checkout_date': $('#checkout_date').val(),
+                    'accomodation_id': roomTypes
+                },
+                success: function(response) {
+                    // Handle success
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+
+            $.ajax({
+                url: "{{ route('bookings.overnight_stay') }}",
+                type: "POST",
+                data: {
+                    'email': $('#email').val(),
+                    'room_type': roomTypes, // Pass room type IDs
+                    'checkin_date': $('#checkin_date').val(),
+                    'checkout_date': $('#checkout_date').val(),
+                    'room_type_text': selectedRoomTypesText // Pass room type names
+                },
+                success: function(response) {
+                    $('#eventModal').modal('hide');
+                    $('#bookingReviewModal').modal('hide');
+                    loadCalendar();
+                    $('#bookingMessage').modal('show');
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }else if (selectedOptionText.textContent == 'Day Tour'){
             $.ajax({
               url: "{{ route('bookings.store') }}",
               type: "POST",
@@ -359,6 +415,7 @@
               },
               success: function(response) {
                   $('#eventModal').modal('hide');
+                  $('#bookingReviewModal').modal('hide');
                   loadCalendar();
                   $('#bookingMessage').modal('show');
               },
@@ -366,8 +423,16 @@
                   console.log(error)
               }
           });
-        } else if (selectedOption === '2') {
-          $('.place_reservation').removeClass('d-none');
+
+            optionText = 'Day Tour';
+            bookingDetails += `<p><strong>Tour Name:</strong> ${$('#dt_name').val()}</p>`;
+            bookingDetails += `<p><strong>Tour Type:</strong> ${$('#tour_type').val()}</p>`;
+            bookingDetails += `<p><strong>Group Type:</strong> ${$('#group_type').val()}</p>`;
+            bookingDetails += `<p><strong>No. of Persons:</strong> ${$('#no_of_persons').val()}</p>`;
+            bookingDetails += `<p><strong>Check-in Date:</strong> ${$('#checkin_date_dt').val()}</p>`;
+            bookingDetails += `<p><strong>Check-out Date:</strong> ${$('#checkout_date_dt').val()}</p>`;
+        }else if (selectedOptionText.textContent == 'Place Reservation'){
+            $('.place_reservation').removeClass('d-none');
             $.ajax({
               url: "{{ route('bookings.store') }}",
               type: "POST",
@@ -402,6 +467,7 @@
               },
               success: function(response) {
                   $('#eventModal').modal('hide');
+                  $('#bookingReviewModal').modal('hide');
                   loadCalendar();
                   $('#bookingMessage').modal('show');
               },
@@ -409,7 +475,14 @@
                   console.log(error)
               }
           });
+
+            optionText = 'Place Reservation';
+            bookingDetails += `<p><strong>Room Type:</strong> ${$('#room_type_pr').val()}</p>`;
+            bookingDetails += `<p><strong>No. of Cottages:</strong> ${$('#no_of_cottages').val()}</p>`;
+            bookingDetails += `<p><strong>Check-in Date:</strong> ${$('#checkin_date_pr').val()}</p>`;
+            bookingDetails += `<p><strong>Check-out Date:</strong> ${$('#checkout_date_pr').val()}</p>`;
         }
+       
     });
 
     $('#tour_type').change(function (e) {
@@ -432,7 +505,7 @@
         }
     });
 
-    $('#room_type_pr').change(function (e) { 
+    $('#room_type_pr').change(function (e) {
         e.preventDefault();
         var selectedOption = $(this).val();
         if (selectedOption === 'cottages' || selectedOption === 'small_huts') {
