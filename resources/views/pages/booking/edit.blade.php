@@ -170,7 +170,7 @@
                                             <span>{{ $formattedDate }}</span><br/>
                                         @endforeach
                                     @else
-                                        <span>{{__('No data found.')}}</span>   
+                                        <span>{{__('No data found.')}}</span>
                                     @endif
                                     
                                     <div class="form-group">

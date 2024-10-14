@@ -10,7 +10,44 @@
         $('.overnight_stay, .day_tour, .place_reservation').addClass('d-none');
 
         var selectedOption = $(this).val();
+        var selectedDate = moment().startOf('day');
+
+        // Initialize the time picker
+        $('.reservationtime').daterangepicker({
+            timePicker: false,
+            startDate: selectedDate,
+            endDate: selectedDate,
+            locale: {
+                format: 'MM/DD/YYYY'
+            },
+            autoApply: true,
+            drops: 'up',
+            isInvalidDate: function(date) {
+                // Disable past dates or Sundays (date.day() === 0)
+                if (date.isBefore(selectedDate)) {
+                    return true;
+                }
+            }
+        }).on('show.daterangepicker', function(ev, picker) {
+            originalStartDate = picker.startDate.clone(); 
+            originalEndDate = picker.endDate.clone();
+        }).on('apply.daterangepicker', function(ev, picker) {
+            var startDate = picker.startDate.format('YYYY-MM-DD HH:mm:ss');
+            var endDate = picker.endDate.format('YYYY-MM-DD HH:mm:ss');
+
+            $('.btnSubmit').removeAttr('disabled');
+                
+            // Set hidden input values
+            $('#checkin_date').val(startDate);
+            $('#checkout_date').val(endDate);
+            $('#checkin_date_dt').val(startDate);
+            $('#checkout_date_dt').val(endDate);
+            $('#checkin_date_pr').val(startDate);
+            $('#checkout_date_pr').val(endDate);
+        });
+        
         if (selectedOption === '0') {
+            $('.reservationtime').parent().removeClass('d-none');
             $('.overnight_stay').removeClass('d-none');
 
             $('#room_type').attr('required','required');
@@ -34,6 +71,7 @@
             $('#checkout_date').removeAttr('required');
             
         } else if (selectedOption === '1') {
+            $('.reservationtime').parent().addClass('d-none');
             $('.day_tour').removeClass('d-none');
 
             $('#reservationtimeDT').attr('required','required');
@@ -514,8 +552,19 @@
             <div class="input-group date mt-2">
                 <select name="room_type" class="class_room_type form-control">
                     <option selected value="">Select option</option>
-                    @foreach (App\Models\Accomodation::getAccomodationOvernightStay() as $value)
-                        <option value="{{$value->id}}">{{$value->type}} &nbsp;&nbsp;&nbsp; (capacity: {{$value->capacity}})</option>
+                    @foreach (App\Models\Accomodation::getAccomodationOvernightStay() as $accommodation)
+                        @php
+                            $booking = App\Models\BookingModel::getBookingListv3()->firstWhere('accomodation_name', $accommodation->type);
+                            $taken = $booking ? $booking->accomodation_taken : 0;
+                            $isDisabled = ($taken >= $accommodation->qty);
+                        @endphp
+                        
+                        <option value="{{ $accommodation->id }}" {{ $isDisabled ? 'disabled' : '' }}>
+                            {{ $accommodation->type }} &nbsp;&nbsp;
+                            (Capacity: {{ $accommodation->capacity }}-pax)
+                            &nbsp;&nbsp;
+                            {{ $isDisabled ? 'Fully Booked' : 'Room availability: ' . ($accommodation->qty - $taken) . ' room(s) left' }}
+                        </option>
                     @endforeach
                 </select>
                 <div class="input-group-append">

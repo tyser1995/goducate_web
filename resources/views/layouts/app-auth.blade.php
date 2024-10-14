@@ -60,14 +60,14 @@
     <script>
         var base_url = "{{ url('/') }}";
     </script>
-    <script src="{{ asset('service-worker.js') }}"></script> -->
- <script>
+    <script src="{{ asset('service-worker.js') }}"></script>
+ {{-- <script>
     if (!navigator.serviceWorker.controller) {
         navigator.serviceWorker.register("service-worker.js").then(function(reg) {
             console.log("Service worker has been registered for scope: " + reg.scope);
         });
     }
-    </script>
+    </script> --}}
 
     <!-- adminlte -->
     <!-- REQUIRED SCRIPTS -->

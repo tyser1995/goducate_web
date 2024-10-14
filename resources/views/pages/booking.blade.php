@@ -113,7 +113,7 @@
   <div class="volunteer">
 <div class="container">
   <!-- <h1>Book Now!</h1> -->
-  <a href="#about"><button >Book now!</button></a>
+  <a href="javascript::void(0)" data-toggle="modal" data-target="#eventModal"><button >Book now!</button></a>
       <p>Booking a Stay at Camp Goducate Iloilo is an enriching and rejuvenating experience. Whether you're looking for a peaceful retreat, an exciting team-building event, or a family getaway, Camp Goducate offers the perfect environment for relaxation and growth. Here are some reasons why you should book a stay:</p>
       <div class="image-container">
         <img src="images/B2.jpg" alt="Volunteer Image">
@@ -164,14 +164,14 @@
 
   <section class="about" id="about">
     <div class="container">
-    <div id="calendar"></div>
+    <div id="calendar" hidden></div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
     </div>
   </section>
 
   <!-- Modal Form for Event Creation -->
   <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document">
+     <div class="modal-dialog modal-dialog-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-dark" id="eventModalLabel">Book</h5>
@@ -218,20 +218,33 @@
                   <option selected value="">Select option</option>
                   <option value="0">Overnight Stay</option>
                   <option value="1">Day Tour</option>
-                  <option value="2">Place Reservation</option>
+                  <option value="2" hidden>Place Reservation</option>
                 </select>
               </div>
             </div>
-            <div class="row" style="overflow-x: auto; height:150px">
+            <div class="row">
               <div class="col-12 overnight_stay d-none">
                 <div class="form-group" id="room-container">
                   <label for="children">Room Type:</label>
                   <div class="input-group date">
                       <select name="room_type" id="room_type" class="class_room_type form-control">
                           <option selected value="">Select option</option>
-                          @foreach (App\Models\Accomodation::getAccomodationOvernightStay() as $value)
-                              <option value="{{$value->id}}">{{$value->type}} &nbsp;&nbsp;&nbsp; (capacity: {{$value->capacity}})</option>
+                          
+                          @foreach (App\Models\Accomodation::getAccomodationOvernightStay() as $accommodation)
+                              @php
+                                  $booking = App\Models\BookingModel::getBookingListv3()->firstWhere('accomodation_name', $accommodation->type);
+                                  $taken = $booking ? $booking->accomodation_taken : 0;
+                                  $isDisabled = ($taken >= $accommodation->qty);
+                              @endphp
+                              
+                              <option value="{{ $accommodation->id }}" {{ $isDisabled ? 'disabled' : '' }}>
+                                  {{ $accommodation->type }} &nbsp;&nbsp;
+                                  (Capacity: {{ $accommodation->capacity }}-pax)
+                                  &nbsp;&nbsp;
+                                  {{ $isDisabled ? 'Fully Booked' : 'Room availability: ' . ($accommodation->qty - $taken) . ' room(s) left' }}
+                              </option>
                           @endforeach
+                      
                       </select>
                       <div class="input-group-append">
                           <button type="button" class="input-group-text btn btn-sm btn-info btn-add">
@@ -263,12 +276,12 @@
                   </select>
                 </div>
                 <div class="form-group dt_name_class d-none">
-                  <label for="name">Name:</label>
+                  <label for="name">Group Name:</label>
                   <input type="text" class="form-control" id="dt_name" name="name">
                 </div>
-                <div class="form-group no_person d-none">
+                <div class="form-group no_person d-none" hidden>
                   <label for="adults">Number of Persons:</label>
-                  <input type="number" class="form-control" id="no_of_persons" name="no_of_persons" min="0">
+                  <input type="number" class="form-control" id="no_of_persons" name="no_of_persons" min="0" value="0">
                 </div>
                 <div class="form-group gt d-none">
                   <label for="children">Group Type:</label>

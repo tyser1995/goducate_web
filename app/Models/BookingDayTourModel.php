@@ -65,7 +65,7 @@ class BookingDayTourModel extends Model
         
         $emailDetails = [
             'title' => 'Reservation Confirmation',
-            'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
+            'body' => 'Reservation will be confirmed upon 20% of down payment made through the following payment channels.',
             'reservation' => $payload,
             'booking_status' => 'day_tour',
             'customer_id' => $customer_id

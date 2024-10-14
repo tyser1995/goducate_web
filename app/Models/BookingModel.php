@@ -235,9 +235,9 @@ class BookingModel extends Model
                 'created_by_user_id' => Auth::user()->id ?? 0,
                 'first_name' => $payload->name ?? '',
                 'middle_name' => '',
-                'last_name' => $data['address'] ?? '',
+                'last_name' => '',
                 'email' => $payload->email,
-                'address' => '',
+                'address' => $data['address'],
                 'contact_no' => $data['contact_no'] ?? 0
             ]);
 
@@ -249,7 +249,7 @@ class BookingModel extends Model
 
         $emailDetails = [
             'title' => 'Reservation Confirmation',
-            'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
+            'body' => 'Reservation will be confirmed upon 20% of down payment made through the following payment channels.',
             'reservation' => $payload,
             'booking_status' => $data['boooking_status'],
             'customer_id' => $customer_id
