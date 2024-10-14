@@ -128,6 +128,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('customers', ['as' => 'customers', 'uses' => 'App\Http\Controllers\CustomerController@index']);
     Route::get('customer.generate_qrcode/{id}', ['as' => 'customer.generate_qrcode', 'uses' => 'App\Http\Controllers\CustomerController@generateQrCode']);
     Route::get('customer.payment/{id}', ['as' => 'customer.payment', 'uses' => 'App\Http\Controllers\CustomerController@getPayments']);
+    Route::get('customer.payment.verify/{id}', ['as' => 'customer.payment.verify', 'uses' => 'App\Http\Controllers\CustomerController@getVerifyPayments']);
     Route::post('customer.payment.store', ['as' => 'customer.payment.store', 'uses' => 'App\Http\Controllers\CustomerController@addPayments']);
     Route::resource('customer', 'App\Http\Controllers\CustomerController');
 

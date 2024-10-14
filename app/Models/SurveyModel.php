@@ -16,6 +16,7 @@ class SurveyModel extends Model
         'group_type',
         'person_type',
         'address',
+        'religion',
         'ratings',
         'services',
         'type'
@@ -29,8 +30,18 @@ class SurveyModel extends Model
     ];
 
     public const PERSON_TYPE = [
-        'adults'  => '18 y.o and above',
-        'kids'    => '17 and below'
+        "15 or younger" => "15 or younger",
+        "16–19" => "16–19",
+        "20–24" => "20–24",
+        "25–29" => "25–29",
+        "30–34" => "30–34",
+        "35–39" => "35–39",
+        "40–44" => "40–44",
+        "45–49" => "45–49",
+        "50–54" => "50–54",
+        "55–59" => "55–59",
+        "60–64" => "60–64",
+        "65 or up" => "65 or older"
     ];
 
     public const SERVICE_TYPE = [
@@ -41,12 +52,27 @@ class SurveyModel extends Model
         'services'          => 'Services',
     ];
 
+    public const RELIGION = [
+        "Protestantism" => "Protestantism",
+        "Catholicism" => "Catholicism",
+        "Christianity" => "Christianity",
+        "Judaism" => "Judaism",
+        "Islam" => "Islam",
+        "Buddhism" => "Buddhism",
+        "Hinduism" => "Hinduism",
+        "Inter/Non-denominational" => "Inter/Non-denominational",
+        "No_Religion" => "No religion",
+        "Other" => "Other (please specify)",
+        "Prefer_not_to_disclose" => "Prefer not to disclose"
+    ];
+
     public static function createSurvey($data)
     {
         $payload = self::create([
             'group_type' => $data['group_type'],
             'person_type' => $data['person_type'] ?? 'na',
             'address' => $data['address'] ?? 'na',
+            'religion' => $data['religion'] == "Other" ? $data['other_religion'] : $data['religion'],
             'type'    => 'survey'
         ]);
 
@@ -72,6 +98,7 @@ class SurveyModel extends Model
             'group_type' => $data['group_type'],
             'person_type' => $data['first_name'] ?? 'na',
             'address' => $data['address'] ?? 'na',
+            'religion' => $data['religion'] == "Other" ? $data['other_religion'] : $data['religion'],
             'type'    => 'survey'
         ]);
 
@@ -86,11 +113,26 @@ class SurveyModel extends Model
     //Feedback
     public static function createFeedback($data)
     {
-        $payload = self::create([
-            'ratings' => $data['ratings'],
-            'type'    => 'feedback',
-            'services' => $data['services'],
+        $ratings = json_encode([
+            'food_resto'      => $data['food_resto'],
+            'accomodations'   => $data['accommodation'],
+            'recreations_act' => $data['recreation'],
+            'place'           => $data['place'],
+            'services'        => $data['services'],
         ]);
+
+        $ratingsArray = json_decode($ratings, true);
+        foreach (self::SERVICE_TYPE as $key => $value) {
+            if (array_key_exists($key, $ratingsArray)) {
+
+                $ratingValue = $ratingsArray[$key];
+                $payload = self::create([
+                    'ratings' => $ratingValue,
+                    'type'    => 'feedback',
+                    'services' => $key,
+                ]);
+            }
+        }
 
         return $payload;
     }

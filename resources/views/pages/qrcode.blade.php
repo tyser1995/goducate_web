@@ -75,9 +75,12 @@
       <div id="result"></div>
     </div>
   </div>
+  
+@include('pages.modal.index')
 @endsection
 @push('scripts')
   <script>
+   
       function onScanSuccess(decodedText, decodedResult) {
           // Handle the scanned data
           console.log(`Code scanned = ${decodedText}`, decodedResult);
@@ -91,14 +94,17 @@
                   'X-CSRF-TOKEN': '{{ csrf_token() }}'
               },
               success: function(data) {
+                  $('#modalMessage').modal('show');
                   if (data.success) {
-                      document.getElementById('result').innerHTML = "Successfully deducted";
+                      $('.title_name')[0].innerHTML= "Successful";
+                      $('#validationMessage')[0].innerHTML = "Successfully deducted";
                   } else {
-                      document.getElementById('result').innerHTML = "Insuficient Balance!";
+                    $('.title_name')[0].innerHTML= "Error";
+                    $('#validationMessage')[0].innerHTML = "Out of recreational balance. Please contact Goducate Administrator";
                   }
 
                   setTimeout(() => {
-                    document.getElementById('result').innerHTML = "";
+                    $('#modalMessage').modal('hide');
                   }, 5000);
               },
               error: function(xhr, status, error) {

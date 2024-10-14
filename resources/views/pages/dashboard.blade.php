@@ -104,29 +104,65 @@
                     </div>
                 </div>
             </div>
-            
-            {{-- <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card full-height">
                     <div class="card-body">
-                        <div class="card-title">Group statistics</div>
-                        <div class="card-category">Group information (Family, Organization, Compnay, Church, Others) about statistics in system</div>
+                        <div class="card-title">Feedback List</div>
+                        <div class="card-category">Daily information about statistics in system</div>
                         <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
-                            <div class="px-2 pb-2 pb-md-0 text-center">
-                                <div id="circles-1"></div>
-                                <h6 class="fw-bold mt-3 mb-0">New Users</h6>
+                            <div class="px-2 pb-2 pb-md-0 text-left">
+                                <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-list-alt mr-2"></i>Services</h6>
+                                <h6 class="fw-bold mt-3 mb-0">Food/Resto</h6>
+                                <h6 class="fw-bold mt-3 mb-0">Accommodations</h6>
+                                <h6 class="fw-bold mt-3 mb-0">Recreations Activities</h6>
+                                <h6 class="fw-bold mt-3 mb-0">Place</h6>
+                                <h6 class="fw-bold mt-3 mb-0">Services</h6>
                             </div>
                             <div class="px-2 pb-2 pb-md-0 text-center">
-                                <div id="circles-2"></div>
-                                <h6 class="fw-bold mt-3 mb-0">Sales</h6>
+                                <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-angry mr-2" style="color: red;"></i>Angry</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="food_resto_angry">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="accomodations_angry">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="recreations_act_angry">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="place_angry">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="services_angry">0</h6>
                             </div>
                             <div class="px-2 pb-2 pb-md-0 text-center">
-                                <div id="circles-3"></div>
-                                <h6 class="fw-bold mt-3 mb-0">Subscribers</h6>
+                                <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-sad-tear mr-2" style="color: orange;"></i>Sad</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="food_resto_sad">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="accomodations_sad">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="recreations_act_sad">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="place_sad">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="services_sad">0</h6>
+                            </div>
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-meh mr-2" style="color: gray;"></i>Neutral</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="food_resto_neutral">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="accomodations_neutral">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="recreations_act_neutral">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="place_neutral">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="services_neutral">0</h6>
+                            </div>
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-smile mr-2" style="color: green;"></i>Smile</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="food_resto_smile">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="accomodations_smile">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="recreations_act_smile">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="place_smile">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="services_smile">0</h6>
+                            </div>
+                            <div class="px-2 pb-2 pb-md-0 text-center">
+                                <h6 class="fw-bold mt-3 mb-0"><i class="fas fa-grin-stars mr-2" style="color: gold;"></i>Happy</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="food_resto_happy">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="accomodations_happy">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="recreations_act_happy">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="place_happy">0</h6>
+                                <h6 class="fw-bold mt-3 mb-0" id="services_happy">0</h6>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
+            
             <div class="col-md-6 d-none">
                 <div class="card full-height">
                     <div class="card-body">
@@ -301,6 +337,32 @@
         type: 'GET',
         dataType: 'json',
         success: function(data) {
+            const _counts = {
+                food_resto: { angry: 0, sad: 0, neutral: 0, smile: 0, happy: 0 },
+                accomodations: { angry: 0, sad: 0, neutral: 0, smile: 0, happy: 0 },
+                recreations_act: { angry: 0, sad: 0, neutral: 0, smile: 0, happy: 0 },
+                place: { angry: 0, sad: 0, neutral: 0, smile: 0, happy: 0 },
+                services: { angry: 0, sad: 0, neutral: 0, smile: 0, happy: 0 },
+            };
+
+            // Count ratings for each service
+            data.data.forEach(entry => {
+                const service = entry.services;
+                const rating = entry.ratings;
+
+                console.log(service);
+                if (_counts[service] && _counts[service][rating] !== undefined) {
+                    _counts[service][rating]++;
+                }
+            });
+
+            // Update the HTML with the counts
+            for (const service in _counts) {
+                for (const rating in _counts[service]) {
+                    $(`#${service}_${rating}`).text(_counts[service][rating]);
+                }
+            }
+
             const counts = {
                 angry: 0,
                 sad: 0,

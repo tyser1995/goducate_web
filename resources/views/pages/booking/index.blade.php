@@ -14,7 +14,7 @@
                             <div class="col-8">
                                 <h3 class="mb-0 h3_title">Booked</h3>
                             </div>
-                            <div class="col-4 text-right add-region-btn d-none">
+                            <div class="col-4 text-right add-region-btn">
                                 <a href="{{ route('booking.create') }}" class="btn btn-sm btn-primary"
                                     id="add-region-btn">{{ __('Add Booking') }}</a>
                             </div>

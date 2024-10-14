@@ -29,6 +29,8 @@ class BookingModel extends Model
         'no_of_children',
         'boooking_status',
         'accomodation_id',
+        'accomodation_name',
+        'accomodation_availability',
         'checkin_date',
         'checkout_date',
         'status'
@@ -145,33 +147,31 @@ class BookingModel extends Model
                 bookings.name,
                 bookings.email,
                 bookings.address,
-                '' as 'status',
+                bookings.status,
                 bookings.contact_no,
-                CASE 
-                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkin_date 
-                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkin_date 
-                    ELSE booking_place_reservations.checkin_date 
-                END as checkin_date,
-                CASE 
-                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkout_date 
-                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkout_date 
-                    ELSE booking_place_reservations.checkout_date 
-                END as checkout_date,
-                bookings.created_at
+                CONCAT(
+                    DATE(bookings.checkin_date), ' ',TIME(bookings.created_at)
+                ) as
+                combined_checkin_datetime,
+                CONCAT(
+                    DATE(bookings.checkout_date), ' ',TIME(bookings.created_at)
+                ) as combined_checkout_datetime
             ")
-            ->leftJoin('booking_overnight_stays', function($join) {
-                $join->on('booking_overnight_stays.email', '=', 'bookings.email')
-                    ->where('bookings.boooking_status', '=', 0);
-            })
-            ->leftJoin('booking_day_tours', function($join) {
-                $join->on('booking_day_tours.email', '=', 'bookings.email')
-                    ->where('bookings.boooking_status', '=', 1); 
-            })
-            ->leftJoin('booking_place_reservations', function($join) {
-                $join->on('booking_place_reservations.email', '=', 'bookings.email')
-                    ->where('bookings.boooking_status', '=', 2);
-            })
-            ->orderBy('bookings.created_at','DESC')
+            ->where('status','=','pending')
+            // ->leftJoin('booking_overnight_stays', function($join) {
+            //     $join->on('booking_overnight_stays.email', '=', 'bookings.email')
+            //         ->where('bookings.boooking_status', '=', 0);
+            // })
+            // ->leftJoin('booking_day_tours', function($join) {
+            //     $join->on('booking_day_tours.email', '=', 'bookings.email')
+            //         ->where('bookings.boooking_status', '=', 1); 
+            // })
+            // ->leftJoin('booking_place_reservations', function($join) {
+            //     $join->on('booking_place_reservations.email', '=', 'bookings.email')
+            //         ->where('bookings.boooking_status', '=', 2);
+            // })
+            ->distinct()
+            ->orderBy('combined_checkin_datetime','DESC')
             ->get();
     }
 
@@ -299,7 +299,7 @@ class BookingModel extends Model
             
         $emailDetails = [
             'title' => 'Reservation Approved',
-            'body' => 'Your reservation details have been approved. Kindly check your Goducate for other concerns. Thank you for choosing Goducate!',
+            'body' => 'Your reservation has been approved. Please visit the Goducate website and feel free to contact us if you have any other concerns. Thank you for choosing Goducate!',
             'reservation' => $payload,
             'booking_status' => $booking_status,
             'email' => $payload->email

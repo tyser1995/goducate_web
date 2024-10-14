@@ -59,6 +59,11 @@
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <div class="form-group others_container d-none">
+                                    <label for="name">Others</label>
+                                    <input type="text" min="1" class="form-control" name="others" id="others" required disabled autofocus placeholder="{{ __('Enter query') }}">
+                                </div>
                             
                                 <div class="form-group">
                                     <label for="name">Amount</label>
@@ -145,5 +150,17 @@
         window.print();
         document.body.innerHTML = originalContents;
     }
+
+    $('#description').change(function (e) {
+        if($(this).val() == "others"){
+            $('.others_container').removeClass('d-none');
+            $('#others').removeAttr('disabled');
+            $('#others').attr('required');
+        }else{
+            $('.others_container').addClass('d-none');
+            $('#others').attr('disabled','disabled');
+            $('#others').removeAttr('required');
+        }
+    });
 </script>
 @endpush
