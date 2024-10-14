@@ -79,4 +79,10 @@ class Transaction extends Model
     {
         return self::findOrFail($id)->delete();
     }
+
+    public static function deleteTransactionAfterPrint($id)
+    {
+        return self::where('customer_id','=',$id)
+        ->delete();
+    }
 }

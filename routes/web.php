@@ -130,6 +130,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('customer.payment/{id}', ['as' => 'customer.payment', 'uses' => 'App\Http\Controllers\CustomerController@getPayments']);
     Route::get('customer.payment.verify/{id}', ['as' => 'customer.payment.verify', 'uses' => 'App\Http\Controllers\CustomerController@getVerifyPayments']);
     Route::post('customer.payment.store', ['as' => 'customer.payment.store', 'uses' => 'App\Http\Controllers\CustomerController@addPayments']);
+    Route::post('transaction.delete', ['as' => 'transaction.delete', 'uses' => 'App\Http\Controllers\CustomerController@getCustomerPrintAndDelete']);
     Route::resource('customer', 'App\Http\Controllers\CustomerController');
 
     //QR Code Generator
