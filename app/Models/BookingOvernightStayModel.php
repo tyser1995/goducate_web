@@ -67,10 +67,21 @@ class BookingOvernightStayModel extends Model
                 'contact_no' => $data['contact_no'] ?? 0
             ]);
             
+            $new_customer = CustomerModel::create([
+                'created_by_user_id' => $data['created_by_users_id'] ?? 0,
+                'first_name' => $data['first_name'] ?? '',
+                'middle_name' => $data['middle_name'] ?? '',
+                'last_name' => $data['last_name'] ?? '',
+                'email' => $data['email'],
+                'address' => $data['address'] ?? '',
+                'contact_no' => $data['contact_no'] ?? 0
+            ]);
+
             $customer_id = $new_customer->id;
         } else {
             $customer_id = $customer->id;
         }
+
         
         $emailDetails = [
             'title' => 'Reservation Confirmation',

@@ -109,6 +109,7 @@
                                             @endif
                                         
                                             <?php 
+                                          
                                                 $room_types = \App\Models\Accomodation::getAccomodationOvernightStayName($value->room_type);
                                             ?>
                                             <span>{{ $room_types }}</span><br/>

@@ -47,17 +47,125 @@
       border-radius: 10px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
-
+    .volunteer {
+      background-color: #444;
+      color: #fff;
+      padding: 50px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    .volunteer h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .volunteer p {
+      font-size: 1.2em;
+      line-height: 1.6;
+    }
+    .volunteer .image-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .volunteer .image-container img {
+      max-width: 100%;
+      width: 300%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .volunteer .description {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+    .volunteer .description img {
+      max-width: 50%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .volunteer .description .text {
+      flex: 1;
+      padding: 20px;
+    }
+    .volunteer .description .text p {
+      margin: 0;
+    }
+    .volunteer button {
+      padding: 10px 30px;
+      background-color: #ff9900;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-size: 20px;
+   
+    }
+    .volunteer button:hover {
+      background-color: #e68a00;
+    }
+    
 </style>
 
 <div class="background-overlay" id="background-overlay"></div>
   <div class="overlay"></div>
   <!-- Header -->
   @include('pages.header')
+  <div class="volunteer">
+<div class="container">
+  <!-- <h1>Book Now!</h1> -->
+  <a href="#about"><button >Book now!</button></a>
+      <p>Booking a Stay at Camp Goducate Iloilo is an enriching and rejuvenating experience. Whether you're looking for a peaceful retreat, an exciting team-building event, or a family getaway, Camp Goducate offers the perfect environment for relaxation and growth. Here are some reasons why you should book a stay:</p>
+      <div class="image-container">
+        <img src="images/B2.jpg" alt="Volunteer Image">
+      </div>
+      <div class="description">
+        <img src="images/b1.jpg" alt="Volunteers">
+        <div class="text">
+          <h1>Jungle Huts:</h1>
+          <h2>₱2,200 (6 pax)</h2>
+          <p>- Cozy accommodations for small groups.</p>
+        </div>
+      </div>
+      <div class="description">
+      <div class="text">          
+          <br>
+          <h1>Hillside Villa:</h1>
+          <h2>₱3,500 (9 pax)</h2>
+          <p>- Spacious, great for larger gatherings.</p>
+          </br>
+          <h1>Family Rooms:</h1>
+          <h2>₱2,500 (3 pax)</h2>
+          <p>- Ideal for families, providing comfort and space.</p>
+        </div>
+        <img src="images/b3.jpg" alt="Volunteers">
+      </div>
+      <div class="description">
+        <img src="images/b5.jpg" alt="Volunteers">
+        <div class="text">
+          <h1>Courtyard Rooms:</h1>
+          <h2>₱2,800 (4 pax)</h2>
+          <h2>₱4,500 (12 pax)</h2>
+          <p>- Versatile options for smaller groups or larger parties, with differing capacities.</p>
+        </div>
+      </div>
+      <div class="description">
+      <div class="text">
+          <h1>Tents: </h1>
+          <h2>₱1,000 (2-4 pax)</h2>
+          <p>- Affordable and suitable for camping experiences.</p>
+        </div>
+        <img src="images/b4.jpg" alt="Volunteers">
+      </div>
+      <div class="image-container">
+        <img src="images/b6.jpg" alt="Volunteer Image">
+      </div>
+    </div>
+    </div>
 
   <section class="about" id="about">
     <div class="container">
-      <div id="calendar"></div>
+    <div id="calendar"></div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
     </div>
   </section>
 

@@ -62,7 +62,8 @@ class Accomodation extends Model
 
     public static function getAccomodationOvernightStayName($id)
     {
-        return self::findOrFail($id)['type'];
+        $accomodation_id = self::where('type','=',$id)->get()->first();
+        return self::findOrFail($accomodation_id->id)['type'];
     }
 
     public static function getAccomodationById($id)

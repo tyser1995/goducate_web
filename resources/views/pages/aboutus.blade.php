@@ -85,6 +85,53 @@
       font-size: 1.2em;
       line-height: 1.6;
     }
+    footer {
+    background-color: #2c3e50; /* Dark background color */
+    color: white; /* Text color */
+    padding: 20px 40px; /* Padding around the footer */
+    text-align: center; /* Center text */
+    font-family: Arial, sans-serif; /* Font family */
+    border-radius: 15px;
+    }
+
+    footer h3 {
+        font-size: 24px; /* Font size for the heading */
+        margin-bottom: 15px; /* Margin below the heading */
+    }
+
+    footer p {
+        margin: 10px 0; /* Margin for paragraphs */
+        font-size: 16px; /* Font size for paragraphs */
+    }
+
+    footer a {
+        color: #1abc9c; /* Color for links */
+        text-decoration: none; /* Remove underline */
+        transition: color 0.3s; /* Smooth transition for hover effect */
+    }
+
+    footer a:hover {
+        color: #16a085; /* Change color on hover */
+    }
+
+    footer i {
+        margin-right: 8px; /* Spacing between icon and text */
+    }
+
+@media (max-width: 600px) {
+    footer {
+        padding: 15px; /* Adjust padding for smaller screens */
+    }
+
+    footer h3 {
+        font-size: 20px; /* Adjust heading size */
+    }
+
+    footer p {
+        font-size: 14px; /* Adjust paragraph size */
+    }
+}
+
 </style>
 
 <div class="background-overlay" id="background-overlay"></div>
@@ -98,7 +145,19 @@
             echo html_entity_decode($about['description']);
         ?>
       @endforeach
+    </div>  
+    <footer>
+    <div>
+        <h3>Camp Goducate</h3>
+        <p><i class="fas fa-map-marker-alt"></i> Location: Brgy. Sto. Angel, San Miguel, Iloilo</p>
+        <p><i class="fas fa-phone"></i> Contact: 0917 588 9136</p>
+        <p><i class="fas fa-envelope"></i> Email: goducate.mktg@gmail.com</p>
+        <p>Explore more at <a href="https://www.facebook.com/gtc.iloilo" target="_blank">Camp Goducate Facebook Page</a></p>
+        <p>Or at <a href="https://www.goducate.org/" target="_blank">Goducate.org </a>Website</p>
     </div>
+</footer>
+
   </section>
+
 @endsection
 
