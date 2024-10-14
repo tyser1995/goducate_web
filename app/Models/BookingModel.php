@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\CustomerModel;
+use App\Models\Accomodation;
 
 use DB;
 
@@ -31,6 +32,8 @@ class BookingModel extends Model
         'accomodation_id',
         'accomodation_name',
         'accomodation_availability',
+        'accomodation_qty',
+        'accomodation_taken',
         'checkin_date',
         'checkout_date',
         'status'
@@ -52,21 +55,28 @@ class BookingModel extends Model
     {
         $roomTypes = is_array($data['accomodation_id']) ? $data['accomodation_id'] : [$data['accomodation_id']];
         $payload = [];
-        foreach ($roomTypes as $roomType) {
+        foreach ($roomTypes as $roomTypeId){
+
+            $roomType = Accomodation::find($roomTypeId);
+            $roomTypeName = $roomType ? $roomType->type : null;
+
             $payload[] = self::create([
                 'created_by_user_id' => $data['created_by_users_id'] ?? 0,
-                'customer_id' => $data['customer_id'] ?? 0,
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'address' => $data['address'],
-                'contact_no' => $data['contact_no'],
-                'no_of_adults' => $data['no_of_adults'],
-                'no_of_children' => $data['no_of_children'],
-                'boooking_status' => $data['boooking_status'],
-                'checkin_date' => $data['checkin_date'],
-                'checkout_date' => $data['checkout_date'],
-                'accomodation_id' => $roomType,
-                'status' => 'pending'
+                'customer_id'       => $data['customer_id'] ?? 0,
+                'name'              => $data['name'],
+                'email'             => $data['email'],
+                'address'           => $data['address'],
+                'contact_no'        => $data['contact_no'],
+                'no_of_adults'      => $data['no_of_adults'],
+                'no_of_children'    => $data['no_of_children'],
+                'boooking_status'   => $data['boooking_status'],
+                'checkin_date'      => $data['checkin_date'],
+                'checkout_date'     => $data['checkout_date'],
+                'accomodation_id'   => $roomTypeId,
+                'accomodation_name' => $roomTypeName,
+                'accomodation_qty'  => $roomType->qty,
+                'accomodation_taken' => 1,
+                'status'            => 'pending'
             ]);
         }
 
@@ -82,12 +92,12 @@ class BookingModel extends Model
                 bookings.address,
                 bookings.contact_no,
                 bookings.status,
-                CASE 
+                CASE
                     WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkin_date 
                     WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkin_date 
                     ELSE booking_place_reservations.checkin_date 
                 END as checkin_date,
-                CASE 
+                CASE
                     WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkout_date 
                     WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkout_date 
                     ELSE booking_place_reservations.checkout_date 
@@ -138,6 +148,15 @@ class BookingModel extends Model
             ->distinct()
             // ->orderBy('bookings.created_at','DESC')
             ->get();
+    }
+
+    public static function getBookingListv3()
+    {
+        return self::select('accomodation_name', 'checkin_date', 'checkout_date', 'accomodation_qty',
+            DB::raw('SUM(accomodation_taken) as accomodation_taken'))
+        ->groupBy('accomodation_name', 'checkin_date', 'checkout_date')
+        ->orderBy('bookings.created_at', 'DESC')
+        ->get();
     }
 
     public static function getBookingListTable()

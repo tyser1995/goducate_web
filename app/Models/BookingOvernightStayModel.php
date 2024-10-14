@@ -38,9 +38,14 @@ class BookingOvernightStayModel extends Model
     {
         $roomTypes = is_array($data['room_type']) ? $data['room_type'] : [$data['room_type']];
         $payload = [];
+        $partial_amount = 0;
         foreach ($roomTypes as $roomTypeId) {
             $roomType = Accomodation::find($roomTypeId); // Adjust according to your model method
             $roomTypeName = $roomType ? $roomType->type : null; // Replace 'name' with the actual column name
+
+            if ($roomType && is_numeric($roomType->amount)) {
+                $partial_amount += $roomType->amount;
+            }
 
             $payload[] = self::create([
                 'created_by_user_id' => $data['created_by_users_id'] ?? 0,
@@ -57,16 +62,6 @@ class BookingOvernightStayModel extends Model
         $customer_id = 0;
 
         if(!$customer){
-            $new_customer = CustomerModel::createCustomer([
-                'created_by_user_id' => $data['created_by_users_id'] ?? 0,
-                'first_name' => $data['first_name'] ?? '',
-                'middle_name' => $data['middle_name'] ?? '',
-                'last_name' => $data['last_name'] ?? '',
-                'email' => $data['email'],
-                'address' => $data['address'] ?? '',
-                'contact_no' => $data['contact_no'] ?? 0
-            ]);
-            
             $new_customer = CustomerModel::create([
                 'created_by_user_id' => $data['created_by_users_id'] ?? 0,
                 'first_name' => $data['first_name'] ?? '',
@@ -82,13 +77,14 @@ class BookingOvernightStayModel extends Model
             $customer_id = $customer->id;
         }
 
-        
+        $partial_amount *= 0.20;
         $emailDetails = [
             'title' => 'Reservation Confirmation',
             'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
             'reservation' => $payload,
             'booking_status' => 'overnight_stay',
-            'customer_id' => $customer_id
+            'customer_id' => $customer_id,
+            'partial_amount' => $partial_amount
         ];
     
         $notification = [

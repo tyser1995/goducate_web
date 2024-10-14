@@ -83,14 +83,6 @@
 
     loadCalendar();
 
-    // function formatRoomType(type) {
-    //     return type
-    //         .replace(/_/g, ' ')
-    //         .split(' ')
-    //         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    //         .join(' ');
-    // }
-
     function loadCalendar() {
         var originalStartDate, originalEndDate;
         document.addEventListener('DOMContentLoaded', function() {
@@ -113,11 +105,11 @@
                       dataType: 'json',
                       success: function(data) {
                           var events = [];
-                          for (let i = 0; i < data.booking_list.length; i++) {
+                          for (let i = 0; i < data.datav3.length; i++) {
                               events.push({
-                                title: data.booking_list[i].type,
-                                start:    data.booking_list[i].combined_checkin_datetime,
-                                end:  data.booking_list[i].combined_checkout_datetime,
+                                title: data.datav3[i].accomodation_name + ' ' + data.datav3[i].accomodation_taken +'/'+data.datav3[i].accomodation_qty,
+                                start:    data.datav3[i].checkin_date,
+                                end:  data.datav3[i].checkout_date,
                                 allDay: true
                               });
                               // Store bookings for time disabling
@@ -144,7 +136,7 @@
                       $('.reservationtime').daterangepicker({
                           timePicker: false,
                           // timePickerIncrement: 30,
-                          startDate: selectedDate, 
+                          startDate: selectedDate,
                           endDate: selectedDate,
                           locale: {
                               format: 'MM/DD/YYYY'

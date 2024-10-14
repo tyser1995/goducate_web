@@ -47,7 +47,7 @@
                                         $place_reservation = \App\Models\BookingPlaceReservationModel::getPlaceReservationByEmail($booking->email);
 
                                         if (is_null($overnight_stay) && is_null($day_tour) && is_null($place_reservation)) {
-                                            \App\Models\BookingModel::find($booking->id)->delete(); 
+                                            \App\Models\BookingModel::find($booking->id)->delete();
                                         }
                                     ?>
                                     <tr>
@@ -60,7 +60,7 @@
                                         <td>{{ $booking->address }}</td>
                                         <td>{{ $booking->contact_no }}</td>
                                         <td>{{ $booking->created_at->format('M d, Y h:i a') }}</td>
-                                        <td> 
+                                        <td>
                                             @if ($booking->status == "cancel")
                                                 <span class="badge badge-danger">
                                                     Cancel booking

@@ -114,7 +114,8 @@ class BookingController extends Controller
         return response()->json([
             'success' => true,
             'data' => $bookings,
-            'booking_list' =>$booking_list
+            'booking_list' =>$booking_list,
+            'datav3' => BookingModel::getBookingListv3()
         ], 200);
     }
 
