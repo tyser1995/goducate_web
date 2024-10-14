@@ -559,7 +559,10 @@
                             $isDisabled = ($taken >= $accommodation->qty);
                         @endphp
                         
-                        <option value="{{ $accommodation->id }}" {{ $isDisabled ? 'disabled' : '' }}>
+                        <option value="{{ $accommodation->id }}"
+                            data-taken="{{ $taken }}"
+                            data-qty="{{ $accommodation->qty }}"
+                            {{ $isDisabled ? 'disabled' : '' }}>
                             {{ $accommodation->type }} &nbsp;&nbsp;
                             (Capacity: {{ $accommodation->capacity }}-pax)
                             &nbsp;&nbsp;

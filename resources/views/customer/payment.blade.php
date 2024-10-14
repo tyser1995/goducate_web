@@ -30,22 +30,36 @@
                             
                                 <!-- Customer Information -->
                                 <div class="row form-group">
-                                    <div class="col-6">
+                                    <div class="col-5">
                                         <label for="name">Name</label>
                                         <p>{{ $customers->first_name . ' ' . $customers->last_name }}</p>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-5">
                                         <label for="name">Email</label>
                                         <input type="hidden" name="email" value="{{$customers->email}}" />
                                         <p>{{ $customers->email }}</p>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-5">
                                         <label for="name">Address</label>
                                         <p>{{ $customers->address }}</p>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-5">
                                         <label for="name">Contact</label>
                                         <p>{{ $customers->contact_no }}</p>
+                                    </div>
+                                    <div class="col-2">
+                                        <label for="name">Partial Payment</label>
+                                        <?php
+                                            $payment_img = App\Models\Payment::getPaymentByCustomerIdOnly($customers->id);
+                                        ?>
+                                        
+                                        <a href="javascript:void(0)">View</a>
+                                        
+                                        @if($payment_img && $payment_img->attachment)
+                                            <img src="{{ asset('images/payment/' . $payment_img->attachment) }}" class="mb-2" style="width: 100%; height:200px" alt="{{ $payment_img->attachment }}" />
+                                        @else
+                                            <p>No payment image available</p>
+                                        @endif
                                     </div>
                                 </div>
                             
