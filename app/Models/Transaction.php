@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\CustomerModel;
+use App\Models\BookingModel;
+use App\Models\BookingDayTourModel;
+use App\Models\BookingOvernightStayModel;
+use App\Models\BookingPlaceReservationModel;
 
 class Transaction extends Model
 {
@@ -82,6 +86,13 @@ class Transaction extends Model
 
     public static function deleteTransactionAfterPrint($id)
     {
+
+        BookingModel::where('customer_id','=',$id)->delete();
+        BookingDayTourModel::where('customer_id','=',$id)->delete();
+        BookingOvernightStayModel::where('customer_id','=',$id)->delete();
+        BookingPlaceReservationModel::where('customer_id','=',$id)->delete();
+        Payment::where('customer_id','=',$id)->delete();
+
         return self::where('customer_id','=',$id)
         ->delete();
     }
