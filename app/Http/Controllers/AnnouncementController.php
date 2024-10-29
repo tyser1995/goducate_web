@@ -45,7 +45,7 @@ class AnnouncementController extends Controller
         //
         if ($request->hasFile('attachment')) {
             $image = $request->file('attachment');
-            $image_name = $image->getClientOriginalName();
+            $image_name = time() . '_' . $image->getClientOriginalName();
             
             $destination_path = public_path('/images/announcement/');
     
@@ -61,16 +61,15 @@ class AnnouncementController extends Controller
             $input = $request->all();
             $input['attachment'] = $image_name;
 
-            AnnouncementModel::createAnnouncement($input);
-    
-            return redirect()->route('announcement.index')->withStatus(__('Successfully created.'));
+           
         }else{
-            
-            AnnouncementModel::createAnnouncement($request->all());
-            return redirect()->route('announcement.index')->withStatus(__('Successfully created.'));
+            $input = $request->all();
+            $input['attachment'] = 'default-announcement.png';
         }
     
-        return redirect()->route('announcement.index')->withError(__('Error.'));
+        AnnouncementModel::createAnnouncement($input);
+    
+        return redirect()->route('announcement.index')->withStatus(__('Successfully created.'));
     }
 
     /**
@@ -108,6 +107,7 @@ class AnnouncementController extends Controller
     public function update(Request $request, $id)
     {
         $input = $request->all();
+        $announcement = AnnouncementModel::find($id);
 
         if ($request->hasFile('attachment')) {
             $image = $request->file('attachment');
@@ -122,9 +122,15 @@ class AnnouncementController extends Controller
     
             $image->move($destination_path, $image_name);
             $input['attachment'] = $image_name;
+
+            if ($announcement->attachment && File::exists($destination_path . $announcement->attachment)) {
+                File::delete($destination_path . $announcement->attachment);
+            }
+        }else {
+            $input['attachment'] = $announcement->attachment;
         }
     
-        AnnouncementModel::updateAnnouncement($id, $input);
+        $announcement->update($input);
     
         return redirect()->route('announcement.index')->withStatus(__('Successfully updated.'));
        

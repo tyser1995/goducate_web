@@ -21,6 +21,7 @@ class VerifyCsrfToken extends Middleware
         'bookings.place_reservation',
         'volunteer.register',
         'checkout',
-        'checkout.process'
+        'checkout.process',
+        'accomodation_list'
     ];
 }

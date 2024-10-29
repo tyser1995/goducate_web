@@ -30,9 +30,11 @@
                             ?>
                             <br/>
                             @if ($announcement->attachment)
-                                <img src="{{ asset('images/announcement/' . $announcement->attachment) }}" class="mb-2" style="width: 150px; height:150px" alt="{{ $announcement->attachment }}" />
-                            @else
-                                <span>No attachment.</span>
+                                @if($announcement->attachment == "default-announcement.png")
+                                    <img src="{{ asset('images/' . $announcement->attachment) }}" class="mb-2" style="width: 150px; height:150px" alt="{{ $announcement->attachment }}" />
+                                @else
+                                    <img src="{{ asset('images/announcement/' . $announcement->attachment) }}" class="mb-2" style="width: 150px; height:150px" alt="{{ $announcement->attachment }}" />
+                                @endif
                             @endif
                             <br/>
                             <a href="{{ route('announcement.edit', Hashids::encode($announcement->id)) }}" class="btn btn-info btn-sm"><i class="fas fa-pen"></i></a>
