@@ -174,6 +174,10 @@
                                     @endif
                                     
                                     <div class="form-group">
+                                        Walk-in payment <input type="checkbox" id="walkInCheckbox" onclick="toggleWalkInPayment()" name="walkInCheckbox">
+                                        <input type="number" min="1" class="form-control" id="walkInPayment" disabled name="amount" />
+                                    </div>
+                                    <div class="form-group">
                                         <label for="name">Status</label>
                                         <select required class="form-control" name="status" id="status"  {{$bookings->status == "approved" ? 'disabled' : ''}}>
                                             <option value="">Select option</option>
@@ -198,6 +202,16 @@
 @include('employees.script')
 @push('scripts')
 <script>
+    function toggleWalkInPayment() {
+        const walkInCheckbox = $('#walkInCheckbox');
+        const walkInPayment = $('#walkInPayment');
+        
+        walkInPayment.prop('disabled', !walkInCheckbox.prop('checked'));
+        walkInPayment.prop('required', walkInCheckbox.prop('checked'));
 
+        if (walkInPayment.prop('disabled') || walkInCheckbox.prop('checked')) {
+            walkInPayment.val(''); // Clear the input value
+        }
+    }
 </script>
 @endpush

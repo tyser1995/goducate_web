@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\CustomerModel;
 use App\Models\Accomodation;
+use App\Models\Payment;
 
 use DB;
 
@@ -267,16 +268,16 @@ class BookingModel extends Model
         $payload->update([
             'status' => $data['status']
         ]);
-        
+       
         $customer = CustomerModel::getCustomerByEmail($payload->email);
         if(!$customer){
             CustomerModel::create([
                 'created_by_user_id' => Auth::user()->id ?? 0,
                 'first_name' => $payload->name ?? '',
                 'middle_name' => '',
-                'last_name' =>  $payload->address ?? '',
+                'last_name' =>  '',
                 'email' => $payload->email,
-                'address' => '',
+                'address' => $payload->address ?? '',
                 'contact_no' => $payload->contact_no ?? 0
             ]);
         }else{
@@ -284,10 +285,20 @@ class BookingModel extends Model
                 'created_by_user_id' => Auth::user()->id ?? 0,
                 'first_name' => $payload->name ?? '',
                 'middle_name' => '',
-                'last_name' =>  $payload->address ?? '',
+                'last_name' =>  '',
                 'email' => $payload->email,
-                'address' => '',
+                'address' => $payload->address ?? '',
                 'contact_no' => $payload->contact_no ?? 0
+            ]);
+        }
+        
+        if (!empty($data['walkInCheckbox']) && $data['walkInCheckbox'] === 'on') {
+            Payment::create([
+                'created_by_user_id' => Auth::user()->id ?? 0,
+                'customer_id' => $customer->id,
+                'amount' => $data['amount'] ?? 0,
+                'attachment' => $data['attachment'] ?? '',
+                'payment_status' => 'Full'
             ]);
         }
 

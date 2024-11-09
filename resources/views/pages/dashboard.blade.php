@@ -235,7 +235,7 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="card full-height">
+                <div class="card">
                     <div class="card-header">
                         <div class="card-title">User Feedback Activity</div>
                     </div>
@@ -247,7 +247,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card full-height">
+                <div class="card">
                     <div class="card-header">
                         <div class="card-head-row">
                             <div class="card-title">Booking Tickets</div>
@@ -270,7 +270,7 @@
                         <!-- Booking tickets will be injected here dynamically -->
                     </div>
                 </div>
-            </div>        
+            </div>
         </div>
     @endif
 </div>
@@ -286,6 +286,10 @@
             dataType: 'json',
             success: function(data) {
                 $('#feedback-activity-feed').empty();
+
+                if(data.data.length == 0){
+                    $('#feedback-activity-feed').append('<li>No data found.</li>');
+                }
 
                 function formatDate(datetime) {
                     const date = new Date(datetime);
