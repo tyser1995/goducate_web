@@ -6,8 +6,8 @@
 @if($details['booking_status'] == "overnight_stay")
     @foreach ($details['reservation'] as $reservation)
     - **Room Type**: {{ $reservation->room_type ?? '' }}
-        - **Check-in Date**: {{ $reservation->checkin_date }}
-        - **Check-out Date**: {{ $reservation->checkout_date }}
+        - **Check-in Date**: {{ date('Y-m-d', strtotime($reservation->checkin_date)) }}
+        - **Check-out Date**: {{ date('Y-m-d', strtotime($reservation->checkout_date)) }}
         - **Status**: {{ $reservation->status }}
     @endforeach
 @elseif($details['booking_status'] == "place_reservation")
@@ -19,8 +19,8 @@
         - **No of Children**: {{ $reservation->no_of_children }}
     @endif
     
-    - **Check-in Date**: {{ $reservation->checkin_date }}
-    - **Check-out Date**: {{ $reservation->checkout_date }}
+    - **Check-in Date**:  {{ date('Y-m-d', strtotime($reservation->checkin_date)) }}
+    - **Check-out Date**:  {{ date('Y-m-d', strtotime($reservation->checkout_date)) }}
     - **Status**: {{ $reservation->status }}
 @elseif($details['booking_status'] == "day_tour")
     @if ($reservation->tour_type == "team_building")
@@ -36,8 +36,8 @@
     @endif
     
     
-    - **Check-in Date**: {{ $reservation->checkin_date }}
-    - **Check-out Date**: {{ $reservation->checkout_date }}
+    - **Check-in Date**:  {{ date('Y-m-d', strtotime($reservation->checkin_date)) }}
+    - **Check-out Date**:  {{ date('Y-m-d', strtotime($reservation->checkout_date)) }}
     - **Status**: {{ $reservation->status }}
 @endif
     - **Patrial Amount**: {{ $details['partial_amount'] ?? 0 }}
