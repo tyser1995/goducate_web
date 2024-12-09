@@ -110,7 +110,11 @@
           url: '/verify-code',
           type: 'POST',
           contentType: 'application/json',
-          data: JSON.stringify({ qr_data: decodedText }),
+          data: JSON.stringify({
+            qr_data: decodedText,
+            title: $('#activity_list').val(),
+            description: $('#activity_list option:selected').text()
+          }),
           headers: {
               'X-CSRF-TOKEN': '{{ csrf_token() }}'
           },
@@ -119,11 +123,13 @@
               if (data.success) {
                   $('.title_name')[0].innerHTML = "Successful";
                   $('#validationMessage')[0].innerHTML = "Successfully deducted";
+                  $('.qr_container').addClass('d-none');
               } else {
+                $('.qr_container').addClass('d-none');
                   $('.title_name')[0].innerHTML = "Error";
                   $('#validationMessage')[0].innerHTML = "Out of recreational balance. Please contact Goducate Administrator";
               }
-
+              $('#activity_list').val(0);
               setTimeout(() => {
                   $('#modalMessage').modal('hide');
               }, 5000);

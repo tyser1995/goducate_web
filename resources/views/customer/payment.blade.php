@@ -81,39 +81,53 @@
                                 <input type="hidden" name="customer_id" value="{{ $customers->id }}" class="form-control form-control-alternative" id="customer_id">
                             
                                 <!-- Customer Information -->
-                                <div class="row form-group">
-                                    <div class="col-5">
-                                        <label for="name">Name</label>
-                                        <p>{{ $customers->first_name . ' ' . $customers->last_name }}</p>
+                                <div class="form-group row">
+                                    <div class="col-9">
+                                        <div class="row">
+                                            <div class="col-2">
+                                                <p for="name">Name:</p>
+                                           </div>
+                                           <div class="col-4">
+                                                <p for="name">{{old('name',$customers->first_name . ' ' . $customers->last_name)}}</p>
+                                            </div>
+                                            <div class="col-2">
+                                                <p for="email">Email:</p>
+                                           </div>
+                                           <div class="col-4">
+                                                <p for="email">{{old('email',$customers->email)}}</p>
+                                            </div>
+                                            <div class="col-2">
+                                                <p for="address">Address:</p>
+                                           </div>
+                                           <div class="col-4">
+                                                <p for="address">{{old('address',$customers->address)}}</p>
+                                            </div>
+                                            <div class="col-2">
+                                                <p for="contact_no">Contact No.:</p>
+                                           </div>
+                                           <div class="col-4">
+                                            <p>{{ $customers->contact_no }}</p>
+                                        </div>
+                                        </div>
                                     </div>
-                                    <div class="col-5">
-                                        <label for="name">Email</label>
-                                        <input type="hidden" name="email" value="{{$customers->email}}" />
-                                        <p>{{ $customers->email }}</p>
-                                    </div>
-                                    <div class="col-5">
-                                        <label for="name">Address</label>
-                                        <p>{{ $customers->address }}</p>
-                                    </div>
-                                    <div class="col-5">
-                                        <label for="name">Contact</label>
-                                        <p>{{ $customers->contact_no }}</p>
-                                    </div>
-                                    <div class="col-2">
-                                        <label for="name">Partial Payment</label>
-                                        <?php
-                                            $payment_img = App\Models\Payment::getPaymentByCustomerIdOnly($customers->id);
-                                        ?>
-                                        @if($payment_img && $payment_img->attachment)
-                                            {{-- <img src="{{ asset('images/payment/' . $payment_img->attachment) }}" class="mb-2" style="width: 100%; height:200px" alt="{{ $payment_img->attachment }}" /> --}}
-                                            <a href="javascript:void(0)" onclick="showPaymentImageModal('{{ asset('images/payment/' . ($payment_img->attachment ?? '')) }}')">View</a>
-                                        @else
-                                            @if ($payment_img->amount)
-                                                <p>Walk-in payment: {{$payment_img->amount}}</p>
-                                            @else
-                                                <p>No payment image available</p>
-                                            @endif
-                                        @endif
+                                    <div class="col-3">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label for="name">Partial Payment</label>
+                                                <?php
+                                                    $payment_img = App\Models\Payment::getPaymentByCustomerIdOnly($customers->id);
+                                                ?>
+                                                @if($payment_img && $payment_img->attachment)
+                                                    <a href="javascript:void(0)" onclick="showPaymentImageModal('{{ asset('images/payment/' . ($payment_img->attachment ?? '')) }}')">View</a>
+                                                @else
+                                                    @if ($payment_img)
+                                                        <p>Walk-in payment: {{$payment_img->amount}}</p>
+                                                    @else
+                                                        <p>No payment image available</p>
+                                                    @endif
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             

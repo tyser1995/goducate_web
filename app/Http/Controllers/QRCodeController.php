@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\QRCodeModel;
+use App\Models\Reports;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Crypt;
@@ -108,7 +109,7 @@ class QRCodeController extends Controller
 
             if (!$qrcode) {
                 return response()->json([
-                    'success' => false, 
+                    'success' => false,
                     'error' => 'Invalid QR code'
                 ]);
             }
@@ -124,6 +125,8 @@ class QRCodeController extends Controller
             $qrcode->amount -= $deductionAmount;
             $qrcode->save();
 
+            //Report QR Code scanner
+            Reports::createReports($request->all());
             return response()->json([
                 'message' => 'Successfully deducted.',
                 'success' => true
@@ -131,7 +134,7 @@ class QRCodeController extends Controller
 
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'error' => 'An error occurred: ' . $e->getMessage()
             ]);
         }

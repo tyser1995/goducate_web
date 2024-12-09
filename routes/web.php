@@ -154,6 +154,10 @@ Route::group(['middleware' => 'auth'], function () {
     //Accomodation
     Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'App\Http\Controllers\AccomodationController@index']);
     Route::resource('accomodation', 'App\Http\Controllers\AccomodationController');
+
+    //Report
+    Route::get('reports', ['as' => 'reports', 'uses' => 'App\Http\Controllers\ReportController@index']);
+    Route::resource('report', 'App\Http\Controllers\ReportController');
     
     //Price Monitoring
     Route::get('price_monitorings', ['as' => 'price_monitorings', 'uses' => 'App\Http\Controllers\PriceMonitoringController@index']);
