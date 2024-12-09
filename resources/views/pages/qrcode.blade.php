@@ -71,6 +71,16 @@
   @include('pages.header')
   <div class="container">
     <div class="card mt-2">
+      <select name="title" class="form-control" id="activity_list">
+        <option selected value="0">Select Activities</option>
+        @foreach (App\Models\ActivityList::getActivityList() as $activity_list)
+            <option value="{{ $activity_list->id }}">
+                {{ $activity_list->title }}
+              </option>
+        @endforeach
+    </select>
+    </div>
+    <div class="card mt-2 qr_container d-none">
       <div id="reader"></div>
       <div id="result"></div>
     </div>
@@ -80,6 +90,13 @@
 @endsection
 @push('scripts')
 <script>
+
+  $('#activity_list').change(function (e) {
+    $('.qr_container').addClass('d-none');
+    if($(this).val() != 0){
+      $('.qr_container').removeClass('d-none');
+    }
+  });
   let isScanning = true;
   function onScanSuccess(decodedText, decodedResult) {
       if (!isScanning) return;
