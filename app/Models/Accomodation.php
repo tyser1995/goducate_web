@@ -23,7 +23,9 @@ class Accomodation extends Model
         'capacity',
         'tour_type',
         'group_type',
-        'amount'
+        'amount',
+        'image',
+        'description'
     ];
 
     public const BOOKING_STATUS = [
@@ -42,7 +44,9 @@ class Accomodation extends Model
             'capacity' => $data['capacity'],
             'tour_type' => $data['tour_type'] ?? 'NA',
             'group_type' => $data['group_type'] ?? 'NA',
-            'amount' => $data['amount'] ?? '0'
+            'amount' => $data['amount'] ?? '0',
+            'image'         => $data['image'],
+            'description'   => $data['description'] ?? ''
         ]);
 
         return $payload;
@@ -83,7 +87,9 @@ class Accomodation extends Model
             'capacity' => $data['capacity'],
             'tour_type' => $data['tour_type'] ?? 'NA',
             'group_type' => $data['group_type'] ?? 'NA',
-            'amount' => $data['amount'] ?? '0'
+            'amount' => $data['amount'] ?? '0',
+            'image'         => $data['image'],
+            'description'   => $data['description'] ?? ''
         ]);
 
         return $payload;

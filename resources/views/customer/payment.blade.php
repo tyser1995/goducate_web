@@ -104,13 +104,15 @@
                                         <?php
                                             $payment_img = App\Models\Payment::getPaymentByCustomerIdOnly($customers->id);
                                         ?>
-                                        
-                                        <a href="javascript:void(0)">View</a>
-                                        
                                         @if($payment_img && $payment_img->attachment)
-                                            <img src="{{ asset('images/payment/' . $payment_img->attachment) }}" class="mb-2" style="width: 100%; height:200px" alt="{{ $payment_img->attachment }}" />
+                                            {{-- <img src="{{ asset('images/payment/' . $payment_img->attachment) }}" class="mb-2" style="width: 100%; height:200px" alt="{{ $payment_img->attachment }}" /> --}}
+                                            <a href="javascript:void(0)" onclick="showPaymentImageModal('{{ asset('images/payment/' . ($payment_img->attachment ?? '')) }}')">View</a>
                                         @else
-                                            <p>No payment image available</p>
+                                            @if ($payment_img->amount)
+                                                <p>Walk-in payment: {{$payment_img->amount}}</p>
+                                            @else
+                                                <p>No payment image available</p>
+                                            @endif
                                         @endif
                                     </div>
                                 </div>
@@ -171,7 +173,7 @@
                                             @foreach ($groupedTransactions as $transaction)
                                                 <tr>
                                                     <td>
-                                                        {{ $transaction['description'] }} 
+                                                        {{ $transaction['description'] }}
                                                         @if($transaction['count'] > 1)
                                                             ({{ $transaction['count'] }}) <!-- Or use " {{ $transaction['count'] }}x" for 2x format -->
                                                         @endif
@@ -231,6 +233,26 @@
         </div>
     </div>
 </div>
+
+<!-- Modal for Viewing Image -->
+<div class="modal fade" id="paymentImageModal" tabindex="-1" role="dialog" aria-labelledby="paymentImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentImageModalLabel">Payment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="paymentImage" src="" alt="Payment Image" style="width: 100%; height: auto;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @include('employees.script')
@@ -279,5 +301,13 @@
             $('#others').removeAttr('required');
         }
     });
+
+    function showPaymentImageModal(imageSrc) {
+        // Set the image source for the modal
+        document.getElementById('paymentImage').src = imageSrc;
+        
+        // Show the modal
+        $('#paymentImageModal').modal('show');
+    }
 </script>
 @endpush

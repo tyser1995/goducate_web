@@ -118,43 +118,28 @@
       <div class="image-container">
         <img src="images/B2.jpg" alt="Volunteer Image">
       </div>
-      <div class="description">
-        <img src="images/b1.jpg" alt="Volunteers">
-        <div class="text">
-          <h1>Jungle Huts:</h1>
-          <h2>₱2,200 (6 pax)</h2>
-          <p>- Cozy accommodations for small groups.</p>
-        </div>
-      </div>
-      <div class="description">
-      <div class="text">          
-          <br>
-          <h1>Hillside Villa:</h1>
-          <h2>₱3,500 (9 pax)</h2>
-          <p>- Spacious, great for larger gatherings.</p>
-          </br>
-          <h1>Family Rooms:</h1>
-          <h2>₱2,500 (3 pax)</h2>
-          <p>- Ideal for families, providing comfort and space.</p>
-        </div>
-        <img src="images/b3.jpg" alt="Volunteers">
-      </div>
-      <div class="description">
-        <img src="images/b5.jpg" alt="Volunteers">
-        <div class="text">
-          <h1>Courtyard Rooms:</h1>
-          <h2>₱2,800 (4 pax)</h2>
-          <h2>₱4,500 (12 pax)</h2>
-          <p>- Versatile options for smaller groups or larger parties, with differing capacities.</p>
-        </div>
-      </div>
-      <div class="description">
-      <div class="text">
-          <h1>Tents: </h1>
-          <h2>₱1,000 (2-4 pax)</h2>
-          <p>- Affordable and suitable for camping experiences.</p>
-        </div>
-        <img src="images/b4.jpg" alt="Volunteers">
+      <div class="accomodations-container">
+          @foreach ($accomodations as $index => $accomodation)
+              <div class="description">
+                  @if ($index % 2 == 0)
+                      <!-- Image on the Left for Even Index -->
+                      <img src="{{ asset('images/accomodation/' . $accomodation->image) }}" alt="{{ $accomodation->type }}">
+                      <div class="text">
+                          <h1>{{ $accomodation->type }}:</h1>
+                          <h2>₱{{ number_format($accomodation->amount, 2) }} ({{ $accomodation->capacity }} pax)</h2>
+                          <p>- {{ $accomodation->description }}</p>
+                      </div>
+                  @else
+                      <!-- Image on the Right for Odd Index -->
+                      <div class="text">
+                          <h1>{{ $accomodation->type }}:</h1>
+                          <h2>₱{{ number_format($accomodation->amount, 2) }} ({{ $accomodation->capacity }} pax)</h2>
+                          <p>- {{ $accomodation->description }}</p>
+                      </div>
+                      <img src="{{ asset('images/accomodation/' . $accomodation->image) }}" alt="{{ $accomodation->type }}">
+                  @endif
+              </div>
+          @endforeach
       </div>
       <div class="image-container">
         <img src="images/b6.jpg" alt="Volunteer Image">

@@ -41,7 +41,7 @@ class AnnouncementModel extends Model
 
     public static function getAnnouncementList()
     {
-        $announcements = self::all(); 
+        $announcements = self::all();
 
         foreach ($announcements as $announcement) {
             $dateRange = $announcement->when;
@@ -96,7 +96,7 @@ class AnnouncementModel extends Model
 
     public static function getAnnouncement()
     {
-        $announcements = self::all(); 
+        $announcements = self::all();
 
         foreach ($announcements as $announcement) {
             $dateRange = $announcement->when;

@@ -55,8 +55,10 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Attachment</label>
-                                        <input type="file" class="form-control" name="attachment" value="{{old('attachment',$announcements['attachment'])}}" />
+                                        <input type="file" class="form-control" name="attachment" value="{{old('attachment',$announcements['attachment'])}}" id="image-input" onchange="previewImage(event)" />
                                     </div>
+                                    <img id="image-preview" src="{{ $announcements->announcement ? asset('images/announcement/' . $announcements->announcement) : asset('images/default-announcement.png') }}" alt="Preview Image" onerror="this.src='{{ asset('images/default-announcement.png') }}';" style="width: 200px; height: auto; margin-top: 10px;"
+                                />
                                 </div>
                                 <div class="">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
@@ -87,11 +89,11 @@
         ],
     });
 
-    var selectedDate = moment(new Date()).startOf('day'); 
+    var selectedDate = moment(new Date()).startOf('day');
     $('.reservationtime').daterangepicker({
         timePicker: true,
         timePickerIncrement: 30,
-        startDate: selectedDate, 
+        startDate: selectedDate,
         endDate: selectedDate,
         minDate: selectedDate,
         locale: {
@@ -100,5 +102,26 @@
         autoApply: true,
         drops: 'up'
     });
+
+    function previewImage(event) {
+        const preview = document.getElementById('image-preview');
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.onerror = function() {
+                preview.src = '{{ asset("images/default-announcement.png") }}';
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '{{ asset("images/default-announcement.png") }}';
+            preview.style.display = 'block';
+        }
+    }
 </script>
 @endpush

@@ -49,6 +49,7 @@ Route::post('bookings.overnight_stay', ['as' => 'bookings.overnight_stay', 'uses
 Route::post('bookings.day_tour', ['as' => 'bookings.day_tour', 'uses' => 'App\Http\Controllers\BookingController@dt_store']);
 Route::post('bookings.place_reservation', ['as' => 'bookings.place_reservation', 'uses' => 'App\Http\Controllers\BookingController@pr_store']);
 Route::get('room-capacity/{id}', ['as' => 'room-capacity/{id}', 'uses' => 'App\Http\Controllers\AccomodationController@getRoomCapacity']);
+Route::get('accomodation_list', ['as' => 'accomodation_list', 'uses' => 'App\Http\Controllers\AccomodationController@getRoomCapacity']);
 // Route::resource('booking', 'App\Http\Controllers\BookingController');
 
 //Google

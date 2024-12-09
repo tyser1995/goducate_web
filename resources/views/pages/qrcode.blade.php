@@ -79,52 +79,63 @@
 @include('pages.modal.index')
 @endsection
 @push('scripts')
-  <script>
-   
-      function onScanSuccess(decodedText, decodedResult) {
-          // Handle the scanned data
-          console.log(`Code scanned = ${decodedText}`, decodedResult);
-          console.log(decodedText);
-          $.ajax({
-              url: '/verify-code',
-              type: 'POST',
-              contentType: 'application/json',
-              data: JSON.stringify({ qr_data: decodedText }),
-              headers: {
-                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
-              },
-              success: function(data) {
-                  $('#modalMessage').modal('show');
-                  if (data.success) {
-                      $('.title_name')[0].innerHTML= "Successful";
-                      $('#validationMessage')[0].innerHTML = "Successfully deducted";
-                  } else {
-                    $('.title_name')[0].innerHTML= "Error";
-                    $('#validationMessage')[0].innerHTML = "Out of recreational balance. Please contact Goducate Administrator";
-                  }
+<script>
+  let isScanning = true;
+  function onScanSuccess(decodedText, decodedResult) {
+      if (!isScanning) return;
 
-                  setTimeout(() => {
-                    $('#modalMessage').modal('hide');
-                  }, 5000);
-              },
-              error: function(xhr, status, error) {
-                  document.getElementById('result').innerHTML = "Error verifying QR Code.";
+      isScanning = false;
 
-                  setTimeout(() => {
-                    document.getElementById('result').innerHTML = "";
-                  }, 5000);
+      // Handle the scanned data
+      console.log(`Code scanned = ${decodedText}`, decodedResult);
+      console.log(decodedText);
+      $.ajax({
+          url: '/verify-code',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ qr_data: decodedText }),
+          headers: {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          },
+          success: function(data) {
+              $('#modalMessage').modal('show');
+              if (data.success) {
+                  $('.title_name')[0].innerHTML = "Successful";
+                  $('#validationMessage')[0].innerHTML = "Successfully deducted";
+              } else {
+                  $('.title_name')[0].innerHTML = "Error";
+                  $('#validationMessage')[0].innerHTML = "Out of recreational balance. Please contact Goducate Administrator";
               }
-          });
-      }
 
+              setTimeout(() => {
+                  $('#modalMessage').modal('hide');
+              }, 5000);
+          },
+          error: function(xhr, status, error) {
+              document.getElementById('result').innerHTML = "Error verifying QR Code.";
 
-        function onScanFailure(error) {
-            //console.warn(`QR Code scan failed. Reason: ${error}`);
-        }
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML = "";
+              }, 5000);
+          },
+          complete: function() {
+              // Re-enable scanning after a 3-second delay
+              setTimeout(() => {
+                  isScanning = true;
+              }, 3000);
+          }
+      });
+  }
 
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-  </script>
+  function onScanFailure(error) {
+      // Optional: Handle scan failure
+      // console.warn(`QR Code scan failed. Reason: ${error}`);
+  }
+
+  let html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader", { fps: 10, qrbox: 250 });
+  html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+</script>
+
 @endpush
 

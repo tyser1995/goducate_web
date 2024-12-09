@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('accomodation.update',$accomodations->id) }}" autocomplete="off">
+                        <form method="post" action="{{ route('accomodation.update',$accomodations->id) }}" autocomplete="off" enctype="multipart/form-data">
                             @csrf
                             @method('put')
                             <div class="pl-lg-4">
@@ -50,11 +50,22 @@
                                         <label for="name">Capacity</label>
                                         <input type="number" class="form-control" name="capacity" id="capacity" required autofocus  placeholder="{{ __('Enter Capacity') }}" value="{{old('capacity',$accomodations->capacity)}}" min="1">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="description">Description</label>
+                                        <input type="text" class="form-control" name="description" id="description" required autofocus value="{{old('description',$accomodations->description)}}" placeholder="{{ __('Enter Description') }}">
+                                    </div>
                         
                                     <div class="form-group">
                                         <label for="email">Amount</label>
                                         <input type="number" class="form-control" name="amount" id="amount" required autofocus  placeholder="{{ __('Enter Amount') }}" min="1" value="{{old('amount',$accomodations->amount)}}">
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="image">Image</label>
+                                        <input type="file" class="form-control" name="image" id="image-input" onchange="previewImage(event)" />
+                                    </div>
+                                    <img id="image-preview" src="{{ $accomodations->image ? asset('images/accomodation/' . $accomodations->image) : asset('images/default-image.png') }}" alt="Preview Image" onerror="this.src='{{ asset('images/default-image.png') }}';" style="width: 200px; height: auto; margin-top: 10px;"
+                                />
                                 <div class="">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Save') }}</button>
                                 </div>
@@ -71,6 +82,25 @@
 @include('employees.script')
 @push('scripts')
 <script>
+ function previewImage(event) {
+        const preview = document.getElementById('image-preview');
+        const file = event.target.files[0];
 
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            };
+            reader.onerror = function() {
+                preview.src = '{{ asset("images/default-image.png") }}';
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = '{{ asset("images/default-image.png") }}';
+            preview.style.display = 'block';
+        }
+    }
 </script>
 @endpush
