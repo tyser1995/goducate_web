@@ -121,26 +121,13 @@ class ReportController extends Controller
         $reports = Reports::getReportsChartBooking();
 
         $chartData = [
-            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            'datasets' => [],
+            'labels' => $reports->pluck('accomodation_name'),
+            'data' => $reports->pluck('count'),
+            'backgroundColor' => $reports->pluck('accomodation_name')->map(function ($description) {
+                return '#' . substr(md5($description), 0, 6);
+            })
         ];
-
-        $descriptions = $reports->pluck('accomodation_name')->unique();
-
-        foreach ($descriptions as $description) {
-            $data = array_fill(0, 12, 0);
-            foreach ($reports->where('accomodation_name', $description) as $report) {
-                $data[$report->month - 1] = $report->count;
-            }
-
-            $chartData['datasets'][] = [
-                'label' => $description,
-                'backgroundColor' => '#' . substr(md5($description), 0, 6),
-                'borderColor' => '#' . substr(md5($description), 0, 6),
-                'data' => $data,
-            ];
-        }
-
+    
         return response()->json($chartData);
     }
 }

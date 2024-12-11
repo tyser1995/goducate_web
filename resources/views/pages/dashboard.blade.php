@@ -181,7 +181,7 @@
                         <div class="card-title">Booking Usage</div>
                         <div class="card-body">
                             <div class="chart-container">
-                                <canvas id="multipleLineChart"></canvas>
+                                <canvas id="myPieChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -280,7 +280,7 @@
 <script>
 
     var multipleBarChart = document.getElementById('multipleBarChart').getContext('2d'),
-    multipleLineChart = document.getElementById('multipleLineChart').getContext('2d');
+    myPieChart = document.getElementById('myPieChart').getContext('2d');
 
     var myMultipleBarChart = new Chart(multipleBarChart, {
         type: 'bar',
@@ -314,35 +314,43 @@
     });
 
 
-    var myMultipleLineChart = new Chart(multipleLineChart, {
-			type: 'bar',
-			data: {
-            labels: [], // Will be populated dynamically
-            datasets: [] // Will be populated dynamically
+    var myPieChart = new Chart(myPieChart, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [], // Empty initially, will be populated dynamically
+                    backgroundColor: [], // Empty initially, will be populated dynamically
+                    borderWidth: 0
+                }],
+                labels: [] // Empty initially, will be populated dynamically
             },
             options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            legend: {
-                position: 'bottom'
-            },
-            title: {
-                display: true,
-                text: 'Booking'
-            },
-            tooltips: {
-                mode: 'index',
-                intersect: false
-            },
-            scales: {
-                xAxes: [{
-                    stacked: true,
-                }],
-                yAxes: [{
-                    stacked: true
-                }]
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        fontColor: 'rgb(154, 154, 154)',
+                        fontSize: 11,
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                },
+                pieceLabel: {
+                    render: 'percentage',
+                    fontColor: 'white',
+                    fontSize: 14,
+                },
+                tooltips: false,
+                layout: {
+                    padding: {
+                        left: 20,
+                        right: 20,
+                        top: 20,
+                        bottom: 20
+                    }
+                }
             }
-        }
 		});
 
     const fetchChartDataActivity = () => {
@@ -372,11 +380,11 @@
             success: function (response) {
                 const chartData = response;
 
-                myMultipleLineChart.data.labels = chartData.labels;
-                myMultipleLineChart.data.datasets = chartData.datasets;
-                myMultipleLineChart.update();
+                myPieChart.data.labels = chartData.labels; // Set the labels dynamically
+                myPieChart.data.datasets[0].data = chartData.data; // Set the data dynamically
+                myPieChart.data.datasets[0].backgroundColor = chartData.backgroundColor; // Set colors dynamically
+                myPieChart.update(); // Redraw the chart
 
-                console.log(chartData);
             },
             error: function (xhr, status, error) {
                 console.error('Error fetching chart data:', error);

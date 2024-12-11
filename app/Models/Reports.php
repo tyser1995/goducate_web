@@ -85,12 +85,10 @@ class Reports extends Model
     public static function getReportsChartBooking()
     {
         return BookingModel::select(
-            DB::raw('MONTH(checkin_date) as month'),
             'accomodation_name',
             DB::raw('COUNT(*) as count')
         )
-        ->groupBy(DB::raw('MONTH(checkin_date)'), 'accomodation_name')
-        ->orderBy(DB::raw('MONTH(checkin_date)'), 'asc')
+        ->groupBy('accomodation_name')
         ->get();
     }
 
