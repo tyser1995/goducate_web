@@ -21,7 +21,7 @@ class BookingController extends Controller
     {
         //
         return view('pages.booking.index',[
-            'bookings' => BookingModel::getBooking(),
+            'bookings' => BookingModel::getBookingv2(),
             'customers' => CustomerModel::getCustomer()
         ]);
     }
@@ -68,9 +68,10 @@ class BookingController extends Controller
     public function edit($id)
     {
         //
-        $booking = BookingModel::getBookingById(Hashids::decode($id)[0]);
+        $customers = CustomerModel::findOrFail(Hashids::decode($id)[0]);
+        $booking = BookingModel::getBookingByEmail($customers->email)->first();
         return view('pages.booking.edit',[
-            'bookings' => BookingModel::getBookingById(Hashids::decode($id)[0]),
+            'bookings' => BookingModel::getBookingById($booking->id),
             'overnight_stays' => BookingOvernightStayModel::getOvernightStayByEmail($booking->email),
             'day_tours' => BookingDayTourModel::getDayTourByEmail($booking->email),
             'place_reservations' => BookingPlaceReservationModel::getPlaceReservationByEmail($booking->email)
@@ -86,12 +87,16 @@ class BookingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $booking = BookingModel::getBookingById($id);
-        BookingModel::updateBookingStatus($id,$request->all());
+        $customers = CustomerModel::findOrFail($id);
+        $bookings = BookingModel::getBookingByEmail($customers->email);
+        foreach ($bookings as $booking) {
+            BookingModel::getBookingById($booking->id);
+            BookingModel::updateBookingStatus($booking->id,$request->all());
 
-        BookingOvernightStayModel::updateOvernightStayStatus($booking->email,$request->all());
-        BookingDayTourModel::updateDayTourStatus($booking->email,$request->all());
-        BookingPlaceReservationModel::updatePlaceReservationStatus($booking->email,$request->all());
+            BookingOvernightStayModel::updateOvernightStayStatus($booking->email,$request->all());
+            BookingDayTourModel::updateDayTourStatus($booking->email,$request->all());
+            BookingPlaceReservationModel::updatePlaceReservationStatus($booking->email,$request->all());
+        }
 
         return redirect()->route('booking.index')->withStatus(__('Updated successfully'));
     }
@@ -105,7 +110,12 @@ class BookingController extends Controller
     public function destroy($id)
     {
         //
-        BookingModel::deleteBooking($id);
+        $customers = CustomerModel::findOrFail($id);
+        $bookings = BookingModel::getBookingByEmail($customers->email);
+        foreach ($bookings as $booking) {
+            BookingModel::deleteBooking($booking->id);
+        }
+        
         return redirect()->route('booking.index')->withError(__('Deleted successfully'));
     }
 
