@@ -98,6 +98,13 @@
     }
   });
   let isScanning = true;
+
+  function resetScanner() {
+    isScanning = true;
+    html5QrcodeScanner.clear(); // Clear the scanner
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure); // Reinitialize
+  }
+
   function onScanSuccess(decodedText, decodedResult) {
       if (!isScanning) return;
 
@@ -130,6 +137,7 @@
                   $('#validationMessage')[0].innerHTML = "Out of recreational balance. Please contact Goducate Administrator";
               }
               $('#activity_list').val(0);
+              resetScanner();
               setTimeout(() => {
                   $('#modalMessage').modal('hide');
               }, 5000);
@@ -145,6 +153,7 @@
               // Re-enable scanning after a 3-second delay
               setTimeout(() => {
                   isScanning = true;
+                  resetScanner();
               }, 3000);
           }
       });

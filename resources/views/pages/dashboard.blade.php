@@ -163,25 +163,25 @@
                 </div>
             </div>
             
-            <div class="col-md-6 d-none">
+            <div class="col-md-6">
                 <div class="card full-height">
                     <div class="card-body">
-                        <div class="card-title">Total income & spend statistics</div>
-                        <div class="row py-3">
-                            <div class="col-md-4 d-flex flex-column justify-content-around">
-                                <div>
-                                    <h6 class="fw-bold text-uppercase text-success op-8">Total Income</h6>
-                                    <h3 class="fw-bold">$9.782</h3>
-                                </div>
-                                <div>
-                                    <h6 class="fw-bold text-uppercase text-danger op-8">Total Spend</h6>
-                                    <h3 class="fw-bold">$1,248</h3>
-                                </div>
+                        <div class="card-title">Activity Usage</div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="multipleBarChart"></canvas>
                             </div>
-                            <div class="col-md-8">
-                                <div id="chart-container">
-                                    <canvas id="totalIncomeChart"></canvas>
-                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="card-title">Booking Usage</div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="multipleLineChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -278,6 +278,118 @@
 
 @push('scripts')
 <script>
+
+    var multipleBarChart = document.getElementById('multipleBarChart').getContext('2d'),
+    multipleLineChart = document.getElementById('multipleLineChart').getContext('2d');
+
+    var myMultipleBarChart = new Chart(multipleBarChart, {
+        type: 'bar',
+        data: {
+            labels: [], // Will be populated dynamically
+            datasets: [], // Will be populated dynamically
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom'
+            },
+            title: {
+                display: true,
+                text: 'Daily Stats'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
+
+
+    var myMultipleLineChart = new Chart(multipleLineChart, {
+			type: 'bar',
+			data: {
+            labels: [], // Will be populated dynamically
+            datasets: [] // Will be populated dynamically
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom'
+            },
+            title: {
+                display: true,
+                text: 'Booking'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+		});
+
+    const fetchChartDataActivity = () => {
+        $.ajax({
+            url: "{{ route('chart.data.activity') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                const chartData = response;
+
+                // Update the chart with new data
+                myMultipleBarChart.data.labels = chartData.labels;
+                myMultipleBarChart.data.datasets = chartData.datasets;
+                myMultipleBarChart.update();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    };
+
+    const fetchChartDataBooking = () => {
+        $.ajax({
+            url: "{{ route('chart.data.booking') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                const chartData = response;
+
+                myMultipleLineChart.data.labels = chartData.labels;
+                myMultipleLineChart.data.datasets = chartData.datasets;
+                myMultipleLineChart.update();
+
+                console.log(chartData);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    };
+
+    // Fetch initial data on page load
+    fetchChartDataActivity();
+    fetchChartDataBooking();
+
+    
+        
     loadSurveys();
     function loadSurveys() {
         $.ajax({

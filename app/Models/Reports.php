@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\BookingModel;
+
+use DB;
+
 class Reports extends Model
 {
     use HasFactory, SoftDeletes;
@@ -34,8 +38,12 @@ class Reports extends Model
 
     public static function getReports()
     {
-
-        return self::get();
+        return self::select(
+            'description',
+            'type',
+            DB::raw('COUNT(*) as count'))
+        ->groupBy('description','type')
+        ->get();
     }
 
     public static function getReportsById($id)
@@ -61,4 +69,29 @@ class Reports extends Model
     {
         return self::findOrFail($id)->delete();
     }
+
+
+    public static function getReportsChartActivity()
+    {
+        return self::select(
+            DB::raw('MONTH(created_at) as month'),
+            'description',
+            DB::raw('COUNT(*) as count')
+        )
+        ->groupBy('month', 'description')
+        ->get();
+    }
+
+    public static function getReportsChartBooking()
+    {
+        return BookingModel::select(
+            DB::raw('MONTH(checkin_date) as month'),
+            'accomodation_name',
+            DB::raw('COUNT(*) as count')
+        )
+        ->groupBy(DB::raw('MONTH(checkin_date)'), 'accomodation_name')
+        ->orderBy(DB::raw('MONTH(checkin_date)'), 'asc')
+        ->get();
+    }
+
 }

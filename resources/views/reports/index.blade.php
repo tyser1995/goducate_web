@@ -25,9 +25,8 @@
                                 <tr>
                                     <th class="d-none">ID</th>
                                     <th>Description</th>
-                                    <th>Type</th>
-                                    <th>Created date</th>
-                                    <th></th>
+                                    <th>Usage</th>
+                                    {{-- <th>Created date</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -36,8 +35,8 @@
                                     <tr>
                                         <td class="d-none">{{ $report->id }}</td>
                                         <td>{{ $report->description}}</td>
-                                        <td>{{ $report->type}}</td>
-                                        <td>{{ $report->created_at}}</td>
+                                        <td>{{ $report->count}}</td>
+                                        {{-- <td>{{ $report->created_at}}</td> --}}
                                     </tr>
                                     @endforeach
                                 @else

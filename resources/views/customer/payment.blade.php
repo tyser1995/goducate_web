@@ -95,6 +95,7 @@
                                            </div>
                                            <div class="col-4">
                                                 <p for="email">{{old('email',$customers->email)}}</p>
+                                                <input type="hidden" name="email" value="{{old('email',$customers->email)}}" />
                                             </div>
                                             <div class="col-2">
                                                 <p for="address">Address:</p>

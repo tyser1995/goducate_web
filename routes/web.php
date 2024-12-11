@@ -157,6 +157,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Report
     Route::get('reports', ['as' => 'reports', 'uses' => 'App\Http\Controllers\ReportController@index']);
+    Route::get('chart.data.activity', ['as' => 'chart.data.activity', 'uses' => 'App\Http\Controllers\ReportController@getChartDataActivity']);
+    Route::get('chart.data.booking', ['as' => 'chart.data.booking', 'uses' => 'App\Http\Controllers\ReportController@getChartDataBooking']);
+
     Route::resource('report', 'App\Http\Controllers\ReportController');
     
     //Price Monitoring
