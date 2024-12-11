@@ -21,7 +21,8 @@ class BookingController extends Controller
     {
         //
         return view('pages.booking.index',[
-            'bookings' => BookingModel::getBooking()
+            'bookings' => BookingModel::getBooking(),
+            'customers' => CustomerModel::getCustomer()
         ]);
     }
 

@@ -181,6 +181,56 @@
     .background-overlay {
       animation: slide-left 5s infinite ease-in-out;
     }
+
+    .content {
+      text-align: center;
+    }
+    .text h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .text p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #555;
+    }
+    .text button {
+      padding: 0.5rem 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .text button:hover {
+      background-color: #0056b3;
+    }
+    .announcement {
+      position: absolute;
+      top: 40%;
+      left: 80%;
+      transform: translate(-50%, -50%);
+      background-color: #f9f9f93a;
+      padding: 1rem;
+      overflow: hidden;
+      box-shadow: -3px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .announcement .carousel-inner {
+      width: 100%;
+      height: 100%;
+    }
+
+    .announcement .carousel-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .announcement h2 {
+      margin-top: 0;
+    }
 </style>
 
 <div class="background-overlay" id="background-overlay"></div>
@@ -193,38 +243,98 @@
 <section class="home" id="home">
   <div class="container content">
     <div class="text">
-      <h1>Welcome to Camp Goducate Iloilo</h1>
-      <p>Relax and enjoy your stay at Camp Goducate.</p>
+      <h1 style="color:#fff">Welcome to Camp Goducate Iloilo</h1>
+      <p style="color:#fff">Relax and enjoy your stay at Camp Goducate.</p>
       <a href="http://127.0.0.1:8000/_booking"><button>Book Now</button></a>
     </div>
   </div>
 </section>
+<!-- Sliding Announcement Section -->
+<div class="announcement">
+  <div id="announcement-slider">
+    @if (count($announcements) > 0)
+    <h4 style="color:#fff">Announcements</h4>
+    <div id="carouselExample" class="carousel slide carousel-dark">
+      <div class="carousel-inner announcement-item-img">
+        @foreach ($announcements as $key => $announcement)
+          <div class="carousel-item @if($key === 0) active @endif">
+            @if ($announcement->attachment === "default-announcement.png")
+              <img
+                src="{{ asset('images/default-announcement.png') }}"
+                alt="Default Announcement"
+                class="img-fluid"
+                data-bs-toggle="modal"
+                data-bs-target="#imageModal"
+                data-image="{{ asset('images/default-announcement.png') }}"
+                {{-- data-description="{{ html_entity_decode($announcement['description']) }}" --}}
+                loading="lazy" />
+                <div class="d-none desc">
+                  <?php
+                  echo html_entity_decode($announcement['description']);
+              ?>
+                </div>
+            @else
+            <img
+              src="{{ asset('images/announcement/' . $announcement->attachment) }}"
+              alt="{{ $announcement->title }}"
+              class="img-fluid"
+              data-bs-toggle="modal"
+              data-bs-target="#imageModal"
+              data-image="{{ asset('images/announcement/' . $announcement->attachment) }}"
+              {{-- data-description="{{ html_entity_decode($announcement['description']) }}" --}}
+              loading="lazy" />
+              <div class="d-none desc">
+                <?php
+                  echo html_entity_decode($announcement['description']);
+              ?>
+              </div>
+            @endif
+          </div>
+        @endforeach
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    @else
+    <div class="announcement-item">
+      <p>No Announcement.</p>
+    </div>
+    @endif
+  </div>
+</div>
+
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Announcement</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="row">
+          <div class="col-4">
+            <img id="modalImage" src="" alt="" class="img-fluid">
+          </div>
+          <div class="col-8">
+            <div id="modalDescription"></div>
+          </div>
+        </div>
+       
+        
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- Promo and Announcements Section -->
 <section class="Promo-section">
-  <section class="mb-5">
-    <div class="container content">
-      @if (count($announcements) > 0)
-        <h2>Announcements</h2>
-        <div class="activities" style=" display: flex; align-items: center; justify-content: center;">
-          @foreach ($announcements as $announcement)
-            @if ($announcement->attachment)
-              <img src="{{ asset('images/announcement/' . $announcement->attachment) }}" class="mb-2" style="width: 300px; height:300px; margin-right: 15px;" alt="{{ $announcement->title }}" />
-              <div> 
-                {!! html_entity_decode($announcement['description']) !!}
-              </div>
-            @else
-              <div> 
-                {!! html_entity_decode($announcement['description']) !!}
-              </div>
-            @endif
-          @endforeach
-        </div>
-      @else
-        <p>No Announcement.</p>
-      @endif
-    </div>
-  </section>
   <div class="right">
     @if (count($lists) > 0)
       <h2>Activities</h2>
@@ -253,6 +363,9 @@
 </section>
 
 <!-- JavaScript for background slideshow -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   const backgroundOverlay = document.getElementById('background-overlay');
   const backgroundImages = [
@@ -278,6 +391,24 @@
   window.onload = function() {
     backgroundOverlay.style.backgroundImage = `url(${backgroundImages[currentIndex]})`;
   };
+
+  document.addEventListener("DOMContentLoaded", function () {
+  const imageModal = document.getElementById("imageModal");
+  const modalImage = document.getElementById("modalImage");
+  const modalDescription = document.getElementById("modalDescription");
+
+  imageModal.addEventListener("show.bs.modal", function (event) {
+    const trigger = event.relatedTarget; // The clicked image that triggered the modal
+    const imageSrc = trigger.getAttribute("data-image"); // Get image source
+    const descriptionElement = trigger.closest(".carousel-item").querySelector(".desc"); // Find the related description
+
+    // Update modal content
+    modalImage.src = imageSrc;
+    modalDescription.innerHTML = descriptionElement ? descriptionElement.innerHTML : "No description available.";
+  });
+});
+
+
 </script>
 
 @endsection

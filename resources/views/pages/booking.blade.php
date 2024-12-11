@@ -123,20 +123,29 @@
               <div class="description">
                   @if ($index % 2 == 0)
                       <!-- Image on the Left for Even Index -->
-                      <img src="{{ asset('images/accomodation/' . $accomodation->image) }}" alt="{{ $accomodation->type }}">
+                      @if ($accomodation->image)
+                        <img src="{{ asset('images/accomodation/' . $accomodation->image) }}" alt="{{ $accomodation->type }}">
+                      @else
+                        <img src="{{ asset('images/default-image.png') }}" alt="{{ $accomodation->type }}">
+                      @endif
                       <div class="text">
                           <h1>{{ $accomodation->type }}:</h1>
                           <h2>₱{{ number_format($accomodation->amount, 2) }} ({{ $accomodation->capacity }} pax)</h2>
-                          <p>- {{ $accomodation->description }}</p>
+                          <p>- {{ $accomodation->description ?? 'No description' }}</p>
                       </div>
                   @else
                       <!-- Image on the Right for Odd Index -->
                       <div class="text">
                           <h1>{{ $accomodation->type }}:</h1>
                           <h2>₱{{ number_format($accomodation->amount, 2) }} ({{ $accomodation->capacity }} pax)</h2>
-                          <p>- {{ $accomodation->description }}</p>
+                          <p>- {{  $accomodation->description ?? 'No description'  }}</p>
                       </div>
-                      <img src="{{ asset('images/accomodation/' . $accomodation->image) }}" alt="{{ $accomodation->type }}">
+                      @if ($accomodation->image)
+                        <img src="{{ asset('images/accomodation/' . $accomodation->image) }}" alt="{{ $accomodation->type }}">
+                      @else
+                        <img src="{{ asset('images/default-image.png') }}" alt="{{ $accomodation->type }}">
+                      @endif
+                      
                   @endif
               </div>
           @endforeach
