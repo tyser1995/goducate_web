@@ -276,6 +276,8 @@
         var noOfAdults = $('#no_of_adults').val();
         var noOfChildren = $('#no_of_children').val();
 
+        roomTypes = [];
+        selectedRoomTypesText = [];
         if (selectedOption === '0') {
             const adults = parseInt($('#no_of_adults').val()) || 0;
             const children = parseInt($('#no_of_children').val()) || 0;

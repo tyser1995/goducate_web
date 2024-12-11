@@ -56,6 +56,27 @@ class BookingModel extends Model
     {
         $roomTypes = is_array($data['accomodation_id']) ? $data['accomodation_id'] : [$data['accomodation_id']];
         $payload = [];
+
+        $customer = CustomerModel::getCustomerByEmail($data['email']);
+        $customer_id = 0;
+
+
+        if(!$customer){
+            $new_customer = CustomerModel::create([
+                'created_by_user_id' => Auth::user()->id ?? 0,
+                'first_name' => $data['name'] ?? '',
+                'middle_name' => '',
+                'last_name' => '',
+                'email' => $data['email'],
+                'address' => $data['address'],
+                'contact_no' => $data['contact_no'] ?? 0
+            ]);
+
+            $customer_id = $new_customer->id;
+        } else {
+            $customer_id = $customer->id;
+        }
+
         foreach ($roomTypes as $roomTypeId){
 
             $roomType = Accomodation::find($roomTypeId);
@@ -63,7 +84,7 @@ class BookingModel extends Model
 
             $payload[] = self::create([
                 'created_by_user_id' => $data['created_by_users_id'] ?? 0,
-                'customer_id'       => $data['customer_id'] ?? 0,
+                'customer_id'       => $data['customer_id'] ?? $customer_id,
                 'name'              => $data['name'],
                 'email'             => $data['email'],
                 'address'           => $data['address'],

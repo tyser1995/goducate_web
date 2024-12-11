@@ -277,6 +277,9 @@
         var noOfAdults = $('#no_of_adults').val();
         var noOfChildren = $('#no_of_children').val();
 
+        selectedRoomTypesText = [];
+        roomTypes = [];
+        
         if (selectedOption === '0') {
             const adults = parseInt($('#no_of_adults').val()) || 0;
             const children = parseInt($('#no_of_children').val()) || 0;
@@ -346,6 +349,7 @@
             bookingDetails += `<p><strong>Check-out Date:</strong> ${$('#checkout_date_pr').val()}</p>`;
         }
 
+      
         // Update confirmation modal
         $('#selectedOptionText').text(optionText);
         $('#confirm_name').text(name);
