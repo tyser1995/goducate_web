@@ -39,19 +39,9 @@
                                 <tbody>
                                     @if ($bookings->count())
                                     @foreach ($bookings as $booking)
-                                    <?php
-                                        $overnight_stay = \App\Models\BookingOvernightStayModel::getOvernightStayByEmail($booking->email);
-
-                                        $day_tour = \App\Models\BookingDayTourModel::getDayTourByEmail($booking->email);
-
-                                        $place_reservation = \App\Models\BookingPlaceReservationModel::getPlaceReservationByEmail($booking->email);
-
-                                        if (is_null($overnight_stay) && is_null($day_tour) && is_null($place_reservation)) {
-                                            \App\Models\BookingModel::find($booking->id)->delete();
-                                        }
-                                    ?>
+                                    
                                     <tr>
-                                        <td class="d-none">{{ $booking->id }}</td>
+                                        <td class="d-none">{{ $booking->customer_id }}</td>
                                         <td>{{ $booking->name }}</td>
                                         <td>
                                             <a href="mailto:{{ $booking->email }}">{{ $booking->email }}
@@ -78,10 +68,10 @@
                                         <td style="display: flex;
                                         align-items: center;">
                                             @if ($booking->status != "cancel")
-                                                <a href="{{ route('booking.edit', Hashids::encode($booking->id)) }}" class="mr-2 btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
+                                                <a href="{{ route('booking.edit', Hashids::encode($booking->customer_id)) }}" class="mr-2 btn btn-info btn-sm"><i class="fas fa-eye"></i></a>
                                             @endif
-                                            <button type="button" class="btn btn-sm btn-danger {{$booking->status == "approved" ? 'd-none' : ''}}" onclick="confirmDelete({{ $booking->id }})"><i class="fas fa-trash" ></i></button>
-                                            <form id="delete-form-{{ $booking->id }}" action="{{ route('booking.destroy', $booking->id) }}" method="POST" style="display: none;">
+                                            <button type="button" class="btn btn-sm btn-danger {{$booking->status == "approved" ? 'd-none' : ''}}" onclick="confirmDelete({{ $booking->customer_id }})"><i class="fas fa-trash" ></i></button>
+                                            <form id="delete-form-{{ $booking->customer_id }}" action="{{ route('booking.destroy', $booking->customer_id) }}" method="POST" style="display: none;">
                                                 @csrf
                                                 @method('DELETE')
                                             </form>

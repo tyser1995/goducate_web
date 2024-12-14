@@ -184,7 +184,6 @@ class BookingModel extends Model
     public static function getBookingListTable()
     {
         return self::selectRaw("
-                bookings.id,
                 bookings.name,
                 bookings.email,
                 bookings.address,
@@ -199,18 +198,6 @@ class BookingModel extends Model
                 ) as combined_checkout_datetime
             ")
             ->where('status','=','pending')
-            // ->leftJoin('booking_overnight_stays', function($join) {
-            //     $join->on('booking_overnight_stays.email', '=', 'bookings.email')
-            //         ->where('bookings.boooking_status', '=', 0);
-            // })
-            // ->leftJoin('booking_day_tours', function($join) {
-            //     $join->on('booking_day_tours.email', '=', 'bookings.email')
-            //         ->where('bookings.boooking_status', '=', 1); 
-            // })
-            // ->leftJoin('booking_place_reservations', function($join) {
-            //     $join->on('booking_place_reservations.email', '=', 'bookings.email')
-            //         ->where('bookings.boooking_status', '=', 2);
-            // })
             ->distinct()
             ->orderBy('combined_checkin_datetime','DESC')
             ->get();
@@ -219,6 +206,20 @@ class BookingModel extends Model
     public static function getBooking()
     {
         return self::get();
+    }
+
+    public static function getBookingv2()
+    {
+        return self::select(
+            "customer_id",
+            "name",
+            "email",
+            "address",
+            "contact_no",
+            "status",
+            "created_at")
+        ->distinct()
+        ->get();
     }
 
     public static function getBookingById($id)
