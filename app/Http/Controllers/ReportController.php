@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reports;
+use App\Models\SurveyModel;
 use Illuminate\Http\Request;
+
+use DB;
 
 class ReportController extends Controller
 {
@@ -128,6 +131,43 @@ class ReportController extends Controller
             })
         ];
     
+        return response()->json($chartData);
+    }
+
+    public function getChartDataFeedback()
+    {
+        // Call the model method to get grouped reports
+        $reports = SurveyModel::select(
+            DB::raw('MONTH(created_at) as month'),
+            'ratings',
+            DB::raw('COUNT(*) as count')
+        )
+        ->where('type','=','feedback')
+        ->groupBy('month','ratings')
+        ->get();
+
+        // Format data for the chart
+        $chartData = [
+            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'datasets' => [],
+        ];
+
+        $descriptions = $reports->pluck('ratings')->unique();
+
+        foreach ($descriptions as $description) {
+            $data = array_fill(0, 12, 0); // Initialize data for 12 months
+            foreach ($reports->where('description', $description) as $report) {
+                $data[$report->month - 1] = $report->count; // Populate monthly counts
+            }
+
+            $chartData['datasets'][] = [
+                'label' => $description,
+                'backgroundColor' => '#' . substr(md5($description), 0, 6), // Dynamic color
+                'borderColor' => '#' . substr(md5($description), 0, 6),
+                'data' => $data,
+            ];
+        }
+
         return response()->json($chartData);
     }
 }

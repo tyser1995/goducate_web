@@ -94,20 +94,22 @@
               </div>
 
               <div class="form-group">
-                  <label for="municipality">Select Municipality:</label>
-                  <select name="address" id="municipality" class="form-control" required>
+                  <label for="municipality">Municipality:</label>
+                  <input class="form-control" placeholder="Input Municipality" name="address" />
+                  {{-- <select name="address" id="municipality" class="form-control" required>
                       <option selected value="">Select Municipality</option>
-                  </select>
+                  </select> --}}
               </div>
 
               <div class="form-group">
                 <label for="children">Religion:</label>
-                <select name="religion" id="religion" class="religion form-control" required>
+                <input class="form-control" placeholder="Input Religion" name="religion" />
+                {{-- <select name="religion" id="religion" class="religion form-control" required>
                   <option selected value="">Select option</option>
                   @foreach (App\Models\SurveyModel::RELIGION as $key => $type)
                     <option value="{{$key}}">{{$type}}</option>
                   @endforeach
-                </select>
+                </select> --}}
               </div>
               <div class="form-group d-none other_religion_containter">
                 <label for="other_religion">Other Religion:</label>
