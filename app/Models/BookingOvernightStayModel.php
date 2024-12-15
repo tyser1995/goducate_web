@@ -77,6 +77,7 @@ class BookingOvernightStayModel extends Model
             $customer_id = $customer->id;
         }
 
+        $total_amount = $partial_amount;
         $partial_amount *= 0.20;
         $emailDetails = [
             'title' => 'Reservation Confirmation',
@@ -84,7 +85,8 @@ class BookingOvernightStayModel extends Model
             'reservation' => $payload,
             'booking_status' => 'overnight_stay',
             'customer_id' => $customer_id,
-            'partial_amount' => $partial_amount
+            'partial_amount' => $partial_amount,
+            'total_amount' => $total_amount
         ];
     
         $notification = [

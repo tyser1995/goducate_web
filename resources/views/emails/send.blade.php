@@ -41,6 +41,7 @@
     - **Status**: {{ $reservation->status }}
 @endif
     - **Patrial Amount**: {{ $details['partial_amount'] ?? 0 }}
+    - **Total Amount**:  {{ $details['total_amount'] ?? 0 }}
 
 @component('mail::button',['url' => url('checkout/id=' . Hashids::encode($details['customer_id']))])
 Click to payment
