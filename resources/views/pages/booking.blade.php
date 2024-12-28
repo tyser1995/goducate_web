@@ -212,7 +212,7 @@
                   <option selected value="">Select option</option>
                   <option value="0">Overnight Stay</option>
                   <option value="1">Day Tour</option>
-                  <option value="2" hidden>Place Reservation</option>
+                  {{-- <option value="2" hidden>Place Reservation</option> --}}
                 </select>
               </div>
             </div>
@@ -231,9 +231,9 @@
                                   $isDisabled = ($taken >= $accommodation->qty);
                               @endphp
                               
-                              <option value="{{ $accommodation->id }}" 
-                                data-taken="{{ $taken }}" 
-                                data-qty="{{ $accommodation->qty }}" 
+                              <option value="{{ $accommodation->id }}"
+                                data-taken="{{ $taken }}"
+                                data-qty="{{ $accommodation->qty }}"
                                 {{ $isDisabled ? 'disabled' : '' }}>
                                   {{ $accommodation->type }} &nbsp;&nbsp;
                                   (Capacity: {{ $accommodation->capacity }}-pax)
@@ -304,9 +304,26 @@
                   <label for="children">Type:</label>
                   <select name="room_type" id="room_type_pr" class="room_type_pr form-control">
                     <option selected value="">Select option</option>
-                    @foreach (App\Models\BookingPlaceReservationModel::ROOM_TYPE as $key => $type)
+                    {{-- @foreach (App\Models\BookingPlaceReservationModel::ROOM_TYPE as $key => $type)
                       <option value="{{$key}}">{{$type}}</option>
-                    @endforeach
+                    @endforeach --}}
+                    @foreach (App\Models\Accomodation::getAccomodationDayTour() as $accommodation)
+                          @php
+                              $booking = App\Models\BookingModel::getBookingListv3()->firstWhere('accomodation_name', $accommodation->type);
+                              $taken = $booking ? $booking->accomodation_taken : 0;
+                              $isDisabled = ($taken >= $accommodation->qty);
+                          @endphp
+                          
+                          <option value="{{ $accommodation->id }}"
+                            data-taken="{{ $taken }}"
+                            data-qty="{{ $accommodation->qty }}"
+                            {{ $isDisabled ? 'disabled' : '' }}>
+                              {{ $accommodation->type }} &nbsp;&nbsp;
+                              (Capacity: {{ $accommodation->capacity }}-pax)
+                              &nbsp;&nbsp;
+                              {{ $isDisabled ? 'Fully Booked' : 'Availability: ' . ($accommodation->qty - $taken) . ' left' }}
+                          </option>
+                      @endforeach
                   </select>
                 </div>
                 <div class="form-group no_of_cottages d-none">
@@ -395,6 +412,10 @@
               <p><strong>Number of Adults:</strong> <span id="confirm_no_of_adults"></span></p>
               <p><strong>Number of Children:</strong> <span id="confirm_no_of_children"></span></p>
               <p><strong>Room Types:</strong> <span id="confirm_room_types"></span></p>
+              <p><strong>Tour Types:</strong> <span id="confirm_tour_types"></span></p>
+              <p><strong>Group Name:</strong> <span id="confirm_group_name"></span></p>
+              <p><strong>Group Types:</strong> <span id="confirm_group_types"></span></p>
+              <p><strong>Types:</strong> <span id="confirm_types"></span></p>
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>

@@ -33,7 +33,7 @@ class AnnouncementModel extends Model
             'where' => $data['where'],
             'when' => $data['when'],
             'description' => htmlentities($data['description']),
-            'attachment' => $data['attachment'] ?? ''
+            'attachment' => $data['attachment'] ?? null
         ]);
 
         return $payload;
@@ -133,7 +133,7 @@ class AnnouncementModel extends Model
             'where' => $data['where'],
             'when' => $data['when'],
             'description' => htmlentities($data['description']),
-            'attachment' => $data['attachment'] ?? ''
+            'attachment' => $data['attachment'] ?? null
         ]);
 
         return $payload;
