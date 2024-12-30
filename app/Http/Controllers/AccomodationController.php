@@ -62,7 +62,7 @@ class AccomodationController extends Controller
             $input['image'] = $image_name;
         }else{
             $input = $request->all();
-            $input['image'] = 'default-image.png';
+            //$input['image'] = 'default-image.png';
         }
 
         Accomodation::createAccomodation($input);

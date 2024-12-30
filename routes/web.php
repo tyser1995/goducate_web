@@ -159,6 +159,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('reports', ['as' => 'reports', 'uses' => 'App\Http\Controllers\ReportController@index']);
     Route::get('chart.data.activity', ['as' => 'chart.data.activity', 'uses' => 'App\Http\Controllers\ReportController@getChartDataActivity']);
     Route::get('chart.data.booking', ['as' => 'chart.data.booking', 'uses' => 'App\Http\Controllers\ReportController@getChartDataBooking']);
+    Route::get('chart.data.feedback', ['as' => 'chart.data.feedback', 'uses' => 'App\Http\Controllers\ReportController@getChartDataFeedback']);
 
     Route::resource('report', 'App\Http\Controllers\ReportController');
     

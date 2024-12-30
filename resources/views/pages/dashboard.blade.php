@@ -104,7 +104,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-7">
                 <div class="card full-height">
                     <div class="card-body">
                         <div class="card-title">Feedback List</div>
@@ -158,6 +158,17 @@
                                 <h6 class="fw-bold mt-3 mb-0" id="place_happy">0</h6>
                                 <h6 class="fw-bold mt-3 mb-0" id="services_happy">0</h6>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="card-title">Feedback Bar Graph</div>
+                        <div class="card-category">Daily information about statistics in system</div>
+                        <div class="chart-container">
+                            <canvas id="multipleBarChart_feedback"></canvas>
                         </div>
                     </div>
                 </div>
@@ -280,9 +291,41 @@
 <script>
 
     var multipleBarChart = document.getElementById('multipleBarChart').getContext('2d'),
+    multipleBarChartFeedback = document.getElementById('multipleBarChart_feedback').getContext('2d'),
     myPieChart = document.getElementById('myPieChart').getContext('2d');
 
     var myMultipleBarChart = new Chart(multipleBarChart, {
+        type: 'bar',
+        data: {
+            labels: [], // Will be populated dynamically
+            datasets: [], // Will be populated dynamically
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom'
+            },
+            title: {
+                display: true,
+                text: 'Daily Stats'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
+
+    var multipleBarChartFeedback = new Chart(multipleBarChartFeedback, {
         type: 'bar',
         data: {
             labels: [], // Will be populated dynamically
@@ -392,9 +435,29 @@
         });
     };
 
+    const fetchChartDataFeedback = () => {
+        $.ajax({
+            url: "{{ route('chart.data.feedback') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                const chartData = response;
+                console.log(chartData);
+                // Update the chart with new data
+                multipleBarChartFeedback.data.labels = chartData.labels;
+                multipleBarChartFeedback.data.datasets = chartData.datasets;
+                multipleBarChartFeedback.update();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    };
+
     // Fetch initial data on page load
     fetchChartDataActivity();
     fetchChartDataBooking();
+    fetchChartDataFeedback();
 
     
         

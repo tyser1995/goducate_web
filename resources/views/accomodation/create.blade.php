@@ -29,10 +29,19 @@
                                     class="form-control form-control-alternative">
                                     <div class="form-group">
                                         <label for="name">Booking Status</label>
-                                        <select name="bookig_status" id="bookig_status" class="form-control" required>
+                                        <select name="bookig_status" id="booking_status" class="form-control" required>
                                             <option disabled selected value="">Select option</option>
                                             @foreach (App\Models\Accomodation::BOOKING_STATUS as $key => $type)
                                               <option value="{{$key}}">{{$type}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="form-group tour_type_container d-none">
+                                        <label for="children">Tour Type:</label>
+                                        <select name="tour_type" id="tour_type" class="room_type form-control">
+                                            <option disabled selected value="">Select option</option>
+                                            @foreach (App\Models\BookingDayTourModel::TOUR_TYPE as $key => $type)
+                                            <option value="{{$key}}">{{$type}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -97,5 +106,15 @@
             preview.style.display = 'block';
         }
     }
+
+    $('#booking_status').change(function (e) { 
+        if($(this).val() == "0"){
+            $('.tour_type_container').addClass('d-none');
+            $('#tour_type').removeAttr('required');
+        }else{
+            $('#tour_type').attr('required','required');
+            $('.tour_type_container').removeClass('d-none');
+        }
+    });
 </script>
 @endpush
