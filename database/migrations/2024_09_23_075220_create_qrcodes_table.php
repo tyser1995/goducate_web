@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAnnouncementsTable extends Migration
+class CreateQrcodesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateAnnouncementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('announcements', function (Blueprint $table) {
+        Schema::create('qrcodes', function (Blueprint $table) {
             $table->id();
-            $table->integer('created_by_user_id');
-            $table->string('who');
-            $table->string('what');
-            $table->string('where');
-            $table->datetime('when');
-            $table->string('attachment')->nullable();
+            $table->integer('created_by_user_id')->default(0)->nullable();
+            $table->string('qrcode_number')->nullable();
+            $table->decimal('amount', 15, 2)->default(75);
+            $table->longText('qrcode_generated')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -33,6 +31,6 @@ class CreateAnnouncementsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('announcements');
+        Schema::dropIfExists('qrcodes');
     }
 }

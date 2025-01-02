@@ -27,3 +27,4 @@ composer.lock
 
 # Ignore Node.js package lock file
 package-lock.json
+goducate_web.zip

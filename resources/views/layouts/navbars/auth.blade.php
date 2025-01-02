@@ -10,8 +10,10 @@
                 <div class="info">
                     <a>
                         <span>
-                            Resty
-                            <span class="user-level">Administrator</span>
+                            {{Auth::user()->name}}
+                            <span class="user-level">
+                                {{Auth::user()->roleName(Auth::user()->role)}}
+                            </span>
                         </span>
                     </a>
                     <div class="clearfix"></div>
@@ -50,14 +52,14 @@
                     </span>
                     <h4 class="text-section">Management</h4>
                 </li>
-                @if(Auth::user()->can('role-list') || Auth::user()->can('user-list') || Auth::user()->can('employee-list') || Auth::user()->role == 1)
+                @if(Auth::user()->can('role-list') || Auth::user()->can('user-list') || Auth::user()->can('employee-list') ||Auth::user()->role == 1)
                     <li class="nav-item {{ $elementActive == 'user' ||  $elementActive == 'roles' || $elementActive == 'employees' ? 'active' : '' }}">
                         <a data-toggle="collapse" href="#usermgmt">
                             <i class="fas fa-users"></i>
                             <p>User</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{ $elementActive == 'user' || $elementActive == 'roles' || $elementActive == 'employees' ? 'show' : '' }}" id="usermgmt">
+                        <div class="collapse {{ $elementActive == 'user' || $elementActive == 'roles' || $elementActive == 'customer' ? 'show' : '' }}" id="usermgmt">
                             <ul class="nav nav-collapse">
                                 @if(Auth::user()->can('role-list') || Auth::user()->role == 1)
                                     <li class="{{ $elementActive == 'roles' ? 'active' : '' }}">
@@ -73,10 +75,10 @@
                                         </a>
                                     </li>
                                 @endif
-                                @if(Auth::user()->can('employee-list') || Auth::user()->role == 1)
-                                    <li class="{{ $elementActive == 'employees' ? 'active' : '' }}">
-                                        <a href="{{route('employees')}}">
-                                            <span class="sub-item">Employee</span>
+                                @if(Auth::user()->can('customer-list') || Auth::user()->role == 1)
+                                    <li class="{{ $elementActive == 'customer' ? 'active' : '' }}">
+                                        <a href="{{route('customers')}}">
+                                            <span class="sub-item">Customer</span>
                                         </a>
                                     </li>
                                 @endif
@@ -84,19 +86,26 @@
                         </div>
                     </li>
                 @endif
-                @if(Auth::user()->can('aboutus-list') || Auth::user()->can('activity-list') || Auth::user()->can('booknow-list') || Auth::user()->role == 1)
-                <li class="nav-item {{ $elementActive == 'aboutus' ||  $elementActive == 'activities' || $elementActive == 'booknow' ? 'active' : '' }}">
+                @if(Auth::user()->can('aboutus-list') || Auth::user()->can('activity-list') || Auth::user()->can('booknow-list') || Auth::user()->can('volunteer-list') || Auth::user()->role == 1)
+                <li class="nav-item {{ $elementActive == 'aboutus' ||  $elementActive == 'activities' || $elementActive == 'booknow' || $elementActive == 'accomodation' || $elementActive == 'survey' || $elementActive == 'feedback_form' || $elementActive == 'report' ? 'active' : '' }}">
                     <a data-toggle="collapse" href="#sitemgmt">
                         <i class="fas fa-cogs"></i>
                         <p>Settings</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ $elementActive == 'aboutus' || $elementActive == 'activities' || $elementActive == 'booknow' ? 'show' : '' }}" id="sitemgmt">
+                    <div class="collapse {{ $elementActive == 'aboutus' || $elementActive == 'activities' || $elementActive == 'booknow' || $elementActive == 'announcement' || $elementActive == 'volunteer' || $elementActive == 'qrcode' || $elementActive == 'accomodation' || $elementActive == 'survey' || $elementActive == 'feedback_form' || $elementActive == 'report' ? 'show' : '' }}" id="sitemgmt">
                         <ul class="nav nav-collapse">
                             @if(Auth::user()->can('aboutus-list') || Auth::user()->role == 1)
                                 <li class="{{ $elementActive == 'aboutus' ? 'active' : '' }}">
                                     <a href="{{route('aboutus')}}">
                                         <span class="sub-item">About Us</span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if(Auth::user()->can('accomodation-list') || Auth::user()->role == 1)
+                                <li class="{{ $elementActive == 'accomodation' ? 'active' : '' }}">
+                                    <a href="{{route('accomodations')}}">
+                                        <span class="sub-item">Accomodation</span>
                                     </a>
                                 </li>
                             @endif
@@ -107,13 +116,51 @@
                                     </a>
                                 </li>
                             @endif
+                            <li class="{{ $elementActive == 'announcement' ? 'active' : '' }}">
+                                <a href="{{route('announcements')}}">
+                                    <span class="sub-item">Announcement</span>
+                                </a>
+                            </li>
                             @if(Auth::user()->can('booknow-list') || Auth::user()->role == 1)
                                 <li class="{{ $elementActive == 'booknow' ? 'active' : '' }}">
-                                    <a href="{{route('employees')}}">
-                                        <span class="sub-item">Book Now</span>
+                                    <a href="{{route('bookings')}}">
+                                        <span class="sub-item">Bookings</span>
                                     </a>
                                 </li>
                             @endif
+                            @if(Auth::user()->can('qrcode-list') || Auth::user()->role == 1)
+                                <li class="{{ $elementActive == 'survey' ? 'active' : '' }}">
+                                    <a href="{{route('survey.index')}}">
+                                        <span class="sub-item">Demographic Survey</span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if(Auth::user()->can('qrcode-list') || Auth::user()->role == 1)
+                                <li class="{{ $elementActive == 'feedback_form' ? 'active' : '' }}">
+                                    <a href="{{route('feedbacks')}}">
+                                        <span class="sub-item">Feedback Form</span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if(Auth::user()->can('qrcode-list') || Auth::user()->role == 1)
+                            <li class="{{ $elementActive == 'qrcode' ? 'active' : '' }}">
+                                <a href="{{route('qrcodes')}}">
+                                    <span class="sub-item">QR Code</span>
+                                </a>
+                            </li>
+                            @endif
+                            @if(Auth::user()->can('volunteer-list') || Auth::user()->role == 1)
+                            <li class="{{ $elementActive == 'volunteer' ? 'active' : '' }}">
+                                <a href="{{route('volunteers')}}">
+                                    <span class="sub-item">Volunteer</span>
+                                </a>
+                            </li>
+                            @endif
+                            <li class="{{ $elementActive == 'report' ? 'active' : '' }}">
+                                <a href="{{route('reports')}}">
+                                    <span class="sub-item">Reports</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

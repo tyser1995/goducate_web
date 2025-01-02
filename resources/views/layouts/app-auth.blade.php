@@ -9,7 +9,7 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
         name='viewport' />
     <!-- Extra details for Live View on GitHub Pages -->
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -30,6 +30,9 @@
 	<link rel="stylesheet" href="{{asset('atlantis')}}/css/atlantis.min.css">
     <link rel="stylesheet" href="{{asset('atlantis')}}/css/global.css">
     <link rel="stylesheet" href="{{asset('atlantis')}}/plugins/summernote/summernote-bs4.min.css">
+     <!-- daterange picker -->
+  	<link rel="stylesheet" href="{{asset('atlantis')}}/plugins/daterangepicker/daterangepicker.css">
+    
     <style>
         body {
             background-image: url('images/A14.jpg');
@@ -39,6 +42,8 @@
         }
     </style>
     <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+    <script src="{{ asset('js/html5-qrcode.min.js') }}"></script>
+    <script src="{{ asset('js/print.js') }}"></script>
 </head>
 
 <x-head.tinymce-config />
@@ -55,14 +60,14 @@
     <script>
         var base_url = "{{ url('/') }}";
     </script>
-    <script src="{{ asset('service-worker.js') }}"></script>
-    <script>
+    {{-- <script src="{{ asset('service-worker.js') }}"></script> --}}
+ {{-- <script>
     if (!navigator.serviceWorker.controller) {
         navigator.serviceWorker.register("service-worker.js").then(function(reg) {
             console.log("Service worker has been registered for scope: " + reg.scope);
         });
     }
-    </script>
+    </script> --}}
 
     <!-- adminlte -->
     <!-- REQUIRED SCRIPTS -->
@@ -104,8 +109,16 @@
     <!-- Summernote -->
     <script src="{{ asset('atlantis') }}/plugins/summernote/summernote-bs4.min.js"></script>
     
+    <!-- date-range-picker -->
+	<script src="{{ asset('atlantis') }}/plugins/daterangepicker/daterangepicker.js"></script>
+    
+    <!-- InputMask -->
+    <script src="{{ asset('atlantis') }}/plugins/moment/moment.min.js"></script>
+    <script src="{{ asset('atlantis') }}/plugins/inputmask/jquery.inputmask.min.js"></script>
+
     <!-- Atlantis JS -->
 	<script src="{{ asset('atlantis') }}/js/atlantis.min.js"></script>
+	
 
     <script>
     var base_url = "{{ url('/') }}";

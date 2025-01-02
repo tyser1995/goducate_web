@@ -17,6 +17,7 @@ class CreateBookingPlaceReservationTable extends Migration
             $table->id();
             $table->integer('created_by_user_id')->default(0)->nullable();
             $table->integer('customer_id')->default(0)->nullable();
+            $table->string('email')->nullable();
             $table->string('room_type')->comment('Board Room,Function Hall,Basketball Gym,Cottages,Small Huts')->nullable();
             $table->integer('no_of_cottages')->default(0)->nullable();//
             $table->integer('no_of_persons')->default(0)->nullable();//

@@ -4,7 +4,7 @@
 @section('content')
 <div class="card login-form">
     <div class="card-header text-center d-none">
-        <span class="h1"><b>HRIS</b>-Apps</span>
+        <span class="h1"><b>RSG</b>-mAnoL</span>
     </div>
     <div class="card-body">
         <div class="text-center">
@@ -33,12 +33,12 @@
                         <a href="{{url('/')}}">I forgot my password</a>
                     </p>
                     <p>
-                        <a href="{{route('register')}}" class="text-center">Register a new membership</a>
+                        <a href="{{route('register')}}" class="text-center" hidden>Register a new membership</a>
                     </p>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                <div class="social-auth-links text-center mt-2 mb-3">
-                    <a href="#" class="btn btn-block btn-primary d-none">
+                <button type="submit" class="btn btn-primary btn-block mb-3">Sign In</button>
+                <div class="social-auth-links text-center mt-2 mb-3 d-none">
+                    <a href="#" class="btn btn-block btn-primary d-none">   
                         <i class="fab fa-facebook mr-2"></i> Sign in using Facebook
                     </a>
                     <a href="{{ route('google.redirect') }}" class="btn btn-block btn-danger">

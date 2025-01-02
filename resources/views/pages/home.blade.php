@@ -22,7 +22,7 @@
       background-repeat: no-repeat;
       background-position: center;
       z-index: -1;
-      opacity: 10;
+      background-image: url("{{asset('images/bckgrnd.png')}}");
     }
 
     .overlay {
@@ -77,7 +77,7 @@
       justify-content: center;
       align-items: center;
       padding: 50px 0;
-      min-height: 80vh;
+      min-height: 100vh; /* Full screen height */
     }
 
     .home .content {
@@ -112,39 +112,13 @@
       cursor: pointer;
     }
 
-    .home .image {
-      display: none;
-    }
-
-    .image_item {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      overflow-y: auto;
-      padding: 10px;
-      border-radius: 10px;
-    }
-
-    .image_item img {
-      width: 100px;
-      cursor: pointer;
-      opacity: 0.6;
-      transition: opacity 0.3s;
-      border-radius: 5px;
-    }
-
-    .image_item img.active {
-      opacity: 1;
-      border: 2px solid #ff9900;
-    }
-
     .Promo-section {
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 20px;
-      margin: 20px 0;
-      background-color: rgba(248, 249, 250, 0.9);
+      margin: 50px 0 20px 0; /* Adds a 50px margin-top */
+      background-color: rgba(255, 255, 255, 0.9); /* Light background with some transparency */
       color: #333;
     }
 
@@ -162,140 +136,279 @@
       border-radius: 10px;
     }
 
-    .Promo-section .center {
-      text-align: center;
+    .Promo-section .right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
     }
 
     .Promo-section .right .activities {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 20px;
+    }
+
+    .Promo-section .right .activity-item {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-    }
-
-    .Promo-section .right .activities div {
-      display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      text-align: center;
     }
 
-    .Promo-section .right .activities div img {
+    .Promo-section .right .activity-item img {
       width: 100px;
-      height: auto;
+      height: 100px;
       border-radius: 5px;
       transition: transform 0.3s ease-in-out;
     }
 
-    .Promo-section .right .activities div img:hover {
+    .Promo-section .right .activity-item img:hover {
       transform: scale(1.5);
+    }
+
+    /* Keyframes for sliding effect */
+    @keyframes slide-left {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: -100% 0;
+      }
+    }
+
+    .background-overlay {
+      animation: slide-left 5s infinite ease-in-out;
+    }
+
+    .content {
+      text-align: center;
+    }
+    .text h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .text p {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #555;
+    }
+    .text button {
+      padding: 0.5rem 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .text button:hover {
+      background-color: #0056b3;
+    }
+    .announcement {
+      position: absolute;
+      top: 40%;
+      left: 80%;
+      transform: translate(-50%, -50%);
+      background-color: #f9f9f93a;
+      padding: 1rem;
+      overflow: hidden;
+      box-shadow: -3px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .announcement .carousel-inner {
+      width: 100%;
+      height: 100%;
+    }
+
+    .announcement .carousel-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .announcement h2 {
+      margin-top: 0;
     }
 </style>
 
 <div class="background-overlay" id="background-overlay"></div>
-  <div class="overlay"></div>
-  <!-- Header -->
-  @include('pages.header')
-  <!-- Home -->
-  <section class="home" id="home">
-    <div class="container content">
-      <div class="text">
-        <h1>Welcome to Camp Goducate Iloilo</h1>
-        <p>Relax and enjoy your stay at Camp Goducate.</p>
-        <a href="booking.php"><button>Book Now</button></a>
+<div class="overlay"></div>
+
+<!-- Header -->
+@include('pages.header')
+
+<!-- Home Section -->
+<section class="home" id="home">
+  <div class="container content">
+    <div class="text">
+      <h1 style="color:#fff">Welcome to Camp Goducate Iloilo</h1>
+      <p style="color:#fff">Relax and enjoy your stay at Camp Goducate.</p>
+      <a href="http://127.0.0.1:8000/_booking"><button>Book Now</button></a>
+    </div>
+  </div>
+</section>
+<!-- Sliding Announcement Section -->
+<div class="announcement">
+  <div id="announcement-slider">
+    @if (count($announcements) > 0)
+    <h4 style="color:#fff">Announcements</h4>
+    <div id="carouselExample" class="carousel slide carousel-dark">
+      <div class="carousel-inner announcement-item-img">
+        @foreach ($announcements as $key => $announcement)
+          <div class="carousel-item @if($key === 0) active @endif">
+            @if ($announcement->attachment === "default-announcement.png")
+              <img
+                src="{{ asset('images/default-announcement.png') }}"
+                alt="Default Announcement"
+                class="img-fluid"
+                data-bs-toggle="modal"
+                data-bs-target="#imageModal"
+                data-image="{{ asset('images/default-announcement.png') }}"
+                {{-- data-description="{{ html_entity_decode($announcement['description']) }}" --}}
+                loading="lazy" />
+                <div class="d-none desc">
+                  <?php
+                  echo html_entity_decode($announcement['description']);
+              ?>
+                </div>
+            @else
+            <img
+              src="{{ asset('images/announcement/' . $announcement->attachment) }}"
+              alt="{{ $announcement->title }}"
+              class="img-fluid"
+              data-bs-toggle="modal"
+              data-bs-target="#imageModal"
+              data-image="{{ asset('images/announcement/' . $announcement->attachment) }}"
+              {{-- data-description="{{ html_entity_decode($announcement['description']) }}" --}}
+              loading="lazy" />
+              <div class="d-none desc">
+                <?php
+                  echo html_entity_decode($announcement['description']);
+              ?>
+              </div>
+            @endif
+          </div>
+        @endforeach
       </div>
-      <div class="image_item">
-        <img src="{{asset('images')}}/bckgrnd.png" alt="Image 1" class="slide active" onclick="setBackground('{{asset('images')}}/bckgrnd.png')">
-        <img src="{{asset('images')}}/A11.jpg" alt="Image 2" class="slide" onclick="setBackground('{{asset('images')}}/A11.jpg')">
-        <img src="{{asset('images')}}/A12.jpg" alt="Image 3" class="slide" onclick="setBackground('{{asset('images')}}/A12.jpg')">
-        <img src="{{asset('images')}}/A13.jpg" alt="Image 4" class="slide" onclick="setBackground('{{asset('images')}}/A13.jpg')">
-        <img src="{{asset('images')}}/A14.jpg" alt="Image 5" class="slide" onclick="setBackground('{{asset('images')}}/A14.jpg')">
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    @else
+    <div class="announcement-item">
+      <p>No Announcement.</p>
+    </div>
+    @endif
+  </div>
+</div>
+
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Announcement</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="row">
+          <div class="col-4">
+            <img id="modalImage" src="" alt="" class="img-fluid">
+          </div>
+          <div class="col-8">
+            <div id="modalDescription"></div>
+          </div>
+        </div>
+       
+        
       </div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <!-- Promo and announcement  -->
-  <section class="Promo-section">
-    <div class="left">
-      <img src="{{asset('images')}}/about.jpg" alt="Left Image">
-    </div>
-    <div class="center">
-      <p>Description of the Promo.</p>
-    </div>
-    <div class="right">
-      @if (count($lists) > 0)
-        <h2>Activities</h2>
-        <div class="activities" id="activities-container">
-          @foreach ($lists as $list)
-            <div class="activity-item">
-              <img src="{{ asset('images/header_list/' . $list->image) }}" class="mb-2" style="width: 100px; height:100px" alt="{{ $list->title }}" />
-              <p>{{$list->title}}</p>
-            </div>
-          @endforeach
-        </div>
-      
-        <!-- Pagination controls -->
-        <div id="pagination-controls">
-          <button id="prevPage" class="btn btn-sm btn-info">
-            <i class="fa fa-angle-left"></i>
-          </button>
-          <button id="nextPage" class="btn btn-sm btn-info">
-            <i class="fa fa-angle-right"></i>
-          </button>
-        </div>
-      @else
-        <p>No Activites.</p>
-      @endif
 
-      
-    </div>
-  </section>
+<!-- Promo and Announcements Section -->
+<section class="Promo-section">
+  <div class="right">
+    @if (count($lists) > 0)
+      <h2>Activities</h2>
+      <div class="activities" id="activities-container">
+        @foreach ($lists as $list)
+          <div class="activity-item">
+            <img src="{{ asset('images/header_list/' . $list->image) }}" class="mb-2" style="width: 100px; height:100px" alt="{{ $list->title }}" />
+            <p>{{$list->title}}</p>
+          </div>
+        @endforeach
+      </div>
 
-  <script>
-     const itemsPerPage = 3;
-      let currentPage = 1;
+      <!-- Pagination controls -->
+      <div id="pagination-controls">
+        <button id="prevPage" class="btn btn-sm btn-info">
+          <i class="fa fa-angle-left"></i>
+        </button>
+        <button id="nextPage" class="btn btn-sm btn-info">
+          <i class="fa fa-angle-right"></i>
+        </button>
+      </div>
+    @else
+      <p>No Activities.</p>
+    @endif
+  </div>
+</section>
 
-      const items = document.querySelectorAll('.activity-item');
-      const totalPages = Math.ceil(items.length / itemsPerPage);
+<!-- JavaScript for background slideshow -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const backgroundOverlay = document.getElementById('background-overlay');
+  const backgroundImages = [
+    "{{asset('images/bckgrnd.png')}}",
+    "{{asset('images/A11.jpg')}}",
+    "{{asset('images/A12.jpg')}}",
+    "{{asset('images/A13.jpg')}}",
+    "{{asset('images/A14.jpg')}}"
+  ];
+  let currentIndex = 0;
 
-      function showPage(page) {
-          const start = (page - 1) * itemsPerPage;
-          const end = start + itemsPerPage;
+  // Function to change the background image
+  function changeBackground() {
+    currentIndex = (currentIndex + 1) % backgroundImages.length;
+    backgroundOverlay.style.backgroundImage = `url(${backgroundImages[currentIndex]})`;
+    backgroundOverlay.style.animation = 'slide-left 3s ease-in-out'; // Apply the slide-left animation
+  }
 
-          items.forEach((item, index) => {
-              item.style.display = (index >= start && index < end) ? 'flex' : 'none';
-          });
-      }
+  // Change background every 5 seconds
+  setInterval(changeBackground, 3000);
 
-      document.getElementById('nextPage').addEventListener('click', () => {
-          if (currentPage < totalPages) {
-              currentPage++;
-              showPage(currentPage);
-          }
-      });
+  // Set initial background image on page load
+  window.onload = function() {
+    backgroundOverlay.style.backgroundImage = `url(${backgroundImages[currentIndex]})`;
+  };
 
-      document.getElementById('prevPage').addEventListener('click', () => {
-          if (currentPage > 1) {
-              currentPage--;
-              showPage(currentPage);
-          }
-      });
+  document.addEventListener("DOMContentLoaded", function () {
+  const imageModal = document.getElementById("imageModal");
+  const modalImage = document.getElementById("modalImage");
+  const modalDescription = document.getElementById("modalDescription");
 
-      // Show the first page initially
-      showPage(currentPage);
+  imageModal.addEventListener("show.bs.modal", function (event) {
+    const trigger = event.relatedTarget; // The clicked image that triggered the modal
+    const imageSrc = trigger.getAttribute("data-image"); // Get image source
+    const descriptionElement = trigger.closest(".carousel-item").querySelector(".desc"); // Find the related description
 
-    function setBackground(imageUrl) {
-        var backgroundOverlay = document.getElementById('background-overlay');
-        backgroundOverlay.style.backgroundImage = 'url(' + imageUrl + ')';
-    
-        var slides = document.querySelectorAll('.slide');
-        slides.forEach(function(slide) {
-            slide.classList.remove('active');
-        });
-    
-        var activeSlide = document.querySelector('img[src="' + imageUrl + '"]');
-        if (activeSlide) {
-            activeSlide.classList.add('active');
-        }
-    }
-    </script>
+    // Update modal content
+    modalImage.src = imageSrc;
+    modalDescription.innerHTML = descriptionElement ? descriptionElement.innerHTML : "No description available.";
+  });
+});
+
+
+</script>
+
 @endsection
-

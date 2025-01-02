@@ -46,7 +46,27 @@ class PermissionTableSeeder extends Seeder
             'booknow-list',
             'booknow-create',
             'booknow-edit',
-            'booknow-delete'
+            'booknow-delete',
+            'volunteer-list',
+            'volunteer-create',
+            'volunteer-edit',
+            'volunteer-delete',
+            'customer-list',
+            'customer-create',
+            'customer-edit',
+            'customer-delete',
+            'announcement-list',
+            'announcement-create',
+            'announcement-edit',
+            'announcement-delete',
+            'qrcode-list',
+            'qrcode-create',
+            'qrcode-edit',
+            'qrcode-delete',
+            'accomodation-list',
+            'accomodation-create',
+            'accomodation-edit',
+            'accomodation-delete',
         ];
 
         // foreach ($permissions as $permission) {

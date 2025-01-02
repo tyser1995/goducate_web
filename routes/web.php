@@ -26,19 +26,46 @@ Route::get('_aboutus', ['as' => '_aboutus', 'uses' => 'App\Http\Controllers\Abou
 //Activity
 Route::get('_activities', ['as' => '_activities', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page']);
 Route::get('_activities_page/{id}', ['as' => '_activities_page', 'uses' => 'App\Http\Controllers\ActivityPageController@activity_page_id']);
+//Volunteer
+Route::get('_volunteer', ['as' => '_volunteer', 'uses' => 'App\Http\Controllers\VolunteerController@volunteer_page']);
+Route::post('volunteer.register', ['as' => 'volunteer.register', 'uses' => 'App\Http\Controllers\VolunteerController@register']);
+
+//Survey and Feedback
+Route::get('_survey', ['as' => '_survey', 'uses' => 'App\Http\Controllers\SurveyController@survey_page']);
+Route::post('survey.register', ['as' => 'survey.register', 'uses' => 'App\Http\Controllers\SurveyController@register']);
+
+Route::get('_feedback', ['as' => '_feedback', 'uses' => 'App\Http\Controllers\SurveyController@feedback_page']);
+Route::post('survey.feedback', ['as' => 'survey.feedback', 'uses' => 'App\Http\Controllers\SurveyController@feedback']);
+
+
 //
-Route::get('/booking', [App\Http\Controllers\HomeController::class, 'booking']);
+Route::get('_booking', [App\Http\Controllers\HomeController::class, 'booking']);
 
 //Booking public
 Route::post('bookings.store', ['as' => 'bookings.store', 'uses' => 'App\Http\Controllers\BookingController@booking_store']);
 Route::get('bookings.list', ['as' => 'bookings.list', 'uses' => 'App\Http\Controllers\BookingController@booking_list']);
+Route::get('bookings.list.table', ['as' => 'bookings.list.table', 'uses' => 'App\Http\Controllers\BookingController@booking_list_dashboard']);
 Route::post('bookings.overnight_stay', ['as' => 'bookings.overnight_stay', 'uses' => 'App\Http\Controllers\BookingController@os_store']);
 Route::post('bookings.day_tour', ['as' => 'bookings.day_tour', 'uses' => 'App\Http\Controllers\BookingController@dt_store']);
+Route::post('bookings.place_reservation', ['as' => 'bookings.place_reservation', 'uses' => 'App\Http\Controllers\BookingController@pr_store']);
+Route::get('room-capacity/{id}', ['as' => 'room-capacity/{id}', 'uses' => 'App\Http\Controllers\AccomodationController@getRoomCapacity']);
+Route::get('accomodation_list', ['as' => 'accomodation_list', 'uses' => 'App\Http\Controllers\AccomodationController@getRoomCapacity']);
 // Route::resource('booking', 'App\Http\Controllers\BookingController');
 
 //Google
 Route::get('/google/redirect', ['as' => 'google.redirect', 'uses' => 'App\Http\Controllers\Auth\LoginController@redirectToGoogle']);
 Route::get('/google/callback', ['as' => 'google.callback', 'uses' => 'App\Http\Controllers\Auth\LoginController@handleGoogleCallback']);
+
+//QR Code
+Route::get('qr.code', ['as' => 'qr.code', 'uses' => 'App\Http\Controllers\QRCodeController@generateQRCode']);
+Route::get('download-code', ['as' => 'download-code', 'uses' => 'App\Http\Controllers\QRCodeController@downloadQrCode']);
+Route::post('verify-code', ['as' => 'verify-code', 'uses' => 'App\Http\Controllers\QRCodeController@verifyQRCode']);
+
+
+//Stripe Payment
+Route::get('checkout/{id}', ['as' => 'checkout/{id}', 'uses' => 'App\Http\Controllers\TransactionController@showCheckoutForm']);
+Route::post('checkout.process', ['as' => 'checkout.process', 'uses' => 'App\Http\Controllers\TransactionController@processPayment']);
+
 
 Route::get('user/{id}/avatar', function ($id) {
     // Find the user
@@ -90,23 +117,55 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('activity', 'App\Http\Controllers\ActivityPageController');
 
     //Booking
+    Route::get('bookings', ['as' => 'bookings', 'uses' => 'App\Http\Controllers\BookingController@index']);
+    Route::resource('booking', 'App\Http\Controllers\BookingController');
+
+    //Volunteer
+    Route::get('volunteers.verify/{id}', ['as' => 'volunteers.verify', 'uses' => 'App\Http\Controllers\VolunteerController@verify_volunteer']);
+    Route::get('volunteers', ['as' => 'volunteers', 'uses' => 'App\Http\Controllers\VolunteerController@index']);
+    Route::resource('volunteer', 'App\Http\Controllers\VolunteerController');
+
+    //Customer
+    Route::get('customers', ['as' => 'customers', 'uses' => 'App\Http\Controllers\CustomerController@index']);
+    Route::get('customer.generate_qrcode/{id}', ['as' => 'customer.generate_qrcode', 'uses' => 'App\Http\Controllers\CustomerController@generateQrCode']);
+    Route::get('customer.payment/{id}', ['as' => 'customer.payment', 'uses' => 'App\Http\Controllers\CustomerController@getPayments']);
+    Route::get('customer.payment.verify/{id}', ['as' => 'customer.payment.verify', 'uses' => 'App\Http\Controllers\CustomerController@getVerifyPayments']);
+    Route::post('customer.payment.store', ['as' => 'customer.payment.store', 'uses' => 'App\Http\Controllers\CustomerController@addPayments']);
+    Route::post('transaction.delete', ['as' => 'transaction.delete', 'uses' => 'App\Http\Controllers\CustomerController@getCustomerPrintAndDelete']);
+    Route::resource('customer', 'App\Http\Controllers\CustomerController');
+
+    //QR Code Generator
+    Route::get('qrcodes', ['as' => 'qrcodes', 'uses' => 'App\Http\Controllers\QRCodeController@index']);
+    Route::post('generate-code',['as' => 'generate-code', 'uses' => 'App\Http\Controllers\QRCodeController@_generateQRCode']);
+    Route::post('funds.update',['as' => 'funds.update', 'uses' => 'App\Http\Controllers\QRCodeController@updateFunds']);
+    Route::resource('qrcode', 'App\Http\Controllers\QRCodeController');
+
+    //Survey
+    Route::get('surveys', ['as' => 'surveys', 'uses' => 'App\Http\Controllers\SurveyController@index']);
+    Route::get('feedbacks', ['as' => 'feedbacks', 'uses' => 'App\Http\Controllers\SurveyController@index_feedback']);
+    Route::get('surveys.list', ['as' => 'surveys.list', 'uses' => 'App\Http\Controllers\SurveyController@survey_data']);
+    Route::get('feedback.list', ['as' => 'feedback.list', 'uses' => 'App\Http\Controllers\SurveyController@feedback_data']);
+    Route::resource('survey', 'App\Http\Controllers\SurveyController');
 
     //Announcement
     Route::get('announcements', ['as' => 'announcements', 'uses' => 'App\Http\Controllers\AnnouncementController@index']);
     Route::resource('announcement', 'App\Http\Controllers\AnnouncementController');
+
+    //Accomodation
+    Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'App\Http\Controllers\AccomodationController@index']);
+    Route::resource('accomodation', 'App\Http\Controllers\AccomodationController');
+
+    //Report
+    Route::get('reports', ['as' => 'reports', 'uses' => 'App\Http\Controllers\ReportController@index']);
+    Route::get('chart.data.activity', ['as' => 'chart.data.activity', 'uses' => 'App\Http\Controllers\ReportController@getChartDataActivity']);
+    Route::get('chart.data.booking', ['as' => 'chart.data.booking', 'uses' => 'App\Http\Controllers\ReportController@getChartDataBooking']);
+    Route::get('chart.data.feedback', ['as' => 'chart.data.feedback', 'uses' => 'App\Http\Controllers\ReportController@getChartDataFeedback']);
+
+    Route::resource('report', 'App\Http\Controllers\ReportController');
     
     //Price Monitoring
     Route::get('price_monitorings', ['as' => 'price_monitorings', 'uses' => 'App\Http\Controllers\PriceMonitoringController@index']);
     Route::resource('price_monitoring', 'App\Http\Controllers\PriceMonitoringController');
-
-    //Consumer Rights
-    Route::get('consumer_rights', ['as' => 'consumer_rights', 'uses' => 'App\Http\Controllers\ConsumerRightsController@index']);
-    Route::get('consumer_rights/preview/{id}', ['as' => 'consumer_rights/preview', 'uses' => 'App\Http\Controllers\ConsumerRightsController@preview_page']);
-    Route::resource('consumer_right', 'App\Http\Controllers\ConsumerRightsController');
-
-    //Business Permit
-    Route::get('business_permits', ['as' => 'business_permits', 'uses' => 'App\Http\Controllers\BusinessPermitController@index']);
-    Route::resource('business_permit', 'App\Http\Controllers\BusinessPermitController');
     
     //Nofication
     Route::get("/admin/notify", function () {

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnnouncementModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Announcement;
-
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Vinkla\Hashids\Facades\Hashids;
 
 class AnnouncementController extends Controller
 {
@@ -19,10 +19,8 @@ class AnnouncementController extends Controller
     {
         //
 
-        $announcement = Announcement::orderBy('created_at','DESC')
-        ->get();
-        return view('announcement.index',[
-            'announcement' => $announcement
+        return view('pages.announcement.index',[
+            'announcements' => AnnouncementModel::getAnnouncement()
         ]);
     }
 
@@ -33,24 +31,9 @@ class AnnouncementController extends Controller
      */
     public function create()
     {
-        //
-        return view('announcement.create');
+        return view('pages.announcement.create');
     }
 
-    public function save_update($request = []){
-        $announcement = Announcement::find($request->id);
-        if(empty($announcement)){
-            $announcement = new Announcement;
-        }
-
-        $announcement->created_by_user_id = Auth::user()->id;
-        $announcement->who = $request->who;
-        $announcement->what = $request->what;
-        $announcement->where = $request->where;
-        $announcement->when = new Carbon($request->when);
-        $announcement->attachment = $request->attachment;
-        $announcement->save();
-    }
     /**
      * Store a newly created resource in storage.
      *
@@ -60,17 +43,42 @@ class AnnouncementController extends Controller
     public function store(Request $request)
     {
         //
-        $this->save_update($request);
-        return redirect()->route('announcements')->withStatus(__('Announcement successfully created.'));
+        if ($request->hasFile('attachment')) {
+            $image = $request->file('attachment');
+            $image_name = time() . '_' . $image->getClientOriginalName();
+            
+            $destination_path = public_path('/images/announcement/');
+    
+            // Check if the directory exists, if not, create it
+            if (!File::exists($destination_path)) {
+                File::makeDirectory($destination_path, 0755, true);
+            }
+    
+            // Move the uploaded file to the destination path
+            $image->move($destination_path, $image_name);
+    
+            // Add the image name to the request data
+            $input = $request->all();
+            $input['attachment'] = $image_name;
+
+           
+        }else{
+            $input = $request->all();
+            $input['attachment'] = 'default-announcement.png';
+        }
+    
+        AnnouncementModel::createAnnouncement($input);
+    
+        return redirect()->route('announcement.index')->withStatus(__('Successfully created.'));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\AnnouncementModel  $announcementModel
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(AnnouncementModel $announcementModel)
     {
         //
     }
@@ -78,14 +86,14 @@ class AnnouncementController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Models\AnnouncementModel  $announcementModel
      * @return \Illuminate\Http\Response
      */
-    public function edit(Announcement $announcement )
+    public function edit($id)
     {
         //
-        return view('announcement.edit',[
-            'announcement' => $announcement
+        return view('pages.announcement.edit',[
+            'announcements' =>  AnnouncementModel::getAnnouncementById(Hashids::decode($id)[0])
         ]);
     }
 
@@ -93,24 +101,51 @@ class AnnouncementController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\AnnouncementModel  $announcementModel
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        //
-        $this->save_update($request);
-        return redirect()->route('announcements')->withStatus(__('Announcement successfully updated.'));
+        $input = $request->all();
+        $announcement = AnnouncementModel::find($id);
+
+        if ($request->hasFile('attachment')) {
+            $image = $request->file('attachment');
+            
+            $image_name = time() . '_' . $image->getClientOriginalName();
+            
+            $destination_path = public_path('/images/announcement/');
+    
+            if (!File::exists($destination_path)) {
+                File::makeDirectory($destination_path, 0755, true);
+            }
+    
+            $image->move($destination_path, $image_name);
+            $input['attachment'] = $image_name;
+
+            if ($announcement->attachment && File::exists($destination_path . $announcement->attachment)) {
+                File::delete($destination_path . $announcement->attachment);
+            }
+        }else {
+            $input['attachment'] = $announcement->attachment;
+        }
+    
+        $announcement->update($input);
+    
+        return redirect()->route('announcement.index')->withStatus(__('Successfully updated.'));
+       
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\AnnouncementModel  $announcementModel
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         //
+        AnnouncementModel::deleteAnnouncement($id);
+        return redirect()->route('announcement.index')->withStatus(__('Successfully deleted.'));
     }
 }

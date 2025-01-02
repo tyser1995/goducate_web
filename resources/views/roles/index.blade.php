@@ -69,19 +69,25 @@
                                     </div>
                                 </td>
                                 <td>{{ $role->created_at->format('M d, Y h:i a') }}</td>
-                                <td class="text-right">
-                                    <form action="{{ route('role.destroy', $role) }}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                        <a class="{{Auth::user()->can('role-edit') ? 'btn btn-info btn-sm' : 'btn btn-info btn-sm d-none'}}"
-                                            href="{{ route('role.edit', $role) }}"><i class="fas fa-pen"></i></a>
-                                        <button type="button"
-                                            class="{{Auth::user()->can('role-delete') ? 'btn btn-danger btn-sm' : 'btn btn-danger btn-sm d-none'}}"
-                                            onclick="confirm('{{ __("Are you sure you want to delete this role?") }}')
-                                                        ? this.parentElement.submit() : ''"><i
-                                                class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                <td class="text-right" style="display: flex;
+                                align-items: center;">
+                                    @if (Auth::user()->can('role-edit'))
+                                        <a class="btn btn-info btn-sm"
+                                    href="{{ route('role.edit', $role) }}"><i class="fas fa-pen"></i></a>
+                                    @endif
+                                    
+                                    @if (Auth::user()->can('role-delete'))
+                                        <form action="{{ route('role.destroy', $role) }}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="button"
+                                                class="btn btn-danger btn-sm"
+                                                onclick="confirm('{{ __("Are you sure you want to delete this role?") }}')
+                                                            ? this.parentElement.submit() : ''"><i
+                                                    class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

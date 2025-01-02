@@ -104,7 +104,7 @@
                 <div class="card shadow">
                     <div class="card-body">
                         <a href="{{ route('_activities_page', ['id' => Hashids::encode($list->id)]) }}" class="btn btn-info btn-sm" title="Edit">
-                          <img src="{{ asset('images/header_list/' . $list->image) }}" class="mb-2" style="width: 100%; height:300px" alt="{{ $list->title }}" />
+                          <img src="{{ asset('images/header_list/' . $list->image) }}" class="mb-2" style="width: 100%; height:200px" alt="{{ $list->title }}" />
                         </a>
                     </div>
                 </div>

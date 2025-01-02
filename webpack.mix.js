@@ -19,6 +19,8 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .sourceMaps()
     .copyDirectory('vendor/tinymce/tinymce', 'public/js/tinymce')
+    .copy('node_modules/html5-qrcode/html5-qrcode.min.js', 'public/js/html5-qrcode.min.js')
+    .copy('node_modules/print-js/dist/print.js', 'public/js/print.js');
 
 var browser_sync = process.env.BROWSER_SYNC;
 
