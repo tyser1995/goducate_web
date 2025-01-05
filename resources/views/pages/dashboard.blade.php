@@ -104,7 +104,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-7">
                 <div class="card full-height">
                     <div class="card-body">
                         <div class="card-title">Feedback List</div>
@@ -162,26 +162,37 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="col-md-6 d-none">
+            <div class="col-md-5">
                 <div class="card full-height">
                     <div class="card-body">
-                        <div class="card-title">Total income & spend statistics</div>
-                        <div class="row py-3">
-                            <div class="col-md-4 d-flex flex-column justify-content-around">
-                                <div>
-                                    <h6 class="fw-bold text-uppercase text-success op-8">Total Income</h6>
-                                    <h3 class="fw-bold">$9.782</h3>
-                                </div>
-                                <div>
-                                    <h6 class="fw-bold text-uppercase text-danger op-8">Total Spend</h6>
-                                    <h3 class="fw-bold">$1,248</h3>
-                                </div>
+                        <div class="card-title">Feedback Bar Graph</div>
+                        <div class="card-category">Daily information about statistics in system</div>
+                        <div class="chart-container">
+                            <canvas id="multipleBarChart_feedback"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="card-title">Activity Usage</div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="multipleBarChart"></canvas>
                             </div>
-                            <div class="col-md-8">
-                                <div id="chart-container">
-                                    <canvas id="totalIncomeChart"></canvas>
-                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="card-title">Booking Usage</div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="myPieChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -235,7 +246,7 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <div class="card full-height">
+                <div class="card">
                     <div class="card-header">
                         <div class="card-title">User Feedback Activity</div>
                     </div>
@@ -247,7 +258,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="card full-height">
+                <div class="card">
                     <div class="card-header">
                         <div class="card-head-row">
                             <div class="card-title">Booking Tickets</div>
@@ -270,7 +281,7 @@
                         <!-- Booking tickets will be injected here dynamically -->
                     </div>
                 </div>
-            </div>        
+            </div>
         </div>
     @endif
 </div>
@@ -278,6 +289,178 @@
 
 @push('scripts')
 <script>
+
+    var multipleBarChart = document.getElementById('multipleBarChart').getContext('2d'),
+    multipleBarChartFeedback = document.getElementById('multipleBarChart_feedback').getContext('2d'),
+    myPieChart = document.getElementById('myPieChart').getContext('2d');
+
+    var myMultipleBarChart = new Chart(multipleBarChart, {
+        type: 'bar',
+        data: {
+            labels: [], // Will be populated dynamically
+            datasets: [], // Will be populated dynamically
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom'
+            },
+            title: {
+                display: true,
+                text: 'Daily Stats'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
+
+    var multipleBarChartFeedback = new Chart(multipleBarChartFeedback, {
+        type: 'bar',
+        data: {
+            labels: [], // Will be populated dynamically
+            datasets: [], // Will be populated dynamically
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom'
+            },
+            title: {
+                display: true,
+                text: 'Daily Stats'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
+
+
+    var myPieChart = new Chart(myPieChart, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [], // Empty initially, will be populated dynamically
+                    backgroundColor: [], // Empty initially, will be populated dynamically
+                    borderWidth: 0
+                }],
+                labels: [] // Empty initially, will be populated dynamically
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        fontColor: 'rgb(154, 154, 154)',
+                        fontSize: 11,
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                },
+                pieceLabel: {
+                    render: 'percentage',
+                    fontColor: 'white',
+                    fontSize: 14,
+                },
+                tooltips: false,
+                layout: {
+                    padding: {
+                        left: 20,
+                        right: 20,
+                        top: 20,
+                        bottom: 20
+                    }
+                }
+            }
+		});
+
+    const fetchChartDataActivity = () => {
+        $.ajax({
+            url: "{{ route('chart.data.activity') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                const chartData = response;
+
+                // Update the chart with new data
+                myMultipleBarChart.data.labels = chartData.labels;
+                myMultipleBarChart.data.datasets = chartData.datasets;
+                myMultipleBarChart.update();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    };
+
+    const fetchChartDataBooking = () => {
+        $.ajax({
+            url: "{{ route('chart.data.booking') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                const chartData = response;
+
+                myPieChart.data.labels = chartData.labels; // Set the labels dynamically
+                myPieChart.data.datasets[0].data = chartData.data; // Set the data dynamically
+                myPieChart.data.datasets[0].backgroundColor = chartData.backgroundColor; // Set colors dynamically
+                myPieChart.update(); // Redraw the chart
+
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    };
+
+    const fetchChartDataFeedback = () => {
+        $.ajax({
+            url: "{{ route('chart.data.feedback') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                const chartData = response;
+                console.log(chartData);
+                // Update the chart with new data
+                multipleBarChartFeedback.data.labels = chartData.labels;
+                multipleBarChartFeedback.data.datasets = chartData.datasets;
+                multipleBarChartFeedback.update();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    };
+
+    // Fetch initial data on page load
+    fetchChartDataActivity();
+    fetchChartDataBooking();
+    fetchChartDataFeedback();
+
+    
+        
     loadSurveys();
     function loadSurveys() {
         $.ajax({
@@ -286,6 +469,10 @@
             dataType: 'json',
             success: function(data) {
                 $('#feedback-activity-feed').empty();
+
+                if(data.data.length == 0){
+                    $('#feedback-activity-feed').append('<li>No data found.</li>');
+                }
 
                 function formatDate(datetime) {
                     const date = new Date(datetime);

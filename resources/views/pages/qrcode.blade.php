@@ -71,6 +71,16 @@
   @include('pages.header')
   <div class="container">
     <div class="card mt-2">
+      <select name="title" class="form-control" id="activity_list">
+        <option selected value="0">Select Activities</option>
+        @foreach (App\Models\ActivityList::getActivityList() as $activity_list)
+            <option value="{{ $activity_list->id }}">
+                {{ $activity_list->title }}
+              </option>
+        @endforeach
+    </select>
+    </div>
+    <div class="card mt-2 qr_container d-none">
       <div id="reader"></div>
       <div id="result"></div>
     </div>
@@ -79,52 +89,85 @@
 @include('pages.modal.index')
 @endsection
 @push('scripts')
-  <script>
-   
-      function onScanSuccess(decodedText, decodedResult) {
-          // Handle the scanned data
-          console.log(`Code scanned = ${decodedText}`, decodedResult);
-          console.log(decodedText);
-          $.ajax({
-              url: '/verify-code',
-              type: 'POST',
-              contentType: 'application/json',
-              data: JSON.stringify({ qr_data: decodedText }),
-              headers: {
-                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
-              },
-              success: function(data) {
-                  $('#modalMessage').modal('show');
-                  if (data.success) {
-                      $('.title_name')[0].innerHTML= "Successful";
-                      $('#validationMessage')[0].innerHTML = "Successfully deducted";
-                  } else {
-                    $('.title_name')[0].innerHTML= "Error";
-                    $('#validationMessage')[0].innerHTML = "Out of recreational balance. Please contact Goducate Administrator";
-                  }
+<script>
 
-                  setTimeout(() => {
-                    $('#modalMessage').modal('hide');
-                  }, 5000);
-              },
-              error: function(xhr, status, error) {
-                  document.getElementById('result').innerHTML = "Error verifying QR Code.";
+  $('#activity_list').change(function (e) {
+    $('.qr_container').addClass('d-none');
+    if($(this).val() != 0){
+      $('.qr_container').removeClass('d-none');
+    }
+  });
+  let isScanning = true;
 
-                  setTimeout(() => {
-                    document.getElementById('result').innerHTML = "";
-                  }, 5000);
+  function resetScanner() {
+    isScanning = true;
+    html5QrcodeScanner.clear(); // Clear the scanner
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure); // Reinitialize
+  }
+
+  function onScanSuccess(decodedText, decodedResult) {
+      if (!isScanning) return;
+
+      isScanning = false;
+
+      // Handle the scanned data
+      console.log(`Code scanned = ${decodedText}`, decodedResult);
+      console.log(decodedText);
+      $.ajax({
+          url: '/verify-code',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({
+            qr_data: decodedText,
+            title: $('#activity_list').val(),
+            description: $('#activity_list option:selected').text()
+          }),
+          headers: {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
+          },
+          success: function(data) {
+              $('#modalMessage').modal('show');
+              if (data.success) {
+                  $('.title_name')[0].innerHTML = "Successful";
+                  $('#validationMessage')[0].innerHTML = "Successfully deducted";
+                  $('.qr_container').addClass('d-none');
+              } else {
+                $('.qr_container').addClass('d-none');
+                  $('.title_name')[0].innerHTML = "Error";
+                  $('#validationMessage')[0].innerHTML = "Out of recreational balance. Please contact Goducate Administrator";
               }
-          });
-      }
+              $('#activity_list').val(0);
+              resetScanner();
+              setTimeout(() => {
+                  $('#modalMessage').modal('hide');
+              }, 5000);
+          },
+          error: function(xhr, status, error) {
+              document.getElementById('result').innerHTML = "Error verifying QR Code.";
 
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML = "";
+              }, 5000);
+          },
+          complete: function() {
+              // Re-enable scanning after a 3-second delay
+              setTimeout(() => {
+                  isScanning = true;
+                  resetScanner();
+              }, 3000);
+          }
+      });
+  }
 
-        function onScanFailure(error) {
-            //console.warn(`QR Code scan failed. Reason: ${error}`);
-        }
+  function onScanFailure(error) {
+      // Optional: Handle scan failure
+      // console.warn(`QR Code scan failed. Reason: ${error}`);
+  }
 
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-  </script>
+  let html5QrcodeScanner = new Html5QrcodeScanner(
+      "reader", { fps: 10, qrbox: 250 });
+  html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+</script>
+
 @endpush
 

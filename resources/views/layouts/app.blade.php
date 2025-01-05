@@ -91,14 +91,14 @@ The above copyright notice and this permission notice shall be included in all c
     <script>
         var base_url = "{{ url('/') }}";
     </script>
-    <script src="{{ asset('service-worker.js') }}"></script>
+    {{-- <script src="{{ asset('service-worker.js') }}"></script>
     <script>
     if (!navigator.serviceWorker.controller) {
         navigator.serviceWorker.register("service-worker.js").then(function(reg) {
             console.log("Service worker has been registered for scope: " + reg.scope);
         });
     }
-    </script>
+    </script> --}}
 
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

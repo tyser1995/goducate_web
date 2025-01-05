@@ -113,48 +113,42 @@
   <div class="volunteer">
 <div class="container">
   <!-- <h1>Book Now!</h1> -->
-  <a href="#about"><button >Book now!</button></a>
+  <a href="javascript::void(0)" data-toggle="modal" data-target="#eventModal"><button >Book now!</button></a>
       <p>Booking a Stay at Camp Goducate Iloilo is an enriching and rejuvenating experience. Whether you're looking for a peaceful retreat, an exciting team-building event, or a family getaway, Camp Goducate offers the perfect environment for relaxation and growth. Here are some reasons why you should book a stay:</p>
       <div class="image-container">
         <img src="images/B2.jpg" alt="Volunteer Image">
       </div>
-      <div class="description">
-        <img src="images/b1.jpg" alt="Volunteers">
-        <div class="text">
-          <h1>Jungle Huts:</h1>
-          <h2>₱2,200 (6 pax)</h2>
-          <p>- Cozy accommodations for small groups.</p>
-        </div>
-      </div>
-      <div class="description">
-      <div class="text">          
-          <br>
-          <h1>Hillside Villa:</h1>
-          <h2>₱3,500 (9 pax)</h2>
-          <p>- Spacious, great for larger gatherings.</p>
-          </br>
-          <h1>Family Rooms:</h1>
-          <h2>₱2,500 (3 pax)</h2>
-          <p>- Ideal for families, providing comfort and space.</p>
-        </div>
-        <img src="images/b3.jpg" alt="Volunteers">
-      </div>
-      <div class="description">
-        <img src="images/b5.jpg" alt="Volunteers">
-        <div class="text">
-          <h1>Courtyard Rooms:</h1>
-          <h2>₱2,800 (4 pax)</h2>
-          <h2>₱4,500 (12 pax)</h2>
-          <p>- Versatile options for smaller groups or larger parties, with differing capacities.</p>
-        </div>
-      </div>
-      <div class="description">
-      <div class="text">
-          <h1>Tents: </h1>
-          <h2>₱1,000 (2-4 pax)</h2>
-          <p>- Affordable and suitable for camping experiences.</p>
-        </div>
-        <img src="images/b4.jpg" alt="Volunteers">
+      <div class="accomodations-container">
+          @foreach ($accomodations as $index => $accomodation)
+              <div class="description">
+                  @if ($index % 2 == 0)
+                      <!-- Image on the Left for Even Index -->
+                      @if ($accomodation->image)
+                        <img src="{{ asset('images/accomodation/' . $accomodation->image) }}" alt="{{ $accomodation->type }}">
+                      @else
+                        <img src="{{ asset('images/default-image.png') }}" alt="{{ $accomodation->type }}">
+                      @endif
+                      <div class="text">
+                          <h1>{{ $accomodation->type }}:</h1>
+                          <h2>₱{{ number_format($accomodation->amount, 2) }} ({{ $accomodation->capacity }} pax)</h2>
+                          <p>- {{ $accomodation->description ?? 'No description' }}</p>
+                      </div>
+                  @else
+                      <!-- Image on the Right for Odd Index -->
+                      <div class="text">
+                          <h1>{{ $accomodation->type }}:</h1>
+                          <h2>₱{{ number_format($accomodation->amount, 2) }} ({{ $accomodation->capacity }} pax)</h2>
+                          <p>- {{  $accomodation->description ?? 'No description'  }}</p>
+                      </div>
+                      @if ($accomodation->image)
+                        <img src="{{ asset('images/accomodation/' . $accomodation->image) }}" alt="{{ $accomodation->type }}">
+                      @else
+                        <img src="{{ asset('images/default-image.png') }}" alt="{{ $accomodation->type }}">
+                      @endif
+                      
+                  @endif
+              </div>
+          @endforeach
       </div>
       <div class="image-container">
         <img src="images/b6.jpg" alt="Volunteer Image">
@@ -164,14 +158,14 @@
 
   <section class="about" id="about">
     <div class="container">
-    <div id="calendar"></div>
+    <div id="calendar" hidden></div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
     </div>
   </section>
 
   <!-- Modal Form for Event Creation -->
   <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document">
+     <div class="modal-dialog modal-dialog-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-dark" id="eventModalLabel">Book</h5>
@@ -218,20 +212,36 @@
                   <option selected value="">Select option</option>
                   <option value="0">Overnight Stay</option>
                   <option value="1">Day Tour</option>
-                  <option value="2">Place Reservation</option>
+                  {{-- <option value="2" hidden>Place Reservation</option> --}}
                 </select>
               </div>
             </div>
-            <div class="row" style="overflow-x: auto; height:150px">
+            <div class="row">
               <div class="col-12 overnight_stay d-none">
                 <div class="form-group" id="room-container">
                   <label for="children">Room Type:</label>
                   <div class="input-group date">
                       <select name="room_type" id="room_type" class="class_room_type form-control">
                           <option selected value="">Select option</option>
-                          @foreach (App\Models\Accomodation::getAccomodationOvernightStay() as $value)
-                              <option value="{{$value->id}}">{{$value->type}} &nbsp;&nbsp;&nbsp; (capacity: {{$value->capacity}})</option>
+                          
+                          @foreach (App\Models\Accomodation::getAccomodationOvernightStay() as $accommodation)
+                              @php
+                                  $booking = App\Models\BookingModel::getBookingListv3()->firstWhere('accomodation_name', $accommodation->type);
+                                  $taken = $booking ? $booking->accomodation_taken : 0;
+                                  $isDisabled = ($taken >= $accommodation->qty);
+                              @endphp
+                              
+                              <option value="{{ $accommodation->id }}"
+                                data-taken="{{ $taken }}"
+                                data-qty="{{ $accommodation->qty }}"
+                                {{ $isDisabled ? 'disabled' : '' }}>
+                                  {{ $accommodation->type }} &nbsp;&nbsp;
+                                  (Capacity: {{ $accommodation->capacity }}-pax)
+                                  &nbsp;&nbsp;
+                                  {{ $isDisabled ? 'Fully Booked' : 'Room availability: ' . ($accommodation->qty - $taken) . ' room(s) left' }}
+                              </option>
                           @endforeach
+                      
                       </select>
                       <div class="input-group-append">
                           <button type="button" class="input-group-text btn btn-sm btn-info btn-add">
@@ -263,12 +273,12 @@
                   </select>
                 </div>
                 <div class="form-group dt_name_class d-none">
-                  <label for="name">Name:</label>
+                  <label for="name">Group Name:</label>
                   <input type="text" class="form-control" id="dt_name" name="name">
                 </div>
-                <div class="form-group no_person d-none">
+                <div class="form-group no_person d-none" hidden>
                   <label for="adults">Number of Persons:</label>
-                  <input type="number" class="form-control" id="no_of_persons" name="no_of_persons" min="0">
+                  <input type="number" class="form-control" id="no_of_persons" name="no_of_persons" min="0" value="0">
                 </div>
                 <div class="form-group gt d-none">
                   <label for="children">Group Type:</label>
@@ -294,9 +304,26 @@
                   <label for="children">Type:</label>
                   <select name="room_type" id="room_type_pr" class="room_type_pr form-control">
                     <option selected value="">Select option</option>
-                    @foreach (App\Models\BookingPlaceReservationModel::ROOM_TYPE as $key => $type)
+                    {{-- @foreach (App\Models\BookingPlaceReservationModel::ROOM_TYPE as $key => $type)
                       <option value="{{$key}}">{{$type}}</option>
-                    @endforeach
+                    @endforeach --}}
+                    @foreach (App\Models\Accomodation::getAccomodationDayTour() as $accommodation)
+                          @php
+                              $booking = App\Models\BookingModel::getBookingListv3()->firstWhere('accomodation_name', $accommodation->type);
+                              $taken = $booking ? $booking->accomodation_taken : 0;
+                              $isDisabled = ($taken >= $accommodation->qty);
+                          @endphp
+                          
+                          <option value="{{ $accommodation->id }}"
+                            data-taken="{{ $taken }}"
+                            data-qty="{{ $accommodation->qty }}"
+                            {{ $isDisabled ? 'disabled' : '' }}>
+                              {{ $accommodation->type }} &nbsp;&nbsp;
+                              (Capacity: {{ $accommodation->capacity }}-pax)
+                              &nbsp;&nbsp;
+                              {{ $isDisabled ? 'Fully Booked' : 'Availability: ' . ($accommodation->qty - $taken) . ' left' }}
+                          </option>
+                      @endforeach
                   </select>
                 </div>
                 <div class="form-group no_of_cottages d-none">
@@ -385,6 +412,10 @@
               <p><strong>Number of Adults:</strong> <span id="confirm_no_of_adults"></span></p>
               <p><strong>Number of Children:</strong> <span id="confirm_no_of_children"></span></p>
               <p><strong>Room Types:</strong> <span id="confirm_room_types"></span></p>
+              <p><strong>Tour Types:</strong> <span id="confirm_tour_types"></span></p>
+              <p><strong>Group Name:</strong> <span id="confirm_group_name"></span></p>
+              <p><strong>Group Types:</strong> <span id="confirm_group_types"></span></p>
+              <p><strong>Types:</strong> <span id="confirm_types"></span></p>
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>

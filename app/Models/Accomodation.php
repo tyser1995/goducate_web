@@ -23,13 +23,15 @@ class Accomodation extends Model
         'capacity',
         'tour_type',
         'group_type',
-        'amount'
+        'amount',
+        'image',
+        'description'
     ];
 
     public const BOOKING_STATUS = [
         '0'    => 'Overnight Stay',
         '1'    => 'Day Tour',
-        '2'    => 'Place Reservation'
+        // '2'    => 'Place Reservation'
     ];
 
     public static function createAccomodation($data)
@@ -42,7 +44,9 @@ class Accomodation extends Model
             'capacity' => $data['capacity'],
             'tour_type' => $data['tour_type'] ?? 'NA',
             'group_type' => $data['group_type'] ?? 'NA',
-            'amount' => $data['amount'] ?? '0'
+            'amount' => $data['amount'] ?? '0',
+            'image'         => $data['image'] ?? null,
+            'description'   => $data['description'] ?? ''
         ]);
 
         return $payload;
@@ -56,6 +60,13 @@ class Accomodation extends Model
     public static function getAccomodationOvernightStay()
     {
         return self::where('bookig_status','=','0')
+            ->orderBy('created_at','DESC')
+            ->get();
+    }
+
+    public static function getAccomodationDayTour()
+    {
+        return self::where('bookig_status','=','1')
             ->orderBy('created_at','DESC')
             ->get();
     }
@@ -83,7 +94,9 @@ class Accomodation extends Model
             'capacity' => $data['capacity'],
             'tour_type' => $data['tour_type'] ?? 'NA',
             'group_type' => $data['group_type'] ?? 'NA',
-            'amount' => $data['amount'] ?? '0'
+            'amount' => $data['amount'] ?? '0',
+            'image'         => $data['image'] ?? null,
+            'description'   => $data['description'] ?? ''
         ]);
 
         return $payload;

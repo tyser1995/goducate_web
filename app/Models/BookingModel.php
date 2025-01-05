@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\CustomerModel;
 use App\Models\Accomodation;
+use App\Models\Payment;
 
 use DB;
 
@@ -55,6 +56,27 @@ class BookingModel extends Model
     {
         $roomTypes = is_array($data['accomodation_id']) ? $data['accomodation_id'] : [$data['accomodation_id']];
         $payload = [];
+
+        $customer = CustomerModel::getCustomerByEmail($data['email']);
+        $customer_id = 0;
+
+
+        if(!$customer){
+            $new_customer = CustomerModel::create([
+                'created_by_user_id' => Auth::user()->id ?? 0,
+                'first_name' => $data['name'] ?? '',
+                'middle_name' => '',
+                'last_name' => '',
+                'email' => $data['email'],
+                'address' => $data['address'],
+                'contact_no' => $data['contact_no'] ?? 0
+            ]);
+
+            $customer_id = $new_customer->id;
+        } else {
+            $customer_id = $customer->id;
+        }
+
         foreach ($roomTypes as $roomTypeId){
 
             $roomType = Accomodation::find($roomTypeId);
@@ -62,7 +84,7 @@ class BookingModel extends Model
 
             $payload[] = self::create([
                 'created_by_user_id' => $data['created_by_users_id'] ?? 0,
-                'customer_id'       => $data['customer_id'] ?? 0,
+                'customer_id'       => $data['customer_id'] ?? $customer_id,
                 'name'              => $data['name'],
                 'email'             => $data['email'],
                 'address'           => $data['address'],
@@ -162,7 +184,6 @@ class BookingModel extends Model
     public static function getBookingListTable()
     {
         return self::selectRaw("
-                bookings.id,
                 bookings.name,
                 bookings.email,
                 bookings.address,
@@ -177,18 +198,6 @@ class BookingModel extends Model
                 ) as combined_checkout_datetime
             ")
             ->where('status','=','pending')
-            // ->leftJoin('booking_overnight_stays', function($join) {
-            //     $join->on('booking_overnight_stays.email', '=', 'bookings.email')
-            //         ->where('bookings.boooking_status', '=', 0);
-            // })
-            // ->leftJoin('booking_day_tours', function($join) {
-            //     $join->on('booking_day_tours.email', '=', 'bookings.email')
-            //         ->where('bookings.boooking_status', '=', 1); 
-            // })
-            // ->leftJoin('booking_place_reservations', function($join) {
-            //     $join->on('booking_place_reservations.email', '=', 'bookings.email')
-            //         ->where('bookings.boooking_status', '=', 2);
-            // })
             ->distinct()
             ->orderBy('combined_checkin_datetime','DESC')
             ->get();
@@ -197,6 +206,20 @@ class BookingModel extends Model
     public static function getBooking()
     {
         return self::get();
+    }
+
+    public static function getBookingv2()
+    {
+        return self::select(
+            "customer_id",
+            "name",
+            "email",
+            "address",
+            "contact_no",
+            "status",
+            "created_at")
+        ->distinct()
+        ->get();
     }
 
     public static function getBookingById($id)
@@ -235,9 +258,9 @@ class BookingModel extends Model
                 'created_by_user_id' => Auth::user()->id ?? 0,
                 'first_name' => $payload->name ?? '',
                 'middle_name' => '',
-                'last_name' => $data['address'] ?? '',
+                'last_name' => '',
                 'email' => $payload->email,
-                'address' => '',
+                'address' => $data['address'],
                 'contact_no' => $data['contact_no'] ?? 0
             ]);
 
@@ -249,7 +272,7 @@ class BookingModel extends Model
 
         $emailDetails = [
             'title' => 'Reservation Confirmation',
-            'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
+            'body' => 'Reservation will be confirmed upon 20% of down payment made through the following payment channels.',
             'reservation' => $payload,
             'booking_status' => $data['boooking_status'],
             'customer_id' => $customer_id
@@ -267,16 +290,16 @@ class BookingModel extends Model
         $payload->update([
             'status' => $data['status']
         ]);
-        
+       
         $customer = CustomerModel::getCustomerByEmail($payload->email);
         if(!$customer){
             CustomerModel::create([
                 'created_by_user_id' => Auth::user()->id ?? 0,
                 'first_name' => $payload->name ?? '',
                 'middle_name' => '',
-                'last_name' =>  $payload->address ?? '',
+                'last_name' =>  '',
                 'email' => $payload->email,
-                'address' => '',
+                'address' => $payload->address ?? '',
                 'contact_no' => $payload->contact_no ?? 0
             ]);
         }else{
@@ -284,10 +307,20 @@ class BookingModel extends Model
                 'created_by_user_id' => Auth::user()->id ?? 0,
                 'first_name' => $payload->name ?? '',
                 'middle_name' => '',
-                'last_name' =>  $payload->address ?? '',
+                'last_name' =>  '',
                 'email' => $payload->email,
-                'address' => '',
+                'address' => $payload->address ?? '',
                 'contact_no' => $payload->contact_no ?? 0
+            ]);
+        }
+        
+        if (!empty($data['walkInCheckbox']) && $data['walkInCheckbox'] === 'on') {
+            Payment::create([
+                'created_by_user_id' => Auth::user()->id ?? 0,
+                'customer_id' => $customer->id,
+                'amount' => $data['amount'] ?? 0,
+                'attachment' => $data['attachment'] ?? '',
+                'payment_status' => 'Full'
             ]);
         }
 

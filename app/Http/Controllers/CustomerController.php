@@ -176,12 +176,15 @@ class CustomerController extends Controller
         if(!$customer){
             return redirect()->back()->withErrors('No customer found')->withInput();
         }
+    }
 
-        // $transaction = Transaction::getTransaction(Hashids::decode($id)[0]);
-        // return view('customer.payment',[
-        //     'customers'     => $customer,
-        //     'transactions'  => $transaction
-        // ]);
+    public function getCustomerPrintAndDelete(Request $request){
+        $customerId = $request->input('customer_id');
+        $transaction = Transaction::deleteTransactionAfterPrint($customerId);
+        return response()->json([
+            'success' => true,
+            'deleted_count' => $transaction,
+        ], 200);
     }
 
     public function addPayments(Request $request){

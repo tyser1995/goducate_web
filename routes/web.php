@@ -49,6 +49,7 @@ Route::post('bookings.overnight_stay', ['as' => 'bookings.overnight_stay', 'uses
 Route::post('bookings.day_tour', ['as' => 'bookings.day_tour', 'uses' => 'App\Http\Controllers\BookingController@dt_store']);
 Route::post('bookings.place_reservation', ['as' => 'bookings.place_reservation', 'uses' => 'App\Http\Controllers\BookingController@pr_store']);
 Route::get('room-capacity/{id}', ['as' => 'room-capacity/{id}', 'uses' => 'App\Http\Controllers\AccomodationController@getRoomCapacity']);
+Route::get('accomodation_list', ['as' => 'accomodation_list', 'uses' => 'App\Http\Controllers\AccomodationController@getRoomCapacity']);
 // Route::resource('booking', 'App\Http\Controllers\BookingController');
 
 //Google
@@ -130,6 +131,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('customer.payment/{id}', ['as' => 'customer.payment', 'uses' => 'App\Http\Controllers\CustomerController@getPayments']);
     Route::get('customer.payment.verify/{id}', ['as' => 'customer.payment.verify', 'uses' => 'App\Http\Controllers\CustomerController@getVerifyPayments']);
     Route::post('customer.payment.store', ['as' => 'customer.payment.store', 'uses' => 'App\Http\Controllers\CustomerController@addPayments']);
+    Route::post('transaction.delete', ['as' => 'transaction.delete', 'uses' => 'App\Http\Controllers\CustomerController@getCustomerPrintAndDelete']);
     Route::resource('customer', 'App\Http\Controllers\CustomerController');
 
     //QR Code Generator
@@ -152,6 +154,14 @@ Route::group(['middleware' => 'auth'], function () {
     //Accomodation
     Route::get('accomodations', ['as' => 'accomodations', 'uses' => 'App\Http\Controllers\AccomodationController@index']);
     Route::resource('accomodation', 'App\Http\Controllers\AccomodationController');
+
+    //Report
+    Route::get('reports', ['as' => 'reports', 'uses' => 'App\Http\Controllers\ReportController@index']);
+    Route::get('chart.data.activity', ['as' => 'chart.data.activity', 'uses' => 'App\Http\Controllers\ReportController@getChartDataActivity']);
+    Route::get('chart.data.booking', ['as' => 'chart.data.booking', 'uses' => 'App\Http\Controllers\ReportController@getChartDataBooking']);
+    Route::get('chart.data.feedback', ['as' => 'chart.data.feedback', 'uses' => 'App\Http\Controllers\ReportController@getChartDataFeedback']);
+
+    Route::resource('report', 'App\Http\Controllers\ReportController');
     
     //Price Monitoring
     Route::get('price_monitorings', ['as' => 'price_monitorings', 'uses' => 'App\Http\Controllers\PriceMonitoringController@index']);

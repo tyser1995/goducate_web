@@ -109,29 +109,33 @@
     $('#customer_id').val(id_value);
 
     $('#quickForm').submit(function(event) {
-      
-      event.preventDefault();
-      
-      $.ajax({
-          url: "{{ route('checkout.process') }}",
-          type: "POST",
-          data: {
-            'customer_id'     : $('#customer_id').val(),
-            'attachment'      : $('#attachment').val(),
-          },
-          success: function(response) {
-              $('#confirmModal').modal('show');
-          },
-          error: function(error) {
-              console.log(error)
-          }
-      });
-  });
+        event.preventDefault(); // Prevent default form submission
 
-  $('.btnClose').click(function(){
-    window.location.href ="/home";
-  });
+        // Create FormData object to handle file and other form data
+        var formData = new FormData(this);
 
-  
+        // Add customer_id manually if it's not included in the form
+        formData.append('customer_id', $('#customer_id').val());
+
+        $.ajax({
+            url: "{{ route('checkout.process') }}",
+            type: "POST",
+            data: formData,
+            processData: false, // Prevent jQuery from automatically processing the data
+            contentType: false, // Set the content type to false to allow file uploads
+            success: function(response) {
+                // Show confirmation modal on success
+                $('#confirmModal').modal('show');
+            },
+            error: function(error) {
+                console.log(error); // Log errors for debugging
+            }
+        });
+    });
+
+    // Handle closing of the confirmation modal
+    $('.btnClose').click(function() {
+        window.location.href = "/home"; // Redirect to home on close
+    });
 </script>
 @endpush

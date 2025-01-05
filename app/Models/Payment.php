@@ -40,10 +40,19 @@ class Payment extends Model
         ->get();
     }
 
+    public static function getPaymentByCustomerIdOnly($customer_id)
+    {
+
+        return self::where('customer_id','=',$customer_id)
+        ->get()
+        ->first();
+    }
+
     public static function getPaymentById($id)
     {
         return self::findOrFail($id);
     }
+
 
     public static function getPaymentPartialOnly()
     {

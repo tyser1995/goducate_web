@@ -66,6 +66,7 @@
         "select2": "^4.1.0-rc.0",
         "smartwizard": "^6.0.5",
         "sweetalert2": "^11.4.29",
+        "tinymce": "^7.6.0",
         "vue-table-component": "^1.9.2",
         "vuetify": "^2.6.8"
     }

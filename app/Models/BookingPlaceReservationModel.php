@@ -29,7 +29,7 @@ class BookingPlaceReservationModel extends Model
     public const ROOM_TYPE = [
         'board_room'        => 'Board Room',
         'function_hall'     => 'Function Hall',
-        'basketball_gym'    => 'Basketball Gym',
+        // 'basketball_gym'    => 'Basketball Gym',
         'cottages'          => 'Cottages',
         'small_huts'        => 'Small Huts'
     ];
@@ -59,7 +59,7 @@ class BookingPlaceReservationModel extends Model
         
         $emailDetails = [
             'title' => 'Reservation Confirmation',
-            'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
+            'body' => 'Reservation will be confirmed upon 20% of down payment made through the following payment channels.',
             'reservation' => $payload,
             'booking_status' => 'place_reservation',
             'customer_id' => $customer_id

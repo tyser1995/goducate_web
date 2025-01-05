@@ -33,7 +33,7 @@ class AnnouncementModel extends Model
             'where' => $data['where'],
             'when' => $data['when'],
             'description' => htmlentities($data['description']),
-            'attachment' => $data['attachment'] ?? ''
+            'attachment' => $data['attachment'] ?? null
         ]);
 
         return $payload;
@@ -41,7 +41,7 @@ class AnnouncementModel extends Model
 
     public static function getAnnouncementList()
     {
-        $announcements = self::all(); 
+        $announcements = self::all();
 
         foreach ($announcements as $announcement) {
             $dateRange = $announcement->when;
@@ -96,7 +96,7 @@ class AnnouncementModel extends Model
 
     public static function getAnnouncement()
     {
-        $announcements = self::all(); 
+        $announcements = self::all();
 
         foreach ($announcements as $announcement) {
             $dateRange = $announcement->when;
@@ -133,7 +133,7 @@ class AnnouncementModel extends Model
             'where' => $data['where'],
             'when' => $data['when'],
             'description' => htmlentities($data['description']),
-            'attachment' => $data['attachment'] ?? ''
+            'attachment' => $data['attachment'] ?? null
         ]);
 
         return $payload;

@@ -29,42 +29,65 @@
                                     class="form-control form-control-alternative">
                                     <h4>Details</h4>
                                     <div class="form-group row">
-                                       <div class="col-2">
-                                            <p for="name">Name:</p>
-                                       </div>
-                                       <div class="col-4">
-                                            <p for="name">{{old('name',$bookings->name)}}</p>
+                                        <div class="col-9">
+                                            <div class="row">
+                                                <div class="col-2">
+                                                    <p for="name">Name:</p>
+                                               </div>
+                                               <div class="col-4">
+                                                    <p for="name">{{old('name',$bookings->name)}}</p>
+                                                </div>
+                                                <div class="col-2">
+                                                    <p for="email">Email:</p>
+                                               </div>
+                                               <div class="col-4">
+                                                    <p for="email">{{old('email',$bookings->email)}}</p>
+                                                </div>
+                                                <div class="col-2">
+                                                    <p for="address">Address:</p>
+                                               </div>
+                                               <div class="col-4">
+                                                    <p for="address">{{old('address',$bookings->address)}}</p>
+                                                </div>
+                                                <div class="col-2">
+                                                    <p for="contact_no">Contact No.:</p>
+                                               </div>
+                                               <div class="col-4">
+                                                    <p for="contact_no">{{old('contact_no',$bookings->contact_no)}}</p>
+                                                </div>
+                                                <div class="col-2">
+                                                    <p for="no_of_adults">Number of Adults:</p>
+                                               </div>
+                                               <div class="col-4">
+                                                    <p for="no_of_adults">{{old('no_of_adults',$bookings->no_of_adults)}}</p>
+                                                </div>
+                                                <div class="col-2">
+                                                  <p for="no_of_children">Number of Children:</p>
+                                                </div>
+                                                <div class="col-4">
+                                                  <p for="no_of_children">{{old('no_of_children',$bookings->no_of_children)}}</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-2">
-                                            <p for="email">Email:</p>
-                                       </div>
-                                       <div class="col-4">
-                                            <p for="email">{{old('email',$bookings->email)}}</p>
+                                        <div class="col-3">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label for="name">Partial Payment</label>
+                                                    <?php
+                                                        $payment_img = App\Models\Payment::getPaymentByCustomerIdOnly($bookings->customer_id);
+                                                    ?>
+                                                    @if($payment_img && $payment_img->attachment)
+                                                        <a href="javascript:void(0)" onclick="showPaymentImageModal('{{ asset('images/payment/' . ($payment_img->attachment ?? '')) }}')">View</a>
+                                                    @else
+                                                        @if ($payment_img)
+                                                            <p>Walk-in payment: {{$payment_img->amount}}</p>
+                                                        @else
+                                                            <p>No payment image available</p>
+                                                        @endif
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-2">
-                                            <p for="address">Address:</p>
-                                       </div>
-                                       <div class="col-4">
-                                            <p for="address">{{old('address',$bookings->address)}}</p>
-                                        </div>
-                                        <div class="col-2">
-                                            <p for="contact_no">Contact No.:</p>
-                                       </div>
-                                       <div class="col-4">
-                                            <p for="contact_no">{{old('contact_no',$bookings->contact_no)}}</p>
-                                        </div>
-                                        <div class="col-2">
-                                            <p for="no_of_adults">Number of Adults:</p>
-                                       </div>
-                                       <div class="col-4">
-                                            <p for="no_of_adults">{{old('no_of_adults',$bookings->no_of_adults)}}</p>
-                                        </div>
-                                        <div class="col-2">
-                                          <p for="no_of_children">Number of Children:</p>
-                                     </div>
-                                     <div class="col-4">
-                                          <p for="no_of_children">{{old('no_of_children',$bookings->no_of_children)}}</p>
-                                      </div>
                                     </div>
                                     <h4>Booking Status</h4>
                                     <?php
@@ -143,7 +166,7 @@
                                             <span>{{ $formattedDate }}</span><br/>
                                         @endforeach
                                     @elseif ($place_reservation->count() > 0)
-                                        <p>{{ __('Place Reservation') }}</p>   
+                                        <p>{{ __('Place Reservation') }}</p>
                                         @foreach ($place_reservation as $value)
                                             @php
                                                 $checkin = \Carbon\Carbon::parse($value->checkin_date);
@@ -170,9 +193,13 @@
                                             <span>{{ $formattedDate }}</span><br/>
                                         @endforeach
                                     @else
-                                        <span>{{__('No data found.')}}</span>   
+                                        <span>{{__('No data found.')}}</span>
                                     @endif
                                     
+                                    <div class="form-group">
+                                        Walk-in payment <input type="checkbox" id="walkInCheckbox" onclick="toggleWalkInPayment()" name="walkInCheckbox">
+                                        <input type="number" min="1" class="form-control" id="walkInPayment" disabled name="amount" />
+                                    </div>
                                     <div class="form-group">
                                         <label for="name">Status</label>
                                         <select required class="form-control" name="status" id="status"  {{$bookings->status == "approved" ? 'disabled' : ''}}>
@@ -193,11 +220,49 @@
         </div>
     </div>
 </div>
+
+<!-- Modal for Viewing Image -->
+<div class="modal fade" id="paymentImageModal" tabindex="-1" role="dialog" aria-labelledby="paymentImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentImageModalLabel">Payment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="paymentImage" src="" alt="Payment Image" style="width: 100%; height: auto;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @include('employees.script')
 @push('scripts')
 <script>
+    function toggleWalkInPayment() {
+        const walkInCheckbox = $('#walkInCheckbox');
+        const walkInPayment = $('#walkInPayment');
+        
+        walkInPayment.prop('disabled', !walkInCheckbox.prop('checked'));
+        walkInPayment.prop('required', walkInCheckbox.prop('checked'));
 
+        if (walkInPayment.prop('disabled') || walkInCheckbox.prop('checked')) {
+            walkInPayment.val(''); // Clear the input value
+        }
+    }
+
+    function showPaymentImageModal(imageSrc) {
+        // Set the image source for the modal
+        document.getElementById('paymentImage').src = imageSrc;
+        
+        // Show the modal
+        $('#paymentImageModal').modal('show');
+    }
 </script>
 @endpush

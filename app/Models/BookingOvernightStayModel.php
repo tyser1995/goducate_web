@@ -77,14 +77,16 @@ class BookingOvernightStayModel extends Model
             $customer_id = $customer->id;
         }
 
+        $total_amount = $partial_amount;
         $partial_amount *= 0.20;
         $emailDetails = [
             'title' => 'Reservation Confirmation',
-            'body' => 'Your reservation details have been saved. Kindly check your email for the confirmation of your request. Thank you for choosing Goducate!',
+            'body' => 'Reservation will be confirmed upon 20% of down payment made through the following payment channels.',
             'reservation' => $payload,
             'booking_status' => 'overnight_stay',
             'customer_id' => $customer_id,
-            'partial_amount' => $partial_amount
+            'partial_amount' => $partial_amount,
+            'total_amount' => $total_amount
         ];
     
         $notification = [
