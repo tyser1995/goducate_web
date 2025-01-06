@@ -1,5 +1,5 @@
 /**
- * TinyMCE version 6.8.4 (2024-06-19)
+ * TinyMCE version 7.6.0 (2024-12-11)
  */
 
 (function () {
@@ -80,7 +80,7 @@
       editor.selection.collapse(false);
     };
     const insertDateTime = (editor, format) => {
-      if (shouldInsertTimeElement(editor)) {
+      if (shouldInsertTimeElement(editor) && editor.selection.isEditable()) {
         const userTime = getDateTime(editor, format);
         let computerTime;
         if (/%[HMSIp]/.test(format)) {
