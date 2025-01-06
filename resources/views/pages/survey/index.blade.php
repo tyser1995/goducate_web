@@ -25,6 +25,7 @@
                                         <th scope="col">{{ __('Group Type') }}</th>
                                         <th scope="col">{{ __('Person Type') }}</th>
                                         <th scope="col">{{ __('Address') }}</th>
+                                        <th scope="col">{{ __('Religion') }}</th>
                                         <th scope="col">{{ __('Creation Date') }}</th>
                                         <th scope="col"></th>
                                     </tr>
@@ -36,6 +37,7 @@
                                         <td>{{ ucfirst($survey->group_type) }}</td>
                                         <td>{{ ucfirst($survey->person_type) }}</td>
                                         <td>{{ $survey->address }}</td>
+                                        <td>{{ $survey->religion }}</td>
                                         <td>{{ $survey->created_at->format('M d, Y h:i a') }}</td>
                                     </tr>
                                     @endforeach

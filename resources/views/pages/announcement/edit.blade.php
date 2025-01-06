@@ -57,7 +57,7 @@
                                         <label>Attachment</label>
                                         <input type="file" class="form-control" name="attachment" value="{{old('attachment',$announcements['attachment'])}}" id="image-input" onchange="previewImage(event)" />
                                     </div>
-                                    <img id="image-preview" src="{{ $announcements->announcement ? asset('images/announcement/' . $announcements->announcement) : asset('images/default-announcement.png') }}" alt="Preview Image" onerror="this.src='{{ asset('images/default-announcement.png') }}';" style="width: 200px; height: auto; margin-top: 10px;"
+                                    <img id="image-preview" src="{{ $announcements->attachment ? asset('images/announcement/' . $announcements->attachment) : asset('images/default-announcement.png') }}" alt="Preview Image" onerror="this.src='{{ asset('images/default-announcement.png') }}';" style="width: 200px; height: auto; margin-top: 10px;"
                                 />
                                 </div>
                                 <div class="">
@@ -90,11 +90,22 @@
     });
 
     var selectedDate = moment(new Date()).startOf('day');
+    var selectedDate = $('#when').val();
+
+    var startDate = selectedDate;
+    var endDate = selectedDate;
+
+    if (selectedDate && selectedDate.includes('-')) {
+        var dates = selectedDate.split(' - '); // Split the range into start and end
+        startDate = moment(dates[0], 'MM/DD/YYYY hh:mm A') || selectedDate;
+        endDate = moment(dates[1], 'MM/DD/YYYY hh:mm A') || selectedDate;
+    }
+
     $('.reservationtime').daterangepicker({
         timePicker: true,
         timePickerIncrement: 30,
-        startDate: selectedDate,
-        endDate: selectedDate,
+        startDate: startDate,
+        endDate: endDate,
         minDate: selectedDate,
         locale: {
             format: 'MM/DD/YYYY hh:mm A'
