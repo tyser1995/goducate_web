@@ -92,7 +92,7 @@
 @push('scripts')
 <script>
     $('#tblUser').DataTable();
-    
+
     function confirmDelete(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -131,7 +131,7 @@
                             allowOutsideClick: false,
                             confirmButtonText: 'Close',
                         }).then(() => {
-                            $('#tblUser').DataTable().ajax.reload();
+                            window.location.reload();
                         });
                     },
                     error: function (xhr) {
