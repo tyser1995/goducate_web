@@ -92,6 +92,7 @@
 @push('scripts')
 <script>
     $('#tblUser').DataTable();
+    
     function confirmDelete(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -108,26 +109,44 @@
         })
     }
 
-    $('#tblUser tbody').on('click','.btnCanVerify',function() {
-            Swal.fire({
-                text: 'Approve ' + $(this).val() + ' user?',
-                icon: 'question',
-                allowOutsideClick:false,
-                confirmButtonText: 'Yes',
-                showCancelButton: true,
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href = base_url + "/volunteers.verify/" + $(this).data('id');
-                    Swal.fire({
-                        title: $(this).val() + ' Approved Successfully',
-                        icon: 'success',
-                        allowOutsideClick:false,
-                        confirmButtonText: 'Close',
-                    }).then(()=>{
-                        $('#tblUser').DataTable().ajax.reload();
-                    });
-                }
-            });
+    $('#tblUser tbody').on('click', '.btnCanVerify', function () {
+        let userId = $(this).data('id');
+        let userName = $(this).val();
+
+        Swal.fire({
+            text: `Approve ${userName} user?`,
+            icon: 'question',
+            allowOutsideClick: false,
+            confirmButtonText: 'Yes',
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: `${base_url}/volunteers.verify/${userId}`,
+                    type: 'GET',
+                    success: function (response) {
+                        Swal.fire({
+                            title: `${userName} Approved Successfully`,
+                            icon: 'success',
+                            allowOutsideClick: false,
+                            confirmButtonText: 'Close',
+                        }).then(() => {
+                            $('#tblUser').DataTable().ajax.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong. Please try again.',
+                            icon: 'error',
+                            allowOutsideClick: false,
+                            confirmButtonText: 'Close',
+                        });
+                    }
+                });
+            }
         });
+    });
+
 </script>
 @endpush
