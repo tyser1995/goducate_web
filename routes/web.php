@@ -17,9 +17,11 @@ use Minishlink\WebPush\WebPush;
 */
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);//Initial Page
 Route::get('/register', [App\Http\Controllers\PageController::class, 'register']);
 Route::post('/user/register', ['as' => '/user/register', 'uses' => 'App\Http\Controllers\UserController@register']);
-Route::get('/', [App\Http\Controllers\DashboardController::class, 'index']);//Initial Page
+
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index']);//Initial Page
 
 //About Us
 Route::get('_aboutus', ['as' => '_aboutus', 'uses' => 'App\Http\Controllers\AboutUsController@aboutus_page']);

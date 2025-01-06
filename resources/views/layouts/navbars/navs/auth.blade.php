@@ -2,7 +2,7 @@
     <!-- Logo Header -->
     <div class="logo-header" data-background-color="blue">
         
-        <a href="{{url('/')}}" class="logo">
+        <a href="{{url('/dashboard')}}" class="logo">
             <img src="{{asset('images')}}/goducate.jpg" style="width: 150px; height:40px; border-radius:20%" alt="goducate" class="navbar-brand">
         </a>
         <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
