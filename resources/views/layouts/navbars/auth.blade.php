@@ -149,6 +149,11 @@
                                 </a>
                             </li>
                             @endif
+                            <li class="{{ $elementActive == 'report' ? 'active' : '' }}">
+                                <a href="{{route('reports')}}">
+                                    <span class="sub-item">QR Logs</span>
+                                </a>
+                            </li>
                             @if(Auth::user()->can('volunteer-list') || Auth::user()->role == 1)
                             <li class="{{ $elementActive == 'volunteer' ? 'active' : '' }}">
                                 <a href="{{route('volunteers')}}">
@@ -156,11 +161,6 @@
                                 </a>
                             </li>
                             @endif
-                            <li class="{{ $elementActive == 'report' ? 'active' : '' }}">
-                                <a href="{{route('reports')}}">
-                                    <span class="sub-item">Reports</span>
-                                </a>
-                            </li>
                         </ul>
                     </div>
                 </li>
