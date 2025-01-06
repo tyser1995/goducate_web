@@ -70,6 +70,9 @@
     "extra": {
         "laravel": {
             "dont-discover": []
+        },
+        "heroku": {
+            "php-version": "8.0"
         }
     },
     "config": {
