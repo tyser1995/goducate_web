@@ -45,7 +45,7 @@ class AnnouncementController extends Controller
         //
         if ($request->hasFile('attachment')) {
             $image = $request->file('attachment');
-            $image_name = time() . '_' . $image->getClientOriginalName();
+            $image_name = $image->getClientOriginalName();
             
             $destination_path = public_path('/images/announcement/');
     
@@ -112,7 +112,7 @@ class AnnouncementController extends Controller
         if ($request->hasFile('attachment')) {
             $image = $request->file('attachment');
             
-            $image_name = time() . '_' . $image->getClientOriginalName();
+            $image_name = $image->getClientOriginalName();
             
             $destination_path = public_path('/images/announcement/');
     
