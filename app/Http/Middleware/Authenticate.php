@@ -18,13 +18,4 @@ class Authenticate extends Middleware
             return route('login');
         }
     }
-
-    public function handle($request, Closure $next)
-    {
-        if ($request->is('images/*')) {
-            return $next($request);
-        }
-
-        return $next($request);
-    }
 }
