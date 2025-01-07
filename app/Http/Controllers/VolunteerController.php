@@ -110,4 +110,16 @@ class VolunteerController extends Controller
         VolunteerModel::verifyVolunteer($id);
         return redirect()->route('volunteer.index')->withStatus(__('Successfully approved.'));
     }
+
+    public function approve_volunteer(Request $request)
+    {
+        VolunteerModel::whereIn('id', $request->ids)->update(['status' => 'approved']);
+        return response()->json(['message' => 'Selected volunteers approved successfully.']);
+    }
+
+    public function disapprove_volunteer(Request $request)
+    {
+        VolunteerModel::whereIn('id', $request->ids)->update(['status' => 'disapproved']);
+        return response()->json(['message' => 'Selected volunteers disapproved successfully.']);
+    }
 }

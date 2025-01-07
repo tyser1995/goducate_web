@@ -124,6 +124,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     //Volunteer
     Route::get('volunteers.verify/{id}', ['as' => 'volunteers.verify', 'uses' => 'App\Http\Controllers\VolunteerController@verify_volunteer']);
+    Route::post('volunteers.bulk.approve', ['as' => 'volunteers.bulk.approve', 'uses' => 'App\Http\Controllers\VolunteerController@approve_volunteer']);
+    Route::post('volunteers.bulk.disapprove', ['as' => 'volunteers.bulk.disapprove', 'uses' => 'App\Http\Controllers\VolunteerController@disapprove_volunteer']);
     Route::get('volunteers', ['as' => 'volunteers', 'uses' => 'App\Http\Controllers\VolunteerController@index']);
     Route::resource('volunteer', 'App\Http\Controllers\VolunteerController');
 

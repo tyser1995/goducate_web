@@ -14,12 +14,14 @@
                             <div class="col-8">
                                 <h3 class="mb-0 h3_title">Volunteer</h3>
                             </div>
-                            @if (Auth::user()->can('volunteer-create'))
-                                <div class="col-4 text-right add-region-btn">
+                            <div class="col-4 text-right add-region-btn">
+                                <button id="btnApprove" class="btn btn-sm btn-success">{{ __('Approve') }}</button>
+                                <button id="btnDisapprove" class="btn btn-sm btn-danger">{{ __('Disapprove') }}</button>
+                                @if (Auth::user()->can('volunteer-create'))
                                     <a href="{{ route('volunteer.create') }}" class="btn btn-sm btn-primary"
-                                        id="add-region-btn">{{ __('Add Volunteer') }}</a>
-                                </div>
-                            @endif
+                                            id="add-region-btn">{{ __('Add Volunteer') }}</a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     @include('notification.index')
@@ -28,6 +30,9 @@
                             <table id="tblUser" class="table">
                                 <thead class="thead-light">
                                     <tr>
+                                        <th scope="col">
+                                            <input type="checkbox" id="selectAll" />
+                                        </th>
                                         <th scope="col">{{ __('Name') }}</th>
                                         <th scope="col">{{ __('Email') }}</th>
                                         <th scope="col">{{ __('Address') }}</th>
@@ -39,6 +44,9 @@
                                     @if ($volunteers->count())
                                     @foreach ($volunteers as $volunteer)
                                     <tr>
+                                        <td>
+                                            <input type="checkbox" class="selectRow" value="{{ $volunteer->id }}" />
+                                        </td>
                                         <td>{{ $volunteer->name }}</td>
                                         <td>
                                             <a href="mailto:{{ $volunteer->email }}">{{ $volunteer->email }}
@@ -127,6 +135,128 @@
                     success: function (response) {
                         Swal.fire({
                             title: `${userName} Approved Successfully`,
+                            icon: 'success',
+                            allowOutsideClick: false,
+                            confirmButtonText: 'Close',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong. Please try again.',
+                            icon: 'error',
+                            allowOutsideClick: false,
+                            confirmButtonText: 'Close',
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.selectRow');
+
+    // Select/Deselect all rows
+    selectAllCheckbox.addEventListener('change', function () {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+
+
+    // Bulk approve
+    $('#btnApprove').on('click', function () {
+        let selectedIds = $('.selectRow:checked').map(function () {
+            return $(this).val();
+        }).get();
+
+        if (selectedIds.length === 0) {
+            Swal.fire({
+                title: 'No records selected',
+                text: 'Please select at least one record to approve.',
+                icon: 'warning',
+                confirmButtonText: 'Close',
+            });
+            return;
+        }
+
+        Swal.fire({
+            text: `Approve ${selectedIds.length} selected users?`,
+            icon: 'question',
+            allowOutsideClick: false,
+            confirmButtonText: 'Yes',
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: `${base_url}/volunteers.bulk.approve`,
+                    type: 'POST',
+                    data: {
+                        ids: selectedIds,
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Users Approved Successfully',
+                            icon: 'success',
+                            allowOutsideClick: false,
+                            confirmButtonText: 'Close',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong. Please try again.',
+                            icon: 'error',
+                            allowOutsideClick: false,
+                            confirmButtonText: 'Close',
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    // Bulk disapprove
+    $('#btnDisapprove').on('click', function () {
+        let selectedIds = $('.selectRow:checked').map(function () {
+            return $(this).val();
+        }).get();
+
+        if (selectedIds.length === 0) {
+            Swal.fire({
+                title: 'No records selected',
+                text: 'Please select at least one record to disapprove.',
+                icon: 'warning',
+                confirmButtonText: 'Close',
+            });
+            return;
+        }
+
+        Swal.fire({
+            text: `Disapprove ${selectedIds.length} selected users?`,
+            icon: 'question',
+            allowOutsideClick: false,
+            confirmButtonText: 'Yes',
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: `${base_url}/volunteers.bulk.disapprove`,
+                    type: 'POST',
+                    data: {
+                        ids: selectedIds,
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'Users Disapproved Successfully',
                             icon: 'success',
                             allowOutsideClick: false,
                             confirmButtonText: 'Close',
