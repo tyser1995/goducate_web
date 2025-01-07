@@ -310,7 +310,7 @@
 </div>
 
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="imageModalLabel">Announcement</h5>
@@ -318,10 +318,10 @@
       </div>
       <div class="modal-body text-center">
         <div class="row">
-          <div class="col-4">
-            <img id="modalImage" src="" alt="" class="img-fluid">
+          <div class="col-12">
+            <img id="modalImage" src="" alt="" class="img-fluid" height="500px" width="100%">
           </div>
-          <div class="col-8">
+          <div class="col-12">
             <div id="modalDescription"></div>
           </div>
         </div>
