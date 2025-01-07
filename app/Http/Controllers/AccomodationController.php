@@ -45,7 +45,7 @@ class AccomodationController extends Controller
     {
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $image_name = time() . '_' . $image->getClientOriginalName();
+            $image_name = $image->getClientOriginalName();
             
             $destination_path = public_path('/images/accomodation/');
     
@@ -109,7 +109,7 @@ class AccomodationController extends Controller
         
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $image_name = time() . '_' . $image->getClientOriginalName();
+            $image_name = $image->getClientOriginalName();
             $destination_path = public_path('/images/accomodation/');
         
             // Ensure the directory exists
