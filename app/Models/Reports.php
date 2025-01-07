@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\BookingModel;
+use App\Models\SurveyModel;
 
 use DB;
 
@@ -79,6 +80,18 @@ class Reports extends Model
             DB::raw('COUNT(*) as count')
         )
         ->groupBy('month', 'description')
+        ->get();
+    }
+
+    public static function getReportsChartDemographic()
+    {
+        return SurveyModel::select(
+            DB::raw('MONTH(created_at) as month'),
+            'group_type',
+            DB::raw('COUNT(*) as count')
+        )
+        ->where('type','=','survey')
+        ->groupBy('month', 'group_type')
         ->get();
     }
 

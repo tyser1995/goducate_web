@@ -258,6 +258,20 @@
                 </div>
             </div>
             <div class="col-md-6">
+                <div class="card full-height">
+                    <div class="card-body">
+                        <div class="card-title">Demographic Survey</div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="multipleBarChartDemoSurvey"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
                         <div class="card-head-row">
@@ -292,9 +306,41 @@
 
     var multipleBarChart = document.getElementById('multipleBarChart').getContext('2d'),
     multipleBarChartFeedback = document.getElementById('multipleBarChart_feedback').getContext('2d'),
-    myPieChart = document.getElementById('myPieChart').getContext('2d');
+    myPieChart = document.getElementById('myPieChart').getContext('2d'),
+    multipleBarChartDemoSurvey = document.getElementById('multipleBarChartDemoSurvey').getContext('2d');
 
     var myMultipleBarChart = new Chart(multipleBarChart, {
+        type: 'bar',
+        data: {
+            labels: [], // Will be populated dynamically
+            datasets: [], // Will be populated dynamically
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+                position: 'bottom'
+            },
+            title: {
+                display: true,
+                text: 'Daily Stats'
+            },
+            tooltips: {
+                mode: 'index',
+                intersect: false
+            },
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        }
+    });
+
+    var myMultipleBarChartDemoSurvey = new Chart(multipleBarChartDemoSurvey, {
         type: 'bar',
         data: {
             labels: [], // Will be populated dynamically
@@ -415,6 +461,25 @@
         });
     };
 
+    const fetchChartDataDemographic = () => {
+        $.ajax({
+            url: "{{ route('chart.data.demographic') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                const chartData = response;
+
+                // Update the chart with new data
+                myMultipleBarChartDemoSurvey.data.labels = chartData.labels;
+                myMultipleBarChartDemoSurvey.data.datasets = chartData.datasets;
+                myMultipleBarChartDemoSurvey.update();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    };
+
     const fetchChartDataBooking = () => {
         $.ajax({
             url: "{{ route('chart.data.booking') }}",
@@ -442,7 +507,7 @@
             dataType: 'json',
             success: function (response) {
                 const chartData = response;
-                console.log(chartData);
+
                 // Update the chart with new data
                 multipleBarChartFeedback.data.labels = chartData.labels;
                 multipleBarChartFeedback.data.datasets = chartData.datasets;
@@ -458,7 +523,7 @@
     fetchChartDataActivity();
     fetchChartDataBooking();
     fetchChartDataFeedback();
-
+    fetchChartDataDemographic();
     
         
     loadSurveys();

@@ -119,6 +119,36 @@ class ReportController extends Controller
         return response()->json($chartData);
     }
 
+    public function getChartDataDemographic()
+    {
+        // Call the model method to get grouped reports
+        $reports = Reports::getReportsChartDemographic();
+
+        // Format data for the chart
+        $chartData = [
+            'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'datasets' => [],
+        ];
+
+        $descriptions = $reports->pluck('group_type')->unique();
+
+        foreach ($descriptions as $description) {
+            $data = array_fill(0, 12, 0); // Initialize data for 12 months
+            foreach ($reports->where('group_type', $description) as $report) {
+                $data[$report->month - 1] = $report->count; // Populate monthly counts
+            }
+
+            $chartData['datasets'][] = [
+                'label' => $description,
+                'backgroundColor' => '#' . substr(md5($description), 0, 6), // Dynamic color
+                'borderColor' => '#' . substr(md5($description), 0, 6),
+                'data' => $data,
+            ];
+        }
+
+        return response()->json($chartData);
+    }
+
     public function getChartDataBooking()
     {
         $reports = Reports::getReportsChartBooking();
