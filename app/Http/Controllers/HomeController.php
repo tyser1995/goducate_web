@@ -40,4 +40,23 @@ class HomeController extends Controller
             'accomodations' => Accomodation::getAccomodation()
         ]);
     }
+
+    public function getRoomDetails($id)
+    {
+        $room = Accomodation::find($id);
+
+        if ($room) {
+            return response()->json([
+                'id' => $room->id,
+                'type' => $room->type,
+                'description' => $room->description,
+                'image' => $room->image ? asset('images/accomodation/' . $room->image) : asset('images/default-image.png'),
+                'capacity' => $room->capacity,
+                'amount' => $room->amount,
+            ]);
+        }
+
+        return response()->json(['error' => 'Room not found'], 404);
+    }
+
 }

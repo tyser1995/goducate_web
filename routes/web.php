@@ -41,6 +41,7 @@ Route::post('survey.feedback', ['as' => 'survey.feedback', 'uses' => 'App\Http\C
 
 
 //
+Route::get('/get-room-details/{id}', [App\Http\Controllers\HomeController::class, 'getRoomDetails']);
 Route::get('_booking', [App\Http\Controllers\HomeController::class, 'booking']);
 
 //Booking public

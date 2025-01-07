@@ -22,6 +22,7 @@ class VerifyCsrfToken extends Middleware
         'volunteer.register',
         'checkout',
         'checkout.process',
-        'accomodation_list'
+        'accomodation_list',
+        'get-room-details/*'
     ];
 }

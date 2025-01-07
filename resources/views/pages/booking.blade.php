@@ -165,7 +165,7 @@
 
   <!-- Modal Form for Event Creation -->
   <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-     <div class="modal-dialog modal-dialog-lg">
+     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-dark" id="eventModalLabel">Book</h5>
@@ -221,6 +221,7 @@
                 <div class="form-group" id="room-container">
                   <label for="children">Room Type:</label>
                   <div class="input-group date">
+                      <img id="room_image" src="{{ asset('images/default-image.png') }}" class="room-image thumbnail clickable-room-image" style="width: 150px; height: 100px; margin-right: 15px;" data-id="" />
                       <select name="room_type" id="room_type" class="class_room_type form-control">
                           <option selected value="">Select option</option>
                           
@@ -420,6 +421,36 @@
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>
               <button type="button" class="btn btn-primary btnConfirmBooking">Confirm Booking</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="roomDetailsModal" tabindex="-1" role="dialog" aria-labelledby="roomDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered " role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="roomDetailsModalLabel">Room Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="row">
+                  <div class="col-md-6">
+                      <img id="modalRoomImage" src="" class="img-fluid" alt="Room Image" />
+                  </div>
+                  <div class="col-md-6">
+                      <h4><strong>Room:</strong><span id="modalRoomType"></span></h4>
+                      <p><strong>Description:</strong><span id="modalRoomDescription"></span></p>
+                      <p><strong>Capacity:</strong> <span id="modalRoomCapacity"></span></p>
+                      <p class="d-none"><strong>Availability:</strong> <span id="modalRoomAvailability"></span></p>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
       </div>
   </div>

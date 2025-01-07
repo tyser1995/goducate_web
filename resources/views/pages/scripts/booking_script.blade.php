@@ -409,6 +409,54 @@
         $('#bookingReviewModal').modal('show');
     });
 
+    $('body').on('change', '.class_room_type', function () {
+        const roomId = $(this).val();
+        const parentDiv = $(this).closest('.input-group');
+        const roomImage = parentDiv.find('.room-image');
+
+        if (roomId) {
+            $.ajax({
+                url: '/get-room-details/' + roomId,
+                type: 'GET',
+                success: function (response) {
+                    if (response.image) {
+                        roomImage.attr('src', response.image).show();
+                        roomImage.attr('data-id', roomId)
+                    } else {
+                        roomImage.attr('src', '/images/default-image.png').show();
+                    }
+                },
+                error: function (xhr) {
+                    console.error('Error fetching room details:', xhr);
+                    roomImage.attr('src', '/images/default-image.png').show();
+                }
+            });
+        }
+    }).on('click', '.clickable-room-image', function () {
+        const roomId = $(this).data('id');
+
+        if (roomId) {
+            $.ajax({
+                url: '/get-room-details/' + roomId,
+                type: 'GET',
+                success: function (response) {
+                    $('#modalRoomImage').attr('src', response.image || '/images/default-image.png');
+                    $('#modalRoomType').text(response.type || 'Unknown');
+                    $('#modalRoomDescription').text(response.description || 'No description available.');
+                    $('#modalRoomCapacity').text(response.capacity || 'N/A');
+                    $('#modalRoomAvailability').text(response.availability || 'N/A');
+
+                    $('#roomDetailsModal').modal('show');
+                },
+                error: function (xhr) {
+                    console.error('Error fetching room details:', xhr);
+                    alert('Failed to load room details. Please try again later.');
+                }
+            });
+        }
+    });
+
+
     // Confirm booking and submit via AJAX
     $('.btnConfirmBooking').click(function() {
         $('.btnConfirmBooking').attr('disabled','disabled');
@@ -601,6 +649,7 @@
     $('body').on('click', '.btn-add', function () {
         var roomTypeHtml = `
             <div class="input-group date mt-2">
+                <img src="{{ asset('images/default-image.png') }}" class="room-image thumbnail clickable-room-image" style="width: 150px; height: 100px; margin-right: 15px;" data-id=""/>
                 <select name="room_type" class="class_room_type form-control">
                     <option selected value="">Select option</option>
                     @foreach (App\Models\Accomodation::getAccomodationOvernightStay() as $accommodation)
