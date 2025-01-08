@@ -250,7 +250,7 @@ class BookingModel extends Model
             'boooking_status' => $data['boooking_status']
         ]);
 
-        $customer = CustomerModel::getCustomerByEmail(strtolower($data['email']));
+        $customer = CustomerModel::getCustomerByEmail(strtolower($payload->email));
         $customer_id = 0;
 
         if (!$customer) {
