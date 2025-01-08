@@ -87,41 +87,57 @@ class BookingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $customers = CustomerModel::findOrFail($id);
-        $bookings = BookingModel::getBookingByEmail($customers->email);
-        foreach ($bookings as $booking) {
-            BookingModel::getBookingById($booking->id);
-            BookingModel::updateBookingStatus($booking->id,$request->all());
+        // $customers = CustomerModel::findOrFail($id);
+        // $bookings = BookingModel::getBookingByEmail($customers->email);
+        // foreach ($bookings as $booking) {
+        //     BookingModel::getBookingById($booking->id);
+        //     BookingModel::updateBookingStatus($booking->id,$request->all());
 
-            BookingOvernightStayModel::updateOvernightStayStatus($booking->email,$request->all());
-            BookingDayTourModel::updateDayTourStatus($booking->email,$request->all());
-            BookingPlaceReservationModel::updatePlaceReservationStatus($booking->email,$request->all());
-        }
-
-        return redirect()->route('booking.index')->withStatus(__('Updated successfully'));
-
-        // try {
-        //     $customers = CustomerModel::findOrFail($id);
-        //     $bookings = BookingModel::getBookingByEmail($customers->email);
-    
-        //     foreach ($bookings as $booking) {
-        //         BookingModel::updateBookingStatus($booking->id, $request->all());
-        //         BookingOvernightStayModel::updateOvernightStayStatus($booking->email, $request->all());
-        //         BookingDayTourModel::updateDayTourStatus($booking->email, $request->all());
-        //         BookingPlaceReservationModel::updatePlaceReservationStatus($booking->email, $request->all());
-        //     }
-    
-        //     return response()->json([
-        //         'status' => 'success',
-        //         'message' => 'Booking updated successfully',
-        //     ]);
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'An error occurred while updating the booking.',
-        //         'error' => $e->getMessage(),
-        //     ], 500);
+        //     BookingOvernightStayModel::updateOvernightStayStatus($booking->email,$request->all());
+        //     BookingDayTourModel::updateDayTourStatus($booking->email,$request->all());
+        //     BookingPlaceReservationModel::updatePlaceReservationStatus($booking->email,$request->all());
         // }
+
+        // return redirect()->route('booking.index')->withStatus(__('Updated successfully'));
+
+        try {
+            $customers = CustomerModel::findOrFail($id);
+            $bookings = BookingModel::getBookingByEmail($customers->email);
+    
+            foreach ($bookings as $booking) {
+                BookingModel::updateBookingStatus($booking->id, $request->all());
+                BookingOvernightStayModel::updateOvernightStayStatus($booking->email, $request->all());
+                BookingDayTourModel::updateDayTourStatus($booking->email, $request->all());
+                BookingPlaceReservationModel::updatePlaceReservationStatus($booking->email, $request->all());
+            }
+    
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Booking updated successfully',
+            ]);
+        } catch (\Exception $e) {
+
+            $customers = CustomerModel::findOrFail($id);
+            $bookings = BookingModel::getBookingByEmail($customers->email);
+    
+            foreach ($bookings as $booking) {
+                BookingModel::updateBookingStatus($booking->id, $request->all());
+                BookingOvernightStayModel::updateOvernightStayStatus($booking->email, $request->all());
+                BookingDayTourModel::updateDayTourStatus($booking->email, $request->all());
+                BookingPlaceReservationModel::updatePlaceReservationStatus($booking->email, $request->all());
+            }
+    
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Booking updated successfully',
+            ]);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while updating the booking.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
