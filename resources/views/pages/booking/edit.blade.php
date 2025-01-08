@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="post" autocomplete="off" action="{{route('booking.update',$bookings)}}">
+                        <form id="update-booking-form" method="post" autocomplete="off" action="{{route('booking.update',$bookings)}}">
                             @csrf
                             @method('put')
                             <div class="pl-lg-4">
@@ -210,7 +210,7 @@
                                     </div>
                       
                                 <div class="">
-                                    <button type="submit" class="btn btn-success mt-4" {{$bookings->status == "approved" ? 'hidden' : ''}}>{{ __('Save') }}</button>
+                                    <button type="button" id="save-button" class="btn btn-success mt-4" {{$bookings->status == "approved" ? 'hidden' : ''}}>{{ __('Save') }}</button>
                                 </div>
                             </div>
                         </form>
@@ -245,6 +245,9 @@
 @include('employees.script')
 @push('scripts')
 <script>
+    const bookingIndexUrl = "{{ route('booking.index') }}";
+</script>
+<script>
     function toggleWalkInPayment() {
         const walkInCheckbox = $('#walkInCheckbox');
         const walkInPayment = $('#walkInPayment');
@@ -264,5 +267,33 @@
         // Show the modal
         $('#paymentImageModal').modal('show');
     }
+
+
+    $('#save-button').on('click', function () {
+        let form = $('#update-booking-form');
+        let formData = form.serialize();
+
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                if (response.status === 'success') {
+                    console.log(response.message);
+                    window.location.href = bookingIndexUrl;
+                } else {
+                    alert('An error occurred: ' + response.message);
+                }
+            },
+            error: function (xhr) {
+                let errors = xhr.responseJSON.errors || { error: xhr.responseJSON.message };
+                let errorMessage = '';
+                for (let key in errors) {
+                    errorMessage += `${errors[key]} \n`;
+                }
+                alert(errorMessage);
+            }
+        });
+    });
 </script>
 @endpush
