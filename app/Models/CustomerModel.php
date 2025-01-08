@@ -89,7 +89,6 @@ class CustomerModel extends Model
 
     public static function getCustomerByEmail($email)
     {
-        $email = strtolower($email['email']);
         return self::where('email','=',$email)->first();
     }
 }

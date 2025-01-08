@@ -210,7 +210,7 @@
                                     </div>
                       
                                 <div class="">
-                                    <button type="button" id="save-button" class="btn btn-success mt-4" {{$bookings->status == "approved" ? 'hidden' : ''}}>{{ __('Save') }}</button>
+                                    <button type="submit" id="save-button" class="btn btn-success mt-4" {{$bookings->status == "approved" ? 'hidden' : ''}}>{{ __('Save') }}</button>
                                 </div>
                             </div>
                         </form>
@@ -269,32 +269,32 @@
     }
 
 
-    $('#save-button').on('click', function () {
-        let form = $('#update-booking-form');
-        let formData = form.serialize();
+    // $('#save-button').on('click', function () {
+    //     let form = $('#update-booking-form');
+    //     let formData = form.serialize();
 
-        $.ajax({
-            url: form.attr('action'),
-            type: 'POST',
-            data: formData,
-            success: function (response) {
-                if (response.status === 'success') {
-                    console.log(response.message);
-                    window.location.href = bookingIndexUrl;
-                } else {
-                    //alert('An error occurred: ' + response.message);
-                }
-            },
-            error: function (xhr) {
-                window.location.href = bookingIndexUrl;
-                let errors = xhr.responseJSON.errors || { error: xhr.responseJSON.message };
-                let errorMessage = '';
-                for (let key in errors) {
-                    errorMessage += `${errors[key]} \n`;
-                }
-                //alert(errorMessage);
-            }
-        });
-    });
+    //     $.ajax({
+    //         url: form.attr('action'),
+    //         type: 'POST',
+    //         data: formData,
+    //         success: function (response) {
+    //             if (response.status === 'success') {
+    //                 console.log(response.message);
+    //                 window.location.href = bookingIndexUrl;
+    //             } else {
+    //                 //alert('An error occurred: ' + response.message);
+    //             }
+    //         },
+    //         error: function (xhr) {
+    //             window.location.href = bookingIndexUrl;
+    //             let errors = xhr.responseJSON.errors || { error: xhr.responseJSON.message };
+    //             let errorMessage = '';
+    //             for (let key in errors) {
+    //                 errorMessage += `${errors[key]} \n`;
+    //             }
+    //             //alert(errorMessage);
+    //         }
+    //     });
+    // });
 </script>
 @endpush
