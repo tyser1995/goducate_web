@@ -282,16 +282,17 @@
                     console.log(response.message);
                     window.location.href = bookingIndexUrl;
                 } else {
-                    alert('An error occurred: ' + response.message);
+                    //alert('An error occurred: ' + response.message);
                 }
             },
             error: function (xhr) {
+                window.location.href = bookingIndexUrl;
                 let errors = xhr.responseJSON.errors || { error: xhr.responseJSON.message };
                 let errorMessage = '';
                 for (let key in errors) {
                     errorMessage += `${errors[key]} \n`;
                 }
-                alert(errorMessage);
+                //alert(errorMessage);
             }
         });
     });

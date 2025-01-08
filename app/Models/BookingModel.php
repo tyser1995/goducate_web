@@ -250,18 +250,18 @@ class BookingModel extends Model
             'boooking_status' => $data['boooking_status']
         ]);
 
-        $customer = CustomerModel::getCustomerByEmail($data['email']);
+        $customer = CustomerModel::getCustomerByEmail(strtolower($data['email']));
         $customer_id = 0;
 
-        if(!$customer){
+        if (!$customer) {
             $new_customer = CustomerModel::create([
                 'created_by_user_id' => Auth::user()->id ?? 0,
                 'first_name' => $payload->name ?? '',
                 'middle_name' => '',
                 'last_name' => '',
-                'email' => $payload->email,
-                'address' => $data['address'],
-                'contact_no' => $data['contact_no'] ?? 0
+                'email' => strtolower($payload->email),
+                'address' => $data['address'] ?? "",
+                'contact_no' => $data['contact_no'] ?? 0,
             ]);
 
             $customer_id = $new_customer->id;
