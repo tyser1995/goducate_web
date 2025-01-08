@@ -245,7 +245,7 @@
     <div class="text">
       <h1 style="color:#fff">Welcome to Camp Goducate Iloilo</h1>
       <p style="color:#fff">Relax and enjoy your stay at Camp Goducate.</p>
-      <a href="http://127.0.0.1:8000/_booking"><button>Book Now</button></a>
+      <a href="{{ url('/_booking') }}"><button>Book Now</button></a>
     </div>
   </div>
 </section>
