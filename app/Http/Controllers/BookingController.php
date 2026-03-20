@@ -7,11 +7,20 @@ use App\Models\BookingOvernightStayModel;
 use App\Models\BookingDayTourModel;
 use App\Models\BookingPlaceReservationModel;
 use App\Models\CustomerModel;
+use App\Http\Requests\StoreBookingRequest;
+use App\Http\Requests\StoreOvernightStayRequest;
+use App\Http\Requests\StoreDayTourRequest;
+use App\Http\Requests\StorePlaceReservationRequest;
+use App\Services\BookingService;
 use Illuminate\Http\Request;
 use Vinkla\Hashids\Facades\Hashids;
 
 class BookingController extends Controller
 {
+    public function __construct(private BookingService $bookingService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -148,13 +157,7 @@ class BookingController extends Controller
      */
     public function destroy($id)
     {
-        //
-        $customers = CustomerModel::findOrFail($id);
-        $bookings = BookingModel::getBookingByEmail($customers->email);
-        foreach ($bookings as $booking) {
-            BookingModel::deleteBooking($booking->id);
-        }
-        
+        $this->bookingService->deleteByCustomerId($id);
         return redirect()->route('booking.index')->withError(__('Deleted successfully'));
     }
 
@@ -178,23 +181,27 @@ class BookingController extends Controller
         ], 200);
     }
 
-    public function booking_store(Request $request){
-        BookingModel::createBooking($request->all());
+    public function booking_store(StoreBookingRequest $request)
+    {
+        $this->bookingService->createBooking($request->validated());
+        return response()->json(['success' => true], 201);
     }
 
-    //Overnight Stay
-    public function os_store(Request $request){
-        BookingOvernightStayModel::createOvernightStay($request->all());
+    public function os_store(StoreOvernightStayRequest $request)
+    {
+        BookingOvernightStayModel::createOvernightStay($request->validated());
+        return response()->json(['success' => true], 201);
     }
 
-    //Day Tour
-    public function dt_store(Request $request){
-        BookingDayTourModel::createDayTour($request->all());
+    public function dt_store(StoreDayTourRequest $request)
+    {
+        BookingDayTourModel::createDayTour($request->validated());
+        return response()->json(['success' => true], 201);
     }
 
-    //Place Reservation
-    //Day Tour
-    public function pr_store(Request $request){
-        BookingPlaceReservationModel::createPlaceReservation($request->all());
+    public function pr_store(StorePlaceReservationRequest $request)
+    {
+        BookingPlaceReservationModel::createPlaceReservation($request->validated());
+        return response()->json(['success' => true], 201);
     }
 }

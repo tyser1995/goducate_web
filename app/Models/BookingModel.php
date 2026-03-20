@@ -20,7 +20,7 @@ class BookingModel extends Model
 
     protected $table = 'bookings';
 
-    protected $fillable =[
+    protected $fillable = [
         'created_by_user_id',
         'customer_id',
         'name',
@@ -29,7 +29,7 @@ class BookingModel extends Model
         'contact_no',
         'no_of_adults',
         'no_of_children',
-        'boooking_status',
+        'booking_status',
         'accomodation_id',
         'accomodation_name',
         'accomodation_availability',
@@ -37,7 +37,7 @@ class BookingModel extends Model
         'accomodation_taken',
         'checkin_date',
         'checkout_date',
-        'status'
+        'status',
     ];
 
     // protected $attributes = [
@@ -91,7 +91,7 @@ class BookingModel extends Model
                 'contact_no'        => $data['contact_no'],
                 'no_of_adults'      => $data['no_of_adults'],
                 'no_of_children'    => $data['no_of_children'],
-                'boooking_status'   => $data['boooking_status'],
+                'booking_status'   => $data['booking_status'],
                 'checkin_date'      => $data['checkin_date'],
                 'checkout_date'     => $data['checkout_date'],
                 'accomodation_id'   => $roomTypeId,
@@ -115,28 +115,28 @@ class BookingModel extends Model
                 bookings.contact_no,
                 bookings.status,
                 CASE
-                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkin_date 
-                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkin_date 
+                    WHEN bookings.booking_status = 0 THEN booking_overnight_stays.checkin_date 
+                    WHEN bookings.booking_status = 1 THEN booking_day_tours.checkin_date 
                     ELSE booking_place_reservations.checkin_date 
                 END as checkin_date,
                 CASE
-                    WHEN bookings.boooking_status = 0 THEN booking_overnight_stays.checkout_date 
-                    WHEN bookings.boooking_status = 1 THEN booking_day_tours.checkout_date 
+                    WHEN bookings.booking_status = 0 THEN booking_overnight_stays.checkout_date 
+                    WHEN bookings.booking_status = 1 THEN booking_day_tours.checkout_date 
                     ELSE booking_place_reservations.checkout_date 
                 END as checkout_date,
                 bookings.created_at
             ")
             ->leftJoin('booking_overnight_stays', function($join) {
                 $join->on('booking_overnight_stays.email', '=', 'bookings.email')
-                    ->where('bookings.boooking_status', '=', 0);
+                    ->where('bookings.booking_status', '=', 0);
             })
             ->leftJoin('booking_day_tours', function($join) {
                 $join->on('booking_day_tours.email', '=', 'bookings.email')
-                    ->where('bookings.boooking_status', '=', 1); 
+                    ->where('bookings.booking_status', '=', 1); 
             })
             ->leftJoin('booking_place_reservations', function($join) {
                 $join->on('booking_place_reservations.email', '=', 'bookings.email')
-                    ->where('bookings.boooking_status', '!=', 2);
+                    ->where('bookings.booking_status', '!=', 2);
             })
             ->distinct()
             ->orderBy('bookings.created_at','DESC')
@@ -158,7 +158,7 @@ class BookingModel extends Model
                 accomodations.capacity
             ")
             ->leftJoin('accomodations', function($join) {
-                $join->on('accomodations.bookig_status', '=', 'bookings.boooking_status');
+                $join->on('accomodations.bookig_status', '=', 'bookings.booking_status');
             })
             // ->groupBy(
             //     'type',
@@ -247,7 +247,7 @@ class BookingModel extends Model
             'contact_no' => $data['contact_no'],
             'no_of_adults' => $data['no_of_adults'],
             'no_of_children' => $data['no_of_children'],
-            'boooking_status' => $data['boooking_status']
+            'booking_status' => $data['booking_status']
         ]);
 
         $customer = CustomerModel::getCustomerByEmail(strtolower($payload->email));
@@ -274,7 +274,7 @@ class BookingModel extends Model
             'title' => 'Reservation Confirmation',
             'body' => 'Reservation will be confirmed upon 20% of down payment made through the following payment channels.',
             'reservation' => $payload,
-            'booking_status' => $data['boooking_status'],
+            'booking_status' => $data['booking_status'],
             'customer_id' => $customer_id
         ];
     
@@ -338,12 +338,12 @@ class BookingModel extends Model
         Transaction::createTransaction($data_new);
 
         $booking_status = 0;
-        if($payload['boooking_status'] == 0){
+        if($payload['booking_status'] == 0){
             $booking_status = 'overnight_stay';
-        }elseif($payload['boooking_status'] == 1){
+        }elseif($payload['booking_status'] == 1){
             $booking_status = 'day_tour';
         }
-        elseif($payload['boooking_status'] == 2){
+        elseif($payload['booking_status'] == 2){
             $booking_status = 'place_reservation';
         }else{
             //

@@ -7,9 +7,6 @@
 require("./bootstrap");
 require("select2");
 require("smartwizard/dist/css/smart_wizard_all.css");
-const cors = require("cors");
-// cors({ origin: "http://localhost:8000", optionsSuccessStatus: 200 });
-// CommonJS
 const Swal = require('sweetalert2');
 
 import $ from "jquery";

@@ -66,28 +66,28 @@ class AnnouncementModel extends Model
                 Announcements.address,
                 Announcements.contact_no,
                 CASE 
-                    WHEN Announcements.boooking_status = 0 THEN Announcement_overnight_stays.checkin_date 
-                    WHEN Announcements.boooking_status = 1 THEN Announcement_day_tours.checkin_date 
+                    WHEN Announcements.booking_status = 0 THEN Announcement_overnight_stays.checkin_date 
+                    WHEN Announcements.booking_status = 1 THEN Announcement_day_tours.checkin_date 
                     ELSE Announcement_place_reservations.checkin_date 
                 END as checkin_date,
                 CASE 
-                    WHEN Announcements.boooking_status = 0 THEN Announcement_overnight_stays.checkout_date 
-                    WHEN Announcements.boooking_status = 1 THEN Announcement_day_tours.checkout_date 
+                    WHEN Announcements.booking_status = 0 THEN Announcement_overnight_stays.checkout_date 
+                    WHEN Announcements.booking_status = 1 THEN Announcement_day_tours.checkout_date 
                     ELSE Announcement_place_reservations.checkout_date 
                 END as checkout_date,
                 Announcements.created_at
             ")
             ->leftJoin('Announcement_overnight_stays', function($join) {
                 $join->on('Announcement_overnight_stays.email', '=', 'Announcements.email')
-                    ->where('Announcements.boooking_status', '=', 0);
+                    ->where('Announcements.booking_status', '=', 0);
             })
             ->leftJoin('Announcement_day_tours', function($join) {
                 $join->on('Announcement_day_tours.email', '=', 'Announcements.email')
-                    ->where('Announcements.boooking_status', '=', 1); 
+                    ->where('Announcements.booking_status', '=', 1); 
             })
             ->leftJoin('Announcement_place_reservations', function($join) {
                 $join->on('Announcement_place_reservations.email', '=', 'Announcements.email')
-                    ->where('Announcements.boooking_status', '!=', 2);
+                    ->where('Announcements.booking_status', '!=', 2);
             })
             ->distinct()
             ->orderBy('Announcements.created_at','DESC')

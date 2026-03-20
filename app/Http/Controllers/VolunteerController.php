@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\VolunteerModel;
+use App\Http\Requests\StoreVolunteerRequest;
 use Illuminate\Http\Request;
 
 class VolunteerController extends Controller
@@ -37,10 +38,9 @@ class VolunteerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreVolunteerRequest $request)
     {
-        //
-        VolunteerModel::createVolunteer($request->all());
+        VolunteerModel::createVolunteer($request->validated());
         return redirect()->route('volunteer.index')->withStatus(__('Successfully created.'));
     }
 
@@ -100,9 +100,9 @@ class VolunteerController extends Controller
         return view('pages.volunteer_page');
     }
 
-    public function register(Request $request){
-        //
-        VolunteerModel::createVolunteer($request->all());
+    public function register(StoreVolunteerRequest $request)
+    {
+        VolunteerModel::createVolunteer($request->validated());
         return redirect()->route('_volunteer')->withStatus(__('Successfully created.'));
     }
 

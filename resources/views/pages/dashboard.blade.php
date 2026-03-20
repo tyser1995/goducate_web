@@ -36,7 +36,7 @@
                                     @foreach ($bookings as $booking)
                                     <tr>
                                         <td class="d-none">{{ $booking->id }}</td>
-                                        <td>{{ $booking->boooking_status }}</td>
+                                        <td>{{ $booking->booking_status }}</td>
                                         <td>{{ $booking->no_of_adults }}</td>
                                         <td>{{ $booking->no_of_children }}</td>
                                         <td>{{ $booking->created_at->format('M d, Y h:i a') }}</td>

@@ -6,6 +6,8 @@ use App\Models\CustomerModel;
 use App\Models\User;
 use App\Models\Transaction;
 use App\Models\Payment;
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\AddPaymentRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -56,33 +58,25 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
-        //
-        if($request->input('password') == $request->input('confirm_password')){
-            $check_user = User::where('email','=',$request->input('email'))
-            ->get()
-            ->first();
+        $data = $request->validated();
 
-            if(!$check_user){
-                $user = new User;
-                $user->name = $request->input('first_name') .' '.$request->input('last_name');
-                $user->email = $request->input('email');
-                $user->password = Hash::make($request->input('password'));
-                $user->role = 4;
-                $user->save();
-
-                CustomerModel::createCustomer($request->all());
-
-                return redirect()->route('customer.index')->withStatus(__('Successfully created.'));
-            }
-
+        $check_user = User::where('email', $data['email'])->first();
+        if ($check_user) {
             return redirect()->route('customer.index')->withError(__('Email already exists.'));
-        }else{
-            return redirect()->route('customer.create')->withError(__('Password does not match'));
         }
 
-       
+        $user = new User;
+        $user->name     = $data['first_name'] . ' ' . $data['last_name'];
+        $user->email    = $data['email'];
+        $user->password = Hash::make($data['password']);
+        $user->role     = 4;
+        $user->save();
+
+        CustomerModel::createCustomer($data);
+
+        return redirect()->route('customer.index')->withStatus(__('Successfully created.'));
     }
 
     /**
@@ -187,8 +181,9 @@ class CustomerController extends Controller
         ], 200);
     }
 
-    public function addPayments(Request $request){
-        Transaction::createTransaction($request->all());
-        return redirect()->route('customer.payment',Hashids::encode($request->customer_id))->withStatus(__('Created successfully'));
+    public function addPayments(AddPaymentRequest $request)
+    {
+        Transaction::createTransaction($request->validated());
+        return redirect()->route('customer.payment', Hashids::encode($request->validated()['customer_id']))->withStatus(__('Created successfully'));
     }
 }

@@ -472,7 +472,7 @@
                     'contact_no': $('#contact_no').val(),
                     'no_of_adults': $('#no_of_adults').val(),
                     'no_of_children': $('#no_of_children').val(),
-                    'boooking_status': $('#boooking_status').val(),
+                    'booking_status': $('#booking_status').val(),
                     'checkin_date': $('#checkin_date').val(),
                     'checkout_date': $('#checkout_date').val(),
                     'accomodation_id': roomTypes
@@ -516,7 +516,7 @@
                 'contact_no'      :$('#contact_no').val(),
                 'no_of_adults'    :$('#no_of_adults').val(),
                 'no_of_children'  :$('#no_of_children').val(),
-                'boooking_status' :$('#boooking_status').val(),
+                'booking_status' :$('#booking_status').val(),
                 'checkin_date'    : $('#checkin_date_dt').val(),
                 'checkout_date'   : $('#checkout_date_dt').val(),
                 'accomodation_id': roomTypes
@@ -564,7 +564,7 @@
         //         'contact_no'      :$('#contact_no').val(),
         //         'no_of_adults'    :$('#no_of_adults').val(),
         //         'no_of_children'  :$('#no_of_children').val(),
-        //         'boooking_status' :$('#boooking_status').val(),
+        //         'booking_status' :$('#booking_status').val(),
         //         'checkin_date'    : $('#checkin_date_pr').val(),
         //         'checkout_date'   : $('#checkout_date_pr').val()
         //       },

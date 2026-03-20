@@ -55,7 +55,7 @@
                             <div class="row">
                               <div class="form-group col-12">
                                 <label for="children">Booking status:</label>
-                                <select required class="booking_option form-control" name="boooking_status" id="boooking_status">
+                                <select required class="booking_option form-control" name="booking_status" id="booking_status">
                                   <option selected value="">Select option</option>
                                   <option value="0">Overnight Stay</option>
                                   <option value="1">Day Tour</option>

@@ -26,7 +26,7 @@ class BookingTransaction extends Model
         'contact_no',
         'no_of_adults',
         'no_of_children',
-        'boooking_status',
+        'booking_status',
         'accomodation_id',
         'accomodation_name',
         'accomodation_taken',
